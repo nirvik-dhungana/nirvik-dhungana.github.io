@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import AnimatedSection from './AnimatedSection.tsx';
 import ProjectCard from './ProjectCard.tsx';
-import { GoProject } from 'react-icons/go';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { LuProjector, LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import type { Project } from '../types';
 
 // Placeholder projects data
@@ -60,12 +59,24 @@ const Projects: React.FC = () => {
     const el = carouselRef.current;
     if (el) {
       checkScrollability();
-      el.addEventListener('scroll', checkScrollability, { passive: true });
-      window.addEventListener('resize', checkScrollability, { passive: true });
+      
+      let ticking = false;
+      const handleScroll = () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+             checkScrollability();
+             ticking = false;
+          });
+          ticking = true;
+        }
+      };
+
+      el.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('resize', handleScroll, { passive: true });
       
       return () => {
-        el.removeEventListener('scroll', checkScrollability);
-        window.removeEventListener('resize', checkScrollability);
+        el.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('resize', handleScroll);
       };
     }
   }, []);
@@ -79,51 +90,68 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <section id="projects" className="my-16 py-20 md:py-32">
+    <section id="projects" className="my-16 py-20 relative">
+       {/* Background Decoration */}
+       <div className="absolute top-1/4 left-0 w-full h-3/4 bg-gradient-to-r from-nord8/10 via-transparent to-nord10/10 blur-3xl -z-10 transform -skew-y-3 pointer-events-none"></div>
+       <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-nord13/5 rounded-full blur-3xl -z-10"></div>
+
       <div className="px-6 md:px-12">
         <AnimatedSection>
-          <div className="text-center mb-16">
-            <div className="flex justify-center items-center gap-3">
-              <GoProject className="w-8 h-8 text-nord13" />
-              <h2 className="text-3xl md:text-4xl font-bold text-nord1 dark:text-nord6">Projects</h2>
+          {/* Section Header */}
+          <div className="flex flex-col items-center justify-center mb-12 gap-6 text-center">
+            <div className="max-w-3xl">
+               <div className="inline-flex items-center justify-center p-3 bg-nord10/10 rounded-2xl mb-4 ring-1 ring-nord10/20 shadow-lg shadow-nord10/10">
+                  <LuProjector className="w-6 h-6 text-nord10 dark:text-nord8" />
+               </div>
+               <h2 className="text-4xl md:text-5xl font-extrabold text-nord0 dark:text-nord6 mb-4 tracking-tight">
+                 Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-nord10 to-nord8">Projects</span>
+               </h2>
+               <p className="text-lg text-nord3 dark:text-nord4 leading-relaxed">
+                  A selection of projects that display my passion for creating intuitive and performant web experiences.
+               </p>
             </div>
-            <p className="text-lg text-nord3 dark:text-nord4 mt-4">A showcase of what I've been working on.</p>
-            <div className="w-16 h-1 bg-nord13 mx-auto mt-4 rounded-full"></div>
+
+            {/* Navigation Controls */}
+            <div className="flex gap-3">
+               <button
+                 onClick={() => scroll('left')}
+                 disabled={!canScrollLeft}
+                 className={`p-4 rounded-full border border-nord4 dark:border-nord3 transition-all duration-300 group ${
+                   canScrollLeft 
+                     ? 'bg-white dark:bg-nord1 hover:bg-nord8 hover:border-nord8 hover:text-white shadow-md cursor-pointer' 
+                     : 'bg-transparent text-nord4 dark:text-nord2 cursor-not-allowed opacity-50'
+                 }`}
+                 aria-label="Scroll previous"
+               >
+                 <LuChevronLeft className="w-5 h-5 group-hover:scale-110 transition-transform" />
+               </button>
+               <button
+                 onClick={() => scroll('right')}
+                 disabled={!canScrollRight}
+                 className={`p-4 rounded-full border border-nord4 dark:border-nord3 transition-all duration-300 group ${
+                   canScrollRight 
+                     ? 'bg-white dark:bg-nord1 hover:bg-nord8 hover:border-nord8 hover:text-white shadow-md cursor-pointer' 
+                     : 'bg-transparent text-nord4 dark:text-nord2 cursor-not-allowed opacity-50'
+                 }`}
+                 aria-label="Scroll next"
+               >
+                 <LuChevronRight className="w-5 h-5 group-hover:scale-110 transition-transform" />
+               </button>
+            </div>
           </div>
           
-          <div className="max-w-6xl mx-auto relative group">
+          {/* Carousel Container */}
+          <div className="relative -mx-6 px-6 md:-mx-12 md:px-12">
             <div 
               ref={carouselRef}
-              className="flex overflow-x-auto snap-x snap-mandatory space-x-6 md:space-x-8 py-4 -mx-6 px-6 md:-mx-12 md:px-12 scrollbar-hide"
+              className="flex overflow-x-auto snap-x snap-mandatory space-x-6 md:space-x-8 py-10 -my-10 px-1 scrollbar-hide"
             >
               {projects.map((project, index) => (
-                <div key={index} className="snap-center shrink-0 w-[90%] sm:w-[80%] md:w-[45%] xl:w-[31%]">
+                <div key={index} className="snap-center shrink-0 w-[90%] sm:w-[80%] md:w-[60%] lg:w-[45%] xl:w-[32%]">
                   <ProjectCard project={project} />
                 </div>
               ))}
             </div>
-            
-            {/* Previous Button */}
-            <button
-              onClick={() => scroll('left')}
-              aria-label="Previous project"
-              className={`absolute top-1/2 -translate-y-1/2 left-0 md:left-2 z-10 p-3 bg-nord6/60 dark:bg-nord1/60 backdrop-blur-sm rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100 ${
-                canScrollLeft ? 'hover:bg-nord8 hover:text-nord0' : 'opacity-30 cursor-not-allowed'
-              }`}
-            >
-              <FaChevronLeft className="w-6 h-6" />
-            </button>
-            
-            {/* Next Button */}
-            <button
-              onClick={() => scroll('right')}
-              aria-label="Next project"
-              className={`absolute top-1/2 -translate-y-1/2 right-0 md:right-2 z-10 p-3 bg-nord6/60 dark:bg-nord1/60 backdrop-blur-sm rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100 ${
-                canScrollRight ? 'hover:bg-nord8 hover:text-nord0' : 'opacity-30 cursor-not-allowed'
-              }`}
-            >
-              <FaChevronRight className="w-6 h-6" />
-            </button>
           </div>
         </AnimatedSection>
       </div>
@@ -131,4 +159,4 @@ const Projects: React.FC = () => {
   );
 };
 
-export default Projects;
+export default React.memo(Projects);

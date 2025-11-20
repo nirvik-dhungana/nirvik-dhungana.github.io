@@ -1,7 +1,6 @@
-
 import React from 'react';
 import type { Testimonial } from '../types';
-import { FaQuoteLeft } from 'react-icons/fa';
+import { LuQuote } from 'react-icons/lu';
 
 interface TestimonialCardProps {
   testimonial: Testimonial;
@@ -11,16 +10,29 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
   const { quote, author, title, avatar } = testimonial;
 
   return (
-    <div className="bg-nord5 dark:bg-nord1 p-8 rounded-lg shadow-2xl shadow-nord3/30 dark:shadow-black/30 flex flex-col items-center text-center transform transition-all duration-300 hover:-translate-y-2 hover:shadow-nord8/20 dark:hover:shadow-nord8/10 border border-nord4/50 dark:border-nord3/50">
-      <FaQuoteLeft className="w-10 h-10 text-nord13 mb-6" />
-      <p className="text-nord2 dark:text-nord4 italic mb-6 flex-grow">"{quote}"</p>
-      <div className="flex flex-col items-center">
-        <img src={avatar} alt={author} className="w-16 h-16 rounded-full object-cover mb-4 border-4 border-nord4 dark:border-nord3" loading="lazy" decoding="async" />
-        <h4 className="font-bold text-lg text-nord1 dark:text-nord6">{author}</h4>
-        <p className="text-sm text-nord3 dark:text-nord4">{title}</p>
+    <div className="h-full bg-white/80 dark:bg-nord1/80 backdrop-blur-xl p-8 rounded-[2rem] shadow-xl shadow-nord4/20 dark:shadow-black/20 border border-white/60 dark:border-nord2/60 relative flex flex-col transition-transform duration-300 hover:-translate-y-1">
+      <LuQuote className="absolute top-8 right-8 text-6xl text-nord6 dark:text-nord0 z-0 opacity-50" />
+      
+      <div className="relative z-10 flex-grow">
+         <div className="flex items-center gap-4 mb-6">
+             <img 
+               src={avatar} 
+               alt={author} 
+               className="w-14 h-14 rounded-full object-cover border-2 border-nord4 dark:border-nord3 bg-nord6" 
+               loading="lazy"
+               decoding="async"
+               width="56"
+               height="56" 
+             />
+             <div>
+                <h4 className="font-bold text-lg text-nord0 dark:text-nord6 leading-tight">{author}</h4>
+                <p className="text-sm text-nord3 dark:text-nord4 font-medium opacity-80">{title}</p>
+             </div>
+         </div>
+         <p className="text-nord2 dark:text-nord4 italic leading-relaxed">"{quote}"</p>
       </div>
     </div>
   );
 };
 
-export default TestimonialCard;
+export default React.memo(TestimonialCard);

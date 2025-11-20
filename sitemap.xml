@@ -9,56 +9,56 @@
 -->
 <url>
   <loc>https://nirvikdhungana.com.np/</loc>
-  <lastmod>2024-07-30T10:00:00+00:00</lastmod>
+  <lastmod>2025-01-01T00:00:00+00:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://nirvikdhungana.com.np/#about</loc>
-  <lastmod>2024-07-30T10:00:00+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2025-01-01T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://nirvikdhungana.com.np/#projects</loc>
-  <lastmod>2024-07-30T10:00:00+00:00</lastmod>
+  <lastmod>2025-01-01T00:00:00+00:00</lastmod>
   <changefreq>weekly</changefreq>
-  <priority>0.80</priority>
+  <priority>0.90</priority>
 </url>
 <url>
   <loc>https://nirvikdhungana.com.np/#skills</loc>
-  <lastmod>2024-07-30T10:00:00+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-  <priority>0.80</priority>
+  <lastmod>2025-01-01T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.70</priority>
 </url>
 <url>
   <loc>https://nirvikdhungana.com.np/#experience</loc>
-  <lastmod>2024-07-30T10:00:00+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2025-01-01T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://nirvikdhungana.com.np/#education</loc>
-  <lastmod>2024-07-30T10:00:00+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-  <priority>0.80</priority>
+  <lastmod>2025-01-01T00:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.60</priority>
 </url>
 <url>
   <loc>https://nirvikdhungana.com.np/#learning-journey</loc>
-  <lastmod>2024-07-30T10:00:00+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-  <priority>0.80</priority>
+  <lastmod>2025-01-01T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.60</priority>
 </url>
 <url>
   <loc>https://nirvikdhungana.com.np/#testimonials</loc>
-  <lastmod>2024-07-30T10:00:00+00:00</lastmod>
-  <changefreq>weekly</changefreq>
-  <priority>0.80</priority>
+  <lastmod>2025-01-01T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.70</priority>
 </url>
 <url>
   <loc>https://nirvikdhungana.com.np/#contact</loc>
-  <lastmod>2024-07-30T10:00:00+00:00</lastmod>
-  <changefreq>weekly</changefreq>
+  <lastmod>2025-01-01T00:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
   <priority>0.80</priority>
 </url>
 </urlset>

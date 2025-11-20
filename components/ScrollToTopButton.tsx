@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { FaChevronUp } from 'react-icons/fa';
+import { LuChevronUp } from 'react-icons/lu';
 
 const ScrollToTopButton: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const toggleVisibility = () => {
-      if (window.scrollY > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (window.scrollY > 300) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
@@ -33,7 +40,7 @@ const ScrollToTopButton: React.FC = () => {
       }`}
       aria-label="Scroll to top"
     >
-      <FaChevronUp className="h-6 w-6" />
+      <LuChevronUp className="h-6 w-6" />
     </button>
   );
 };

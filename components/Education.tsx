@@ -1,198 +1,97 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React from 'react';
 import { EDUCATION } from '../constants';
 import AnimatedSection from './AnimatedSection.tsx';
-import { FaUniversity, FaExternalLinkAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { LuSchool, LuExternalLink, LuCalendar } from 'react-icons/lu';
 
 const Education: React.FC = () => {
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-
-  const checkScrollability = () => {
-    const el = carouselRef.current;
-    if (el) {
-      const hasOverflow = el.scrollWidth > el.clientWidth;
-      setCanScrollLeft(el.scrollLeft > 0 && hasOverflow);
-      setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 1 && hasOverflow);
-    }
-  };
-
-  useEffect(() => {
-    const el = carouselRef.current;
-    if (el) {
-      checkScrollability();
-      el.addEventListener('scroll', checkScrollability, { passive: true });
-      window.addEventListener('resize', checkScrollability, { passive: true });
-      
-      const observer = new MutationObserver(checkScrollability);
-      observer.observe(el, { childList: true, subtree: true });
-
-      return () => {
-        el.removeEventListener('scroll', checkScrollability);
-        window.removeEventListener('resize', checkScrollability);
-        observer.disconnect();
-      };
-    }
-  }, []);
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (carouselRef.current) {
-      const { clientWidth } = carouselRef.current;
-      const scrollAmount = direction === 'left' ? -clientWidth * 0.85 : clientWidth * 0.85;
-      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
-
   return (
-    <section id="education" className="my-16 py-20 md:py-32 bg-nord5 dark:bg-nord1 bg-dots-light dark:bg-dots-dark rounded-3xl shadow-2xl shadow-nord3/20 dark:shadow-black/20">
-      <div className="px-6 md:px-12">
+    <section id="education" className="my-12 py-12 relative">
+      {/* Background Track */}
+      <div className="absolute top-0 left-8 bottom-0 w-px bg-gradient-to-b from-transparent via-nord10/20 to-transparent lg:block hidden"></div>
+
+      <div className="px-0">
         <AnimatedSection>
-          <div className="text-center mb-16">
-            <div className="flex justify-center items-center gap-3">
-              <FaUniversity className="w-8 h-8 text-nord13" />
-              <h2 className="text-3xl md:text-4xl font-bold text-nord1 dark:text-nord6">Education</h2>
-            </div>
-            <p className="text-lg text-nord3 dark:text-nord4 mt-4">My academic background.</p>
-            <div className="w-16 h-1 bg-nord13 mx-auto mt-4 rounded-full"></div>
+           <div className="mb-16 relative z-10 text-center">
+             <div className="inline-flex items-center justify-center p-3 bg-nord10/10 dark:bg-nord8/10 rounded-2xl mb-4 ring-1 ring-nord10/20 shadow-lg shadow-nord10/10">
+                <LuSchool className="w-6 h-6 text-nord10 dark:text-nord8" />
+             </div>
+             <h2 className="text-4xl md:text-5xl font-extrabold text-nord0 dark:text-nord6 mb-4 tracking-tight">
+                Academic <span className="text-transparent bg-clip-text bg-gradient-to-r from-nord10 to-nord8">Background</span>
+             </h2>
+             <p className="text-lg text-nord3 dark:text-nord4 max-w-2xl mx-auto leading-relaxed">
+                The educational foundation that supports my technical journey.
+             </p>
           </div>
 
-          {/* Mobile Carousel */}
-          <div className="md:hidden max-w-3xl mx-auto relative group">
-            <div 
-              ref={carouselRef}
-              className="flex overflow-x-auto snap-x snap-mandatory space-x-6 py-4 -mx-6 px-6 scrollbar-hide"
-            >
-              {EDUCATION.map((edu, index) => (
-                <div key={index} className="snap-center shrink-0 w-[90%] sm:w-[80%]">
-                  <div className="bg-nord6 dark:bg-nord2 p-6 rounded-lg shadow-xl shadow-nord3/20 dark:shadow-black/20 h-full">
-                    {/* Mobile Card Content */}
-                    <div>
-                      <div className="flex items-center gap-4">
-                        {edu.logo && (
-                          <a href={edu.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${edu.institution}'s website`} className="flex-shrink-0">
-                            <img src={edu.logo} alt={`${edu.institution} logo`} className="w-14 h-14 rounded-md object-contain bg-white p-1 shadow-md" width="56" height="56"/>
-                          </a>
-                        )}
-                        <div className="text-xl font-bold text-nord1 dark:text-nord6">{edu.degree}</div>
+          <div className="relative space-y-8 md:space-y-12">
+            {/* Vertical Line */}
+            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-nord10/50 via-nord10/20 to-transparent hidden lg:block"></div>
+
+            {EDUCATION.map((edu, index) => (
+              <div key={index} className="relative lg:pl-24">
+                 {/* Timeline Dot */}
+                 <div className="hidden lg:flex absolute left-[23px] top-8 w-4 h-4 rounded-full bg-nord10 dark:bg-nord8 border-4 border-nord6 dark:border-nord0 shadow-[0_0_0_4px_rgba(136,192,208,0.2)] z-10 transition-transform duration-300 group-hover:scale-125"></div>
+
+                <div className="group relative bg-white/60 dark:bg-nord1/60 backdrop-blur-2xl p-6 sm:p-8 rounded-[2rem] border border-white/50 dark:border-nord3/50 shadow-sm hover:shadow-2xl hover:shadow-nord10/10 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+                   <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-nord10/10 rounded-full blur-2xl transition-all duration-500 group-hover:scale-150"></div>
+
+                   <div className="flex flex-col md:flex-row gap-6 relative z-10">
+                      {/* Logo */}
+                      <div className="flex-shrink-0">
+                         {edu.logo ? (
+                            <div className="w-16 h-16 rounded-2xl bg-white dark:bg-nord2 p-2 border border-nord4/50 dark:border-nord3/50 shadow-inner flex items-center justify-center">
+                                <img 
+                                  src={edu.logo} 
+                                  alt={edu.institution} 
+                                  className="w-full h-full object-contain"
+                                  width="48"
+                                  height="48"
+                                  loading="lazy"
+                                  decoding="async"
+                                />
+                            </div>
+                         ) : (
+                            <div className="w-16 h-16 rounded-2xl bg-nord10/10 flex items-center justify-center text-nord10">
+                               <LuSchool className="w-8 h-8" />
+                            </div>
+                         )}
                       </div>
-                      <div className="mt-4">
-                        <span className="block text-nord13 text-sm font-semibold mb-2">{edu.period}</span>
-                        {edu.url ? (
-                          <a href={edu.url} target="_blank" rel="noopener noreferrer" aria-label={`Learn more about ${edu.institution}`} className="inline-flex items-center text-nord3 dark:text-nord4 mb-3 font-medium hover:text-nord8 transition-colors">
-                            <span>{edu.institution}</span>
-                            <FaExternalLinkAlt className="w-3 h-3 ml-2 opacity-70" />
-                          </a>
-                        ) : (
-                          <p className="text-nord3 dark:text-nord4 mb-3 font-medium">{edu.institution}</p>
-                        )}
-                        <h4 className="font-semibold text-nord2 dark:text-nord5 mb-2 mt-2">Key Highlights:</h4>
-                        <ul className="list-disc list-inside text-nord3 dark:text-nord4 space-y-2">
-                          {edu.description.map((point, i) => <li key={i}>{point}</li>)}
-                        </ul>
+
+                      {/* Content */}
+                      <div className="flex-grow">
+                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                            <div className="text-xl md:text-2xl font-bold text-nord0 dark:text-nord6 group-hover:text-nord10 dark:group-hover:text-nord8 transition-colors">
+                                {edu.degree}
+                            </div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-nord4/50 dark:bg-nord3/50 text-xs font-bold uppercase tracking-wide text-nord2 dark:text-nord4 border border-nord4/50 dark:border-nord3/50">
+                               <LuCalendar className="w-3 h-3" />
+                               {edu.period}
+                            </div>
+                         </div>
+
+                         <div className="mb-6">
+                             {edu.url ? (
+                                <a href={edu.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-lg font-medium text-nord3 dark:text-nord4 hover:text-nord10 dark:hover:text-nord8 transition-colors">
+                                  {edu.institution} <LuExternalLink className="w-3 h-3 opacity-50" />
+                                </a>
+                              ) : (
+                                <p className="text-lg font-medium text-nord3 dark:text-nord4">{edu.institution}</p>
+                              )}
+                         </div>
+                   
+                         <ul className="space-y-3">
+                            {edu.description.map((point, i) => (
+                              <li key={i} className="flex items-start gap-3 text-nord3 dark:text-nord4 text-sm md:text-base leading-relaxed group/li">
+                                 <span className="mt-2 w-1.5 h-1.5 rounded-full bg-nord10 dark:bg-nord8 flex-shrink-0 group-hover/li:scale-150 transition-transform"></span>
+                                 <span className="opacity-90">{point}</span>
+                              </li>
+                            ))}
+                         </ul>
                       </div>
-                    </div>
-                  </div>
+                   </div>
                 </div>
-              ))}
-            </div>
-            
-            <button
-              onClick={() => scroll('left')}
-              aria-label="Previous education entry"
-              className={`absolute top-1/2 -translate-y-1/2 left-0 z-10 p-3 bg-nord6/60 dark:bg-nord1/60 backdrop-blur-sm rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100 ${
-                canScrollLeft ? 'hover:bg-nord8 hover:text-nord0' : 'opacity-30 cursor-not-allowed'
-              }`}
-            >
-              <FaChevronLeft className="w-6 h-6" />
-            </button>
-            
-            <button
-              onClick={() => scroll('right')}
-              aria-label="Next education entry"
-              className={`absolute top-1/2 -translate-y-1/2 right-0 z-10 p-3 bg-nord6/60 dark:bg-nord1/60 backdrop-blur-sm rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 focus:opacity-100 ${
-                canScrollRight ? 'hover:bg-nord8 hover:text-nord0' : 'opacity-30 cursor-not-allowed'
-              }`}
-            >
-              <FaChevronRight className="w-6 h-6" />
-            </button>
-          </div>
-
-          {/* Desktop Timeline - The original component code */}
-          <div className="hidden md:block max-w-3xl mx-auto">
-            <div className="relative border-l-2 border-nord4 dark:border-nord3">
-              {EDUCATION.map((edu, index) => (
-                <AnimatedSection key={index}>
-                  <div className="mb-12 ml-12">
-                    <div className="absolute -left-5 flex items-center justify-center w-10 h-10 bg-nord6 dark:bg-nord0 rounded-full ring-4 ring-nord5 dark:ring-nord1">
-                      {edu.icon}
-                    </div>
-                    <div className="bg-nord6 dark:bg-nord2 p-6 rounded-lg shadow-xl shadow-nord3/20 dark:shadow-black/20 transform transition-transform duration-300 hover:-translate-y-1">
-                       {/* Desktop Layout */}
-                      <div className="hidden md:flex items-start gap-4">
-                        {edu.logo && (
-                          <a href={edu.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${edu.institution}'s website`} className="flex-shrink-0">
-                            <img 
-                              src={edu.logo} 
-                              alt={`${edu.institution} logo`} 
-                              className="w-16 h-16 rounded-md object-contain bg-white p-1 shadow-md"
-                              loading="lazy"
-                              decoding="async"
-                              width="64"
-                              height="64"
-                            />
-                          </a>
-                        )}
-                        <div className="flex-grow">
-                          <div className="flex justify-between items-center mb-1">
-                            <h3 className="text-xl font-bold text-nord1 dark:text-nord6">{edu.degree}</h3>
-                            <span className="text-nord13 text-sm font-semibold flex-shrink-0">{edu.period}</span>
-                          </div>
-                           {edu.url ? (
-                            <a href={edu.url} target="_blank" rel="noopener noreferrer" aria-label={`Learn more about ${edu.institution}`} className="inline-flex items-center text-nord3 dark:text-nord4 mb-3 font-medium hover:text-nord8 transition-colors">
-                              <span>{edu.institution}</span>
-                              <FaExternalLinkAlt className="w-3 h-3 ml-2 opacity-70" />
-                            </a>
-                          ) : (
-                            <p className="text-nord3 dark:text-nord4 mb-3 font-medium">{edu.institution}</p>
-                          )}
-                          <h4 className="font-semibold text-nord2 dark:text-nord5 mb-2 mt-2">Key Highlights:</h4>
-                          <ul className="list-disc list-inside text-nord3 dark:text-nord4 space-y-2">
-                            {edu.description.map((point, i) => <li key={i}>{point}</li>)}
-                          </ul>
-                        </div>
-                      </div>
-
-                      {/* Mobile Layout */}
-                      <div className="md:hidden">
-                        <div className="flex items-center gap-4">
-                          {edu.logo && (
-                            <a href={edu.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${edu.institution}'s website`} className="flex-shrink-0">
-                              <img src={edu.logo} alt={`${edu.institution} logo`} className="w-14 h-14 rounded-md object-contain bg-white p-1 shadow-md" width="56" height="56"/>
-                            </a>
-                          )}
-                          <div className="text-xl font-bold text-nord1 dark:text-nord6">{edu.degree}</div>
-                        </div>
-                        <div className="mt-4">
-                          <span className="block text-nord13 text-sm font-semibold mb-2">{edu.period}</span>
-                           {edu.url ? (
-                            <a href={edu.url} target="_blank" rel="noopener noreferrer" aria-label={`Learn more about ${edu.institution}`} className="inline-flex items-center text-nord3 dark:text-nord4 mb-3 font-medium hover:text-nord8 transition-colors">
-                              <span>{edu.institution}</span>
-                              <FaExternalLinkAlt className="w-3 h-3 ml-2 opacity-70" />
-                            </a>
-                          ) : (
-                            <p className="text-nord3 dark:text-nord4 mb-3 font-medium">{edu.institution}</p>
-                          )}
-                          <h4 className="font-semibold text-nord2 dark:text-nord5 mb-2 mt-2">Key Highlights:</h4>
-                          <ul className="list-disc list-inside text-nord3 dark:text-nord4 space-y-2">
-                            {edu.description.map((point, i) => <li key={i}>{point}</li>)}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </AnimatedSection>
       </div>
@@ -200,4 +99,4 @@ const Education: React.FC = () => {
   );
 };
 
-export default Education;
+export default React.memo(Education);

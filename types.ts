@@ -15,6 +15,7 @@ export interface Skill {
   name: string;
   icon: ReactElement;
   url?: string;
+  color: string; // Hex code for the brand color
 }
 
 // Interface for professional experience or learning journey entries
@@ -22,7 +23,7 @@ export interface Experience {
   role: string;
   company: string;
   period: string;
-  description: string[];
+  description: ReactNode[];
   icon: ReactElement;
   logo?: string;
   url?: string;
@@ -33,14 +34,14 @@ export interface Education {
   degree: ReactNode;
   institution: string;
   period: string;
-  description: string[];
+  description: ReactNode[];
   icon: ReactElement;
   logo?: string;
   url?: string;
 }
 
 export interface Testimonial {
-  quote: string;
+  quote: ReactNode;
   author: string;
   title: string;
   avatar: string;

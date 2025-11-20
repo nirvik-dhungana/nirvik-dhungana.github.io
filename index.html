@@ -1,146 +1,239 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2388C0D0%22>ND</text></svg>"
-    />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2388C0D0;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%235E81AC;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='%232E3440' /%3E%3Cpath d='M30 70V30L55 55L80 30V70' stroke='url(%23grad)' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round' /%3E%3C/svg%3E">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nirvik Dhungana | Portfolio</title>
-
-    <!-- SEO & Metadata -->
-    <meta
-      name="description"
-      content="Personal portfolio of Nirvik Dhungana, an aspiring web developer passionate about creating beautiful and user-friendly digital experiences."
-    />
-    <meta
-      name="keywords"
-      content="Nirvik Dhungana, Portfolio, Web Developer, Frontend Developer, React, TypeScript, JavaScript, Tailwind CSS"
-    />
+    
+    <!-- Primary SEO -->
+    <title>Nirvik Dhungana | Senior Frontend Developer & React Specialist</title>
+    <meta name="title" content="Nirvik Dhungana | Senior Frontend Developer & React Specialist" />
+    <meta name="description" content="Nirvik Dhungana is a Frontend Developer specializing in building high-performance web applications with React, TypeScript, and Tailwind CSS. View portfolio and projects." />
+    <meta name="keywords" content="Nirvik Dhungana, Frontend Developer Nepal, React Developer, TypeScript Expert, UI/UX Engineer, Tailwind CSS Specialist, Web Performance Optimization, Freelance Web Developer" />
     <meta name="author" content="Nirvik Dhungana" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://nirvikdhungana.com.np/" />
+
+    <!-- Local SEO / Geo Tags -->
+    <meta name="geo.region" content="NP" />
+    <meta name="geo.placename" content="Kathmandu" />
+    <meta name="geo.position" content="27.7172;85.3240" />
+    <meta name="ICBM" content="27.7172, 85.3240" />
+
+    <!-- Performance: Preconnect to CDNs -->
+    <link rel="preconnect" href="https://res.cloudinary.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.simpleicons.org" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Nirvik Dhungana | Portfolio" />
-    <meta
-      property="og:description"
-      content="An aspiring web developer passionate about creating beautiful and user-friendly digital experiences."
-    />
-    <meta
-      property="og:image"
-      content="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_1200/v1762424795/pfp_yggogi.png"
-    />
+    <meta property="og:site_name" content="Nirvik Dhungana Portfolio" />
+    <meta property="og:url" content="https://nirvikdhungana.com.np/" />
+    <meta property="og:title" content="Nirvik Dhungana | Building High-Performance Web Experiences" />
+    <meta property="og:description" content="Explore the portfolio of a Frontend Developer passionate about creating accessible, pixel-perfect, and performant web applications." />
+    <meta property="og:image" content="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_1200/v1762424795/pfp_yggogi.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="Nirvik Dhungana | Portfolio" />
-    <meta
-      property="twitter:description"
-      content="An aspiring web developer passionate about creating beautiful and user-friendly digital experiences."
-    />
-    <meta
-      property="twitter:image"
-      content="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_1200/v1762424795/pfp_yggogi.png"
-    />
+    <meta property="twitter:url" content="https://nirvikdhungana.com.np/" />
+    <meta property="twitter:title" content="Nirvik Dhungana | React & TypeScript Developer" />
+    <meta property="twitter:description" content="Explore the portfolio of a Frontend Developer passionate about creating accessible, pixel-perfect, and performant web applications." />
+    <meta property="twitter:image" content="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_1200/v1762424795/pfp_yggogi.png" />
+    <meta property="twitter:creator" content="@Dhungana_Nirvik" />
 
     <meta name="theme-color" content="#5E81AC" />
 
+    <!-- Advanced Structured Data (Graph Strategy) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://nirvikdhungana.com.np/#website",
+          "url": "https://nirvikdhungana.com.np/",
+          "name": "Nirvik Dhungana Portfolio",
+          "description": "Portfolio of Nirvik Dhungana, a Senior Frontend Developer.",
+          "publisher": {
+            "@id": "https://nirvikdhungana.com.np/#person"
+          },
+          "inLanguage": "en-US"
+        },
+        {
+          "@type": "Person",
+          "@id": "https://nirvikdhungana.com.np/#person",
+          "name": "Nirvik Dhungana",
+          "url": "https://nirvikdhungana.com.np/",
+          "image": "https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_1200/v1762424795/pfp_yggogi.png",
+          "jobTitle": "Frontend Developer",
+          "description": "An aspiring web developer passionate about creating beautiful and user-friendly digital experiences.",
+          "gender": "Male",
+          "nationality": "Nepali",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Kathmandu",
+            "addressCountry": "NP"
+          },
+          "sameAs": [
+            "https://github.com/nirvik-dhungana",
+            "https://www.linkedin.com/in/nirvik-dhungana/",
+            "https://x.com/Dhungana_Nirvik"
+          ],
+          "knowsAbout": [
+            "React", 
+            "TypeScript", 
+            "Tailwind CSS", 
+            "Next.js", 
+            "Node.js", 
+            "UI/UX Design", 
+            "Web Performance", 
+            "Search Engine Optimization"
+          ],
+          "alumniOf": [
+            {
+              "@type": "EducationalOrganization",
+              "name": "Kanjirowa National Secondary School"
+            }
+          ]
+        },
+        {
+          "@type": "ItemList",
+          "itemListElement": [
+            {
+              "@type": "CreativeWork",
+              "position": 1,
+              "name": "Personal Portfolio",
+              "description": "A responsive and animated portfolio built with React, TypeScript, and Tailwind CSS.",
+              "url": "https://github.com/nirvik-dhungana/portfolio"
+            },
+            {
+              "@type": "CreativeWork",
+              "position": 2,
+              "name": "Nordic E-commerce Concept",
+              "description": "A clean, minimalist e-commerce storefront concept.",
+              "url": "https://github.com/nirvik-dhungana"
+            },
+            {
+              "@type": "CreativeWork",
+              "position": 3,
+              "name": "AI Content Generator",
+              "description": "Web app leveraging Google Gemini API for content creation.",
+              "url": "https://github.com/nirvik-dhungana"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Google Tag Manager -->
-    <script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-WDXXXMSM");
-    </script>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WDXXXMSM');</script>
     <!-- End Google Tag Manager -->
 
     <!-- Google Analytics - Consent Mode v2 -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-2VT443BNDJ"
-    ></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2VT443BNDJ"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-
+      function gtag(){dataLayer.push(arguments);}
+      
       // Default consent state is denied
-      gtag("consent", "default", {
-        ad_storage: "denied",
-        ad_user_data: "denied",
-        ad_personalization: "denied",
-        analytics_storage: "denied",
+      gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied'
       });
-
-      gtag("js", new Date());
-      gtag("config", "G-2VT443BNDJ");
+      
+      gtag('js', new Date());
+      gtag('config', 'G-2VT443BNDJ');
     </script>
     <!-- End Google Analytics -->
-    <link href="/src/output.css" rel="stylesheet" />
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
-        darkMode: "class", // Enable class-based dark mode
+        darkMode: 'class', // Enable class-based dark mode
         theme: {
           extend: {
             fontFamily: {
-              sans: ["Inter", "sans-serif"],
+              sans: ['Inter', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
             },
             backgroundImage: {
-              "dots-light":
-                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Ccircle cx='4' cy='4' r='0.5' fill='%234C566A' fill-opacity='0.1' /%3E%3C/svg%3E\")",
-              "dots-dark":
-                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Ccircle cx='4' cy='4' r='0.5' fill='%23D8DEE9' fill-opacity='0.05' /%3E%3C/svg%3E\")",
+              'dots-light': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='1' fill='%234C566A' fill-opacity='0.1' /%3E%3C/svg%3E\")",
+              'dots-dark': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='1' fill='%23D8DEE9' fill-opacity='0.05' /%3E%3C/svg%3E\")",
+              'grid-pattern': "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgba(136, 192, 208, 0.1)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e\")",
             },
             colors: {
               // Nord Theme Colors
-              nord0: "#2E3440", // Polar Night
-              nord1: "#3B4252",
-              nord2: "#434C5E",
-              nord3: "#4C566A",
-              nord4: "#D8DEE9", // Snow Storm
-              nord5: "#E5E9F0",
-              nord6: "#ECEFF4",
-              nord7: "#8FBCBB", // Frost
-              nord8: "#88C0D0",
-              nord9: "#81A1C1",
-              nord10: "#5E81AC",
-              nord13: "#EBCB8B", // Aurora Yellow
+              nord0: '#2E3440', // Polar Night
+              nord1: '#3B4252',
+              nord2: '#434C5E',
+              nord3: '#4C566A',
+              nord4: '#D8DEE9', // Snow Storm
+              nord5: '#E5E9F0',
+              nord6: '#ECEFF4',
+              nord7: '#8FBCBB', // Frost
+              nord8: '#88C0D0',
+              nord9: '#81A1C1',
+              nord10: '#5E81AC',
+              nord11: '#BF616A',
+              nord13: '#EBCB8B', // Aurora Yellow
+              nord14: '#A3BE8C',
+              nord15: '#B48EAD',
             },
             keyframes: {
               fadeInUp: {
-                "0%": { opacity: "0", transform: "translateY(20px)" },
-                "100%": { opacity: "1", transform: "translateY(0)" },
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
               },
               blink: {
-                "50%": { opacity: "0" },
+                '50%': { opacity: '0' },
               },
               gradientShift: {
-                "0%, 100%": { backgroundPosition: "0% 50%" },
-                "50%": { backgroundPosition: "100% 50%" },
+                '0%, 100%': { backgroundPosition: '0% 50%' },
+                '50%': { backgroundPosition: '100% 50%' },
               },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+              blob: {
+                '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                '100%': { transform: 'translate(0px, 0px) scale(1)' },
+              },
+              shimmer: {
+                '0%': { backgroundPosition: '-1000px 0' },
+                '100%': { backgroundPosition: '1000px 0' },
+              },
+              tilt: {
+                '0%, 100%': { transform: 'rotate(-1deg)' },
+                '50%': { transform: 'rotate(1deg)' },
+              }
             },
             animation: {
-              fadeInUp: "fadeInUp 0.7s ease-out forwards",
-              blink: "blink 1s step-end infinite",
-              gradientShift: "gradientShift 15s ease infinite",
+              fadeInUp: 'fadeInUp 0.7s ease-out forwards',
+              blink: 'blink 1s step-end infinite',
+              gradientShift: 'gradientShift 15s ease infinite',
+              float: 'float 6s ease-in-out infinite',
+              blob: 'blob 10s infinite',
+              shimmer: 'shimmer 2.5s linear infinite',
+              tilt: 'tilt 5s infinite linear',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
             },
           },
         },
@@ -149,15 +242,15 @@
     <style>
       /* Light mode scrollbar */
       :root {
-        --scrollbar-track: #e5e9f0; /* nord5 */
-        --scrollbar-thumb: #4c566a; /* nord3 */
-        --scrollbar-thumb-hover: #3b4252; /* nord1 */
+        --scrollbar-track: #ECEFF4; /* nord6 */
+        --scrollbar-thumb: #88C0D0; /* nord8 */
+        --scrollbar-thumb-hover: #5E81AC; /* nord10 */
       }
       /* Dark mode scrollbar */
       .dark {
-        --scrollbar-track: #2e3440; /* nord0 */
-        --scrollbar-thumb: #4c566a; /* nord3 */
-        --scrollbar-thumb-hover: #d8dee9; /* nord4 */
+        --scrollbar-track: #2E3440; /* nord0 */
+        --scrollbar-thumb: #434C5E; /* nord2 */
+        --scrollbar-thumb-hover: #88C0D0; /* nord8 */
       }
       ::-webkit-scrollbar {
         width: 8px;
@@ -167,42 +260,50 @@
       }
       ::-webkit-scrollbar-thumb {
         background: var(--scrollbar-thumb);
-        border-radius: 4px;
+        border-radius: 10px;
       }
       ::-webkit-scrollbar-thumb:hover {
         background: var(--scrollbar-thumb-hover);
       }
+      
       /* Custom utility to hide scrollbars */
       .scrollbar-hide::-webkit-scrollbar {
         display: none;
       }
       .scrollbar-hide {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+      
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 80px; /* Ensures anchors don't get hidden behind header */
+      }
+
+      /* Gradient Text Utility */
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-image: linear-gradient(to right, #88C0D0, #5E81AC);
       }
     </style>
-    <!-- <script type="importmap">
-      {
-        "imports": {
-          "react/": "https://aistudiocdn.com/react@^19.2.0/",
-          "react": "https://aistudiocdn.com/react@^19.2.0",
-          "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-          "react-icons/": "https://esm.sh/react-icons@5.2.1/"
-        }
-      }
-    </script> -->
-    <!-- <link rel="stylesheet" href="/index.css" /> -->
-  </head>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react-icons/": "https://esm.sh/react-icons@5.2.1/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
   <body>
     <!-- Google Tag Manager (noscript) -->
-    <noscript
-      ><iframe
-        src="https://www.googletagmanager.com/ns.html?id=GTM-WDXXXMSM"
-        height="0"
-        width="0"
-        style="display: none; visibility: hidden"
-      ></iframe
-    ></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WDXXXMSM"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>

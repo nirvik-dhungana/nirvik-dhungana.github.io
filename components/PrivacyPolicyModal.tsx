@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { FaTimes } from 'react-icons/fa';
+import { LuX } from 'react-icons/lu';
 
 interface PrivacyPolicyModalProps {
   isOpen: boolean;
@@ -28,7 +27,7 @@ const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, onClose
           className="absolute top-4 right-4 text-nord3 dark:text-nord4 hover:text-nord8 dark:hover:text-nord7 transition-colors"
           aria-label="Close privacy policy"
         >
-          <FaTimes className="w-6 h-6" />
+          <LuX className="w-6 h-6" />
         </button>
 
         <h2 id="privacy-policy-title" className="text-2xl md:text-3xl font-bold text-nord1 dark:text-nord6 mb-4">Privacy Policy</h2>
