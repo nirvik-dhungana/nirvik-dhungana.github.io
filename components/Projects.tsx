@@ -17,7 +17,7 @@ const projects: Project[] = [
   {
     title: 'Gadgade Basic School',
     description: 'A clean, minimalist school website for Gadgade Basic School built with React, TypeScript, and Tailwind CSS.',
-    image: 'https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_800/v1762426343/ecommerce-ss_k58ywh.png',
+    image: 'https://res.cloudinary.com/dxt7szquk/image/upload/v1763754698/Screenshot_2025-11-22_at_01-34-50_Gadgade_Basic_School_Nagarkot_Bhaktapur_gxwyqq.png',
     tags: ['React', 'TypeScript', 'Tailwind CSS'],
     liveUrl: 'https://gadgadeschool.edu.np',
     githubUrl: 'https://github.com/gadgade/gadgade#',
