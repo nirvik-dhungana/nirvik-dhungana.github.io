@@ -5,7 +5,6 @@ import Footer from './components/Footer';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import CookieConsent from './components/CookieConsent';
 import PrivacyPolicyModal from './components/PrivacyPolicyModal';
-import LoadingSpinner from './components/LoadingSpinner';
 
 // Lazy load components below the fold to improve initial load time
 const About = React.lazy(() => import('./components/About'));
@@ -197,7 +196,7 @@ const App: React.FC = () => {
           <Hero />
           
           {/* Lazy load the rest of the content */}
-          <Suspense fallback={<LoadingSpinner />}>
+          <div>
             <About />
             <Projects />
             <Skills />
@@ -206,7 +205,7 @@ const App: React.FC = () => {
             <LearningJourney />
             <Testimonials />
             <Contact />
-          </Suspense>
+          </div>
         </main>
         <Footer onPrivacyPolicyClick={handlePrivacyPolicyClick} />
       </div>
