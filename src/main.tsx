@@ -11,8 +11,6 @@ import '@fontsource/jetbrains-mono/600.css';
 import '@fontsource/space-grotesk/500.css';
 import '@fontsource/space-grotesk/600.css';
 import '@fontsource/space-grotesk/700.css';
-import "@fontsource/space-grotesque/latin-400.css";
-import "@fontsource/inter/latin-400.css";
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
