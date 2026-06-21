@@ -60,8 +60,10 @@
       }
     }
     </script>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; img-src 'self' data: https://res.cloudinary.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:;">
-  </head>
+    <meta 
+  http-equiv="Content-Security-Policy" 
+  content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com 'sha256-FvErjDHFfjt2fxoWFrlpq0xNIhmHlNRrUzSaqECpMSo='; connect-src 'self' https://cloudflareinsights.com;" 
+/>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
