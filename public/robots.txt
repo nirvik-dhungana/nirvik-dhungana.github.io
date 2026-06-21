@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap: https://nirvikdhungana.com.np/sitemap.xml — uncomment once sitemap.xml 
+# exists (not needed yet on a single-page site)

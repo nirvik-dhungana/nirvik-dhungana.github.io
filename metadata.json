@@ -1,5 +1,8 @@
 {
   "name": "Nirvik Dhungana Portfolio",
-  "description": "The professional portfolio of Nirvik Dhungana, a Senior Frontend Developer specializing in modern, accessible, and high-performance web applications using React, TypeScript, and Tailwind CSS.",
-  "requestFramePermissions": []
+  "description": "A highly interactive, production-grade developer portfolio for Nirvik Dhungana featuring the Pyrope design system, React, Vite, Tailwind CSS, and Framer Motion.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

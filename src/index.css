@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+
+  --color-bg-base: #171513;
+  --color-bg-1: #1e1b19;
+  --color-bg-2: #282420;
+  --color-bg-3: #3a3430;
+
+  --color-fg: #e6ddd0;
+  --color-fg-dim: #9c9186;
+  --color-fg-faint: #6b625a;
+  --color-fg-bright: #f0e9dd;
+
+  --color-accent: #a8c155;
+  --color-success: #5683c4;
+  --color-warning: #d4893f;
+  --color-error: #c33d5e;
+  --color-gold: #d1a83e;
+
+  --color-garnet: #b5475c;
+  --color-rosewood: #b04f86;
+  --color-lagoon: #3f93a0;
+  --color-verdant: #4f9c87;
+}
+
+@layer base {
+  html {
+    scroll-padding-top: 5rem;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bg-base);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-bg-base), 0 0 0 4px var(--color-accent);
+  }
+}
+
+/* Subtle Animated Grain Overlay */
+.bg-grain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-3);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bg-2);
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-bg-base);
+}
