@@ -62,7 +62,14 @@
     </script>
     <meta 
   http-equiv="Content-Security-Policy" 
-  content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com 'sha256-FvErjDHFfjt2fxoWFrlpq0xNIhmHlNRrUzSaqECpMSo='; connect-src 'self' https://cloudflareinsights.com;" 
+  content="
+    default-src 'self'; 
+    script-src 'self' https://static.cloudflareinsights.com 'sha256-FvErjDHFfjt2fxoWFrlpq0xNIhmHlNRrUzSaqECpMSo=' 'sha256-DPD45cQJBLMzF6WxHTq2/bz9tvl9zWBS3Q+uKlirQUU='; 
+    connect-src 'self' https://cloudflareinsights.com;
+    img-src 'self' data: blob: https://res.cloudinary.com; 
+    style-src 'self' 'unsafe-inline'; 
+    font-src 'self' data:;
+  "
 />
   <body>
     <div id="root"></div>
