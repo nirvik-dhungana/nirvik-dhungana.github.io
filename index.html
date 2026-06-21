@@ -61,6 +61,9 @@
     }
     </script>
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; img-src 'self' data: https://res.cloudinary.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:;">
+    <!-- Preload critical fonts for instant render -->
+<link rel="preload" href="/assets/space-grotesque-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
     <div id="root"></div>

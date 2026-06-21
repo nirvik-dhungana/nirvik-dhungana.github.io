@@ -32,20 +32,22 @@ const Photo = ({ className = "" }: { className?: string }) => (
     <div className="absolute inset-0 bg-accent/20 rounded-full blur-2xl animate-pulse" />
     <div className="absolute inset-0 rounded-full border border-accent/30 bg-bg-1 overflow-hidden z-10 flex items-center justify-center p-2">
       <div className="w-full h-full rounded-full overflow-hidden relative bg-bg-2">
-        {/* Using abstract avatar style/placeholder to represent the photo */}
         <picture>
-          <source srcSet="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_800/v1762424795/pfp_yggogi.png" type="image/webp" />
+          <source 
+            srcSet="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_400/v1762424795/pfp_yggogi.png" 
+            type="image/webp" 
+          />
           <img
-            src="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_800/v1762424795/pfp_yggogi.png"
+            src="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_400/v1762424795/pfp_yggogi.png"
             srcSet="
-              https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_400/v1762424795/pfp_yggogi.png 400w,
-              https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_800/v1762424795/pfp_yggogi.png 800w
+              https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_200/v1762424795/pfp_yggogi.png 200w,
+              https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_400/v1762424795/pfp_yggogi.png 400w
             "
-            sizes="(max-width: 1024px) 200px, 400px"
+            sizes="(max-width: 640px) 160px, (max-width: 1024px) 192px, 400px"
             alt={PersonalInfo.name}
             className="w-full h-full object-cover"
-            width="800"
-            height="800"
+            width="400"
+            height="400"
             loading="eager"
             fetchPriority="high"
           />
