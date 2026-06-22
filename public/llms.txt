@@ -1,0 +1,18 @@
+# Nirvik Dhungana
+
+> Frontend developer specializing in React, TypeScript, and Tailwind CSS. Based in Kathmandu, Nepal.
+
+## About
+Nirvik Dhungana is a frontend developer focused on building accessible, responsive, and performant user interfaces. Currently open to work.
+
+## Skills
+- React, TypeScript, JavaScript
+- Tailwind CSS, Framer Motion
+- Vite, Git, Docker, Figma
+- Node.js, Express, MongoDB
+
+## Contact
+- Email: info.nirvik.dh@gmail.com
+- GitHub: https://github.com/nirvik-dhungana
+- LinkedIn: https://www.linkedin.com/in/nirvik-dhungana/
+- Website: https://nirvikdhungana.com.np
