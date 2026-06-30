@@ -6,13 +6,21 @@
 Nirvik Dhungana is a frontend developer focused on building accessible, responsive, and performant user interfaces. Currently open to work.
 
 ## Skills
-- React, TypeScript, JavaScript
-- Tailwind CSS, Framer Motion
-- Vite, Git, Docker, Figma
-- Node.js, Express, MongoDB
+- **Frontend:** React, TypeScript, JavaScript, Tailwind CSS, Framer Motion, HTML5, CSS3
+- **Tools & DevOps:** Vite, Git, Docker, Figma, npm/pnpm
+- **Backend/Database:** Node.js, Express, MongoDB
 
 ## Contact
 - Email: info.nirvik.dh@gmail.com
 - GitHub: https://github.com/nirvik-dhungana
 - LinkedIn: https://www.linkedin.com/in/nirvik-dhungana/
+- X (Twitter): https://x.com/Dhungana_Nirvik
 - Website: https://nirvikdhungana.com.np
+
+## Links
+- [GitHub Profile](https://github.com/nirvik-dhungana): Primary destination for source code, repositories, and pinned frontend projects.
+- [LinkedIn Profile](https://www.linkedin.com/in/nirvik-dhungana/): Professional network, full experience timeline, and employment availability status.
+- [GitLab Profile](https://gitlab.com/nirvik.dhungana): Secondary version control repository history.
+- [LeetCode Profile](https://leetcode.com/u/nirvik-dhungana/): Algorithmic problem-solving metrics and coding practice history.
+- [freeCodeCamp Profile](https://www.freecodecamp.org/nirvik-dhungana): Technical certifications and curriculum progress records.
+- [FIDE Profile](https://ratings.fide.com/profile/12359149): Official International Chess Federation rating profile (Rapid: 1651).
