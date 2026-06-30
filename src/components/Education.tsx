@@ -1,6 +1,6 @@
-import { motion } from 'motion/react';
-import { EducationContent } from '../data/content';
-import { GraduationCap } from 'lucide-react';
+import { motion } from "motion/react";
+import { EducationContent } from "../data/content";
+import { GraduationCap } from "lucide-react";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -13,7 +13,11 @@ const sectionVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 300, damping: 24 },
+  },
 };
 
 export function Education() {
@@ -23,7 +27,7 @@ export function Education() {
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
+        viewport={{ once: true, margin: "-100px" }}
         className="max-w-4xl mx-auto"
       >
         <div className="mb-12">
@@ -50,7 +54,7 @@ export function Education() {
                   </h3>
                   <div className="text-accent mt-1">{edu.level}</div>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-3 items-center">
                   <span className="px-3 py-1 font-mono text-xs rounded-full bg-bg-2 border border-bg-3 text-fg-dim">
                     {edu.period}
@@ -66,7 +70,9 @@ export function Education() {
               <ul className="space-y-2 mt-4 ml-1 md:ml-9">
                 {edu.activities.map((act, i) => (
                   <li key={i} className="flex items-start text-fg-dim">
-                    <span className="mr-3 text-bg-3 mt-1.5 opacity-80 text-[10px]">■</span>
+                    <span className="mr-3 text-bg-3 mt-1.5 opacity-80 text-[10px]">
+                      ■
+                    </span>
                     <span className="leading-relaxed">{act}</span>
                   </li>
                 ))}

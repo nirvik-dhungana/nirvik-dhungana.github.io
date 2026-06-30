@@ -1,6 +1,15 @@
-import { motion } from 'motion/react';
-import { Github, Linkedin, Twitter, Gitlab, Code2, Terminal, ChevronDown, Mouse } from 'lucide-react';
-import { PersonalInfo } from '../data/content';
+import { motion } from "motion/react";
+import {
+  Github,
+  Linkedin,
+  Twitter,
+  Gitlab,
+  Code2,
+  Terminal,
+  ChevronDown,
+  Mouse,
+} from "lucide-react";
+import { PersonalInfo } from "../data/content";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -18,7 +27,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: 'spring', stiffness: 300, damping: 24 },
+    transition: { type: "spring", stiffness: 300, damping: 24 },
   },
 };
 
@@ -26,16 +35,16 @@ const Photo = ({ className = "" }: { className?: string }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.9 }}
     animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.8, delay: 0.2, type: 'spring' }}
+    transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
     className={`relative ${className}`}
   >
     <div className="absolute inset-0 bg-accent/20 rounded-full blur-2xl animate-pulse" />
     <div className="absolute inset-0 rounded-full border border-accent/30 bg-bg-1 overflow-hidden z-10 flex items-center justify-center p-2">
       <div className="w-full h-full rounded-full overflow-hidden relative bg-bg-2">
         <picture>
-          <source 
-            srcSet="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_400/v1762424795/pfp_yggogi.png" 
-            type="image/webp" 
+          <source
+            srcSet="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_400/v1762424795/pfp_yggogi.png"
+            type="image/webp"
           />
           <img
             src="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_400/v1762424795/pfp_yggogi.png"
@@ -67,7 +76,7 @@ export function Hero() {
           animate={{
             x: [0, 30, -20, 0],
             y: [0, -40, 20, 0],
-            scale: [1, 1.05, 0.95, 1]
+            scale: [1, 1.05, 0.95, 1],
           }}
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
           className="absolute top-[20%] left-[15%] w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-accent/8 rounded-full blur-3xl"
@@ -76,7 +85,7 @@ export function Hero() {
           animate={{
             x: [0, -40, 20, 0],
             y: [0, 30, -20, 0],
-            scale: [1, 0.95, 1.05, 1]
+            scale: [1, 0.95, 1.05, 1],
           }}
           transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
           className="absolute bottom-[10%] right-[10%] w-[35vw] h-[35vw] max-w-[500px] max-h-[500px] bg-success/8 rounded-full blur-3xl"
@@ -118,7 +127,10 @@ export function Hero() {
 
           {/* Name */}
           <motion.div variants={itemVariants} className="mb-6">
-            <h1 className="font-display font-bold text-fg-bright leading-[1.1] tracking-tight" style={{ fontSize: 'clamp(3rem, 10vw, 7rem)' }}>
+            <h1
+              className="font-display font-bold text-fg-bright leading-[1.1] tracking-tight"
+              style={{ fontSize: "clamp(3rem, 10vw, 7rem)" }}
+            >
               Nirvik <span className="text-accent">Dhungana</span>
             </h1>
           </motion.div>
@@ -131,20 +143,28 @@ export function Hero() {
           </motion.div>
 
           {/* Focus Statement */}
-          <motion.div variants={itemVariants} className="mb-8 md:mb-10 max-w-2xl">
+          <motion.div
+            variants={itemVariants}
+            className="mb-8 md:mb-10 max-w-2xl"
+          >
             <p className="text-sm md:text-lg text-fg-faint leading-relaxed">
               {PersonalInfo.focus}
             </p>
           </motion.div>
 
           {/* CTAs */}
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-14 w-full sm:w-auto">
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-14 w-full sm:w-auto"
+          >
             <a
               href="#projects"
               className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-3.5 bg-accent text-bg-base rounded-full text-sm sm:text-base font-bold transition-all duration-300 hover:bg-fg-bright hover:shadow-[0_0_20px_rgba(168,193,85,0.4)] text-center"
               onClick={(e) => {
                 e.preventDefault();
-                document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
+                document
+                  .querySelector("#projects")
+                  ?.scrollIntoView({ behavior: "smooth" });
               }}
             >
               View Projects
@@ -154,7 +174,9 @@ export function Hero() {
               className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-3.5 bg-transparent text-accent rounded-full text-sm sm:text-base font-bold border-2 border-accent transition-all duration-300 hover:bg-accent/10 text-center"
               onClick={(e) => {
                 e.preventDefault();
-                document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+                document
+                  .querySelector("#contact")
+                  ?.scrollIntoView({ behavior: "smooth" });
               }}
             >
               Get in Touch
@@ -162,12 +184,19 @@ export function Hero() {
           </motion.div>
 
           {/* Socials */}
-          <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-center lg:justify-start gap-6">
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-wrap items-center justify-center lg:justify-start gap-6"
+          >
             {[
-              { icon: Github, href: PersonalInfo.github, label: 'GitHub' },
-              { icon: Linkedin, href: PersonalInfo.linkedin, label: 'LinkedIn' },
-              { icon: Twitter, href: PersonalInfo.twitter, label: 'Twitter' },
-              { icon: Gitlab, href: PersonalInfo.gitlab, label: 'GitLab' },
+              { icon: Github, href: PersonalInfo.github, label: "GitHub" },
+              {
+                icon: Linkedin,
+                href: PersonalInfo.linkedin,
+                label: "LinkedIn",
+              },
+              { icon: Twitter, href: PersonalInfo.twitter, label: "Twitter" },
+              { icon: Gitlab, href: PersonalInfo.gitlab, label: "GitLab" },
             ].map((social, idx) => (
               <a
                 key={idx}
@@ -199,7 +228,7 @@ export function Hero() {
         <Mouse size={20} strokeWidth={1.5} />
         <motion.div
           animate={{ y: [0, 5, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
         >
           <ChevronDown size={16} strokeWidth={2} />
         </motion.div>

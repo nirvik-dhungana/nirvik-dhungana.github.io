@@ -1,6 +1,6 @@
-import { motion } from 'motion/react';
-import { ArrowRight, Github } from 'lucide-react';
-import { ProjectsContent, PersonalInfo } from '../data/content';
+import { motion } from "motion/react";
+import { ArrowRight, Github } from "lucide-react";
+import { ProjectsContent, PersonalInfo } from "../data/content";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -13,19 +13,24 @@ const sectionVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 300, damping: 24 },
+  },
 };
 
 const pillColors = [
-  'text-gold border-gold/30 bg-gold/5',
-  'text-lagoon border-lagoon/30 bg-lagoon/5',
-  'text-rosewood border-rosewood/30 bg-rosewood/5',
-  'text-verdant border-verdant/30 bg-verdant/5',
+  "text-gold border-gold/30 bg-gold/5",
+  "text-lagoon border-lagoon/30 bg-lagoon/5",
+  "text-rosewood border-rosewood/30 bg-rosewood/5",
+  "text-verdant border-verdant/30 bg-verdant/5",
 ];
 
 export function Projects() {
-  const featuredProject = ProjectsContent.find(p => p.featured) || ProjectsContent[0];
-  const otherProjects = ProjectsContent.filter(p => p !== featuredProject);
+  const featuredProject =
+    ProjectsContent.find((p) => p.featured) || ProjectsContent[0];
+  const otherProjects = ProjectsContent.filter((p) => p !== featuredProject);
 
   return (
     <section id="projects" className="px-6 relative z-10">
@@ -33,7 +38,7 @@ export function Projects() {
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
+        viewport={{ once: true, margin: "-100px" }}
         className="max-w-7xl mx-auto"
       >
         <div className="mb-12">
@@ -62,7 +67,10 @@ export function Projects() {
                     <div className="w-2.5 h-2.5 rounded-full bg-success/80" />
                   </div>
                   {/* Image Placeholder area */}
-                  <div className="aspect-[16/10] bg-gradient-to-br from-bg-1 to-bg-2 relative" style={{ aspectRatio: '16/10' }}>
+                  <div
+                    className="aspect-[16/10] bg-gradient-to-br from-bg-1 to-bg-2 relative"
+                    style={{ aspectRatio: "16/10" }}
+                  >
                     <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0ibm9uZSIvPgo8Y2lyY2xlIGN4PSIyIiBjeT0iMiIgcj0iMSIgZmlsbD0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjA1KSIvPgo8L3N2Zz4=')] bg-repeat opacity-50" />
                     <div className="absolute inset-0 flex flex-col p-6">
                       <div className="flex justify-between items-center mb-8 opacity-40">
@@ -75,7 +83,7 @@ export function Projects() {
                       </div>
                       <div className="w-3/4 h-8 rounded bg-accent opacity-20 mb-4" />
                       <div className="w-1/2 h-4 rounded bg-accent opacity-10 mb-auto" />
-                      
+
                       <div className="flex gap-6 mt-8 h-20">
                         <div className="flex-[2] space-y-3">
                           <div className="w-full h-2 rounded bg-fg-dim opacity-10" />
@@ -114,7 +122,11 @@ export function Projects() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 font-medium text-fg uppercase tracking-wider text-sm transition-colors group-hover:text-accent relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1.5px] after:bg-accent after:transition-all after:duration-300 group-hover:after:w-full"
                   >
-                    View Project <ArrowRight size={16} className="transform transition-transform group-hover:translate-x-1" />
+                    View Project{" "}
+                    <ArrowRight
+                      size={16}
+                      className="transform transition-transform group-hover:translate-x-1"
+                    />
                   </a>
                 </div>
               </div>
@@ -129,17 +141,20 @@ export function Projects() {
               className="group bg-bg-1 border border-bg-3/40 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:border-accent/30 hover:shadow-[0_0_25px_rgba(168,193,85,0.05)] flex flex-col"
             >
               {/* Top Image Box */}
-              <div className="aspect-[16/9] border-b border-bg-3/40 bg-bg-base/50 p-6 flex items-center justify-center overflow-hidden" style={{ aspectRatio: '16/9' }}>
+              <div
+                className="aspect-[16/9] border-b border-bg-3/40 bg-bg-base/50 p-6 flex items-center justify-center overflow-hidden"
+                style={{ aspectRatio: "16/9" }}
+              >
                 <div className="w-full h-full bg-gradient-to-br from-bg-2 to-bg-base rounded border border-bg-3/40 shadow-lg transform transition-transform duration-500 group-hover:scale-[1.05] relative">
-                    <div className="absolute inset-0 flex flex-col p-4">
-                      <div className="w-1/3 h-4 rounded bg-accent opacity-30 mb-4" />
-                      <div className="grid grid-cols-3 gap-3 flex-grow">
-                        <div className="rounded bg-accent opacity-[0.08]" />
-                        <div className="rounded bg-accent opacity-[0.08]" />
-                        <div className="rounded bg-accent opacity-[0.08]" />
-                      </div>
-                      <div className="h-8 mt-3 rounded bg-fg-faint opacity-[0.05]" />
+                  <div className="absolute inset-0 flex flex-col p-4">
+                    <div className="w-1/3 h-4 rounded bg-accent opacity-30 mb-4" />
+                    <div className="grid grid-cols-3 gap-3 flex-grow">
+                      <div className="rounded bg-accent opacity-[0.08]" />
+                      <div className="rounded bg-accent opacity-[0.08]" />
+                      <div className="rounded bg-accent opacity-[0.08]" />
                     </div>
+                    <div className="h-8 mt-3 rounded bg-fg-faint opacity-[0.05]" />
+                  </div>
                 </div>
               </div>
               {/* Bottom Content */}
@@ -167,7 +182,11 @@ export function Projects() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 font-medium text-fg uppercase tracking-wider text-sm transition-colors group-hover:text-accent relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1px] after:bg-accent after:transition-all after:duration-300 group-hover:after:w-full"
                   >
-                    View Project <ArrowRight size={16} className="transform transition-transform group-hover:translate-x-1" />
+                    View Project{" "}
+                    <ArrowRight
+                      size={16}
+                      className="transform transition-transform group-hover:translate-x-1"
+                    />
                   </a>
                 </div>
               </div>
@@ -179,21 +198,25 @@ export function Projects() {
             variants={cardVariants}
             className="group relative bg-transparent border border-dashed border-bg-3 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:border-accent hover:bg-accent/5 flex flex-col items-center justify-center p-12 min-h-[300px]"
           >
-             <div className="w-16 h-16 rounded-full bg-bg-2 flex items-center justify-center mb-6 text-fg-dim group-hover:text-accent transition-colors group-hover:scale-110 duration-300">
-               <Github size={32} />
-             </div>
-             <h3 className="text-xl font-display font-medium text-fg-bright mb-2">More on GitHub</h3>
-             <p className="text-fg-faint text-center max-w-xs mb-6">Explore my repositories for more technical deep dives and side projects.</p>
-             <a
-                href={PersonalInfo.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-2.5 bg-transparent text-fg-bright rounded-full font-medium border border-bg-3 transition-colors duration-300 hover:border-accent hover:text-accent"
-              >
-                View Profile
-              </a>
+            <div className="w-16 h-16 rounded-full bg-bg-2 flex items-center justify-center mb-6 text-fg-dim group-hover:text-accent transition-colors group-hover:scale-110 duration-300">
+              <Github size={32} />
+            </div>
+            <h3 className="text-xl font-display font-medium text-fg-bright mb-2">
+              More on GitHub
+            </h3>
+            <p className="text-fg-faint text-center max-w-xs mb-6">
+              Explore my repositories for more technical deep dives and side
+              projects.
+            </p>
+            <a
+              href={PersonalInfo.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-2.5 bg-transparent text-fg-bright rounded-full font-medium border border-bg-3 transition-colors duration-300 hover:border-accent hover:text-accent"
+            >
+              View Profile
+            </a>
           </motion.div>
-
         </div>
       </motion.div>
     </section>

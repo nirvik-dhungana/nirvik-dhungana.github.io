@@ -1,5 +1,5 @@
-import { motion } from 'motion/react';
-import { AboutContent } from '../data/content';
+import { motion } from "motion/react";
+import { AboutContent } from "../data/content";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -19,9 +19,9 @@ const itemVariants = {
 };
 
 const pillColors = [
-  'text-gold border-gold/30 bg-gold/5',
-  'text-lagoon border-lagoon/30 bg-lagoon/5',
-  'text-verdant border-verdant/30 bg-verdant/5',
+  "text-gold border-gold/30 bg-gold/5",
+  "text-lagoon border-lagoon/30 bg-lagoon/5",
+  "text-verdant border-verdant/30 bg-verdant/5",
 ];
 
 export function About() {
@@ -31,11 +31,10 @@ export function About() {
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
+        viewport={{ once: true, margin: "-100px" }}
         className="max-w-7xl mx-auto"
       >
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
-          
           {/* Left Column (60%) */}
           <div className="lg:w-3/5">
             <motion.div variants={itemVariants} className="mb-6">
@@ -47,15 +46,31 @@ export function About() {
               </h2>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="text-lg text-fg leading-[1.7]">
+            <motion.div
+              variants={itemVariants}
+              className="text-lg text-fg leading-[1.7]"
+            >
               <p>
-                {AboutContent.bio[0].split('accessible, responsive, and performant')[0]}
-                <span className="text-accent font-medium">accessible, responsive, and performant</span>
-                {AboutContent.bio[0].split('accessible, responsive, and performant')[1]}
+                {
+                  AboutContent.bio[0].split(
+                    "accessible, responsive, and performant",
+                  )[0]
+                }
+                <span className="text-accent font-medium">
+                  accessible, responsive, and performant
+                </span>
+                {
+                  AboutContent.bio[0].split(
+                    "accessible, responsive, and performant",
+                  )[1]
+                }
               </p>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="mt-10 flex flex-wrap gap-3">
+            <motion.div
+              variants={itemVariants}
+              className="mt-10 flex flex-wrap gap-3"
+            >
               {AboutContent.tags.map((tag, idx) => (
                 <span
                   key={tag}
@@ -76,24 +91,31 @@ export function About() {
                   variants={itemVariants}
                   className="bg-bg-1 border border-bg-3/40 rounded-2xl p-6 transition-transform hover:-translate-y-1 hover:border-accent/30 hover:shadow-[0_0_15px_rgba(168,193,85,0.05)] flex flex-col justify-center min-h-[120px]"
                 >
-                  <div className={`${stat.number.length > 5 ? 'text-base sm:text-xl lg:text-2xl mt-1 leading-tight mb-2' : 'text-3xl lg:text-4xl mb-2'} font-display font-bold text-accent break-words`}>
+                  <div
+                    className={`${stat.number.length > 5 ? "text-base sm:text-xl lg:text-2xl mt-1 leading-tight mb-2" : "text-3xl lg:text-4xl mb-2"} font-display font-bold text-accent break-words`}
+                  >
                     {stat.number === "Kathmandu, Nepal" ? (
                       <div className="flex flex-col">
-                        <span className="text-2xl md:text-3xl lg:text-4xl font-bold">KTM</span>
-                        <span className="text-xs text-accent/80 font-mono mt-1 font-medium tracking-wider">KATHMANDU, NEPAL</span>
+                        <span className="text-2xl md:text-3xl lg:text-4xl font-bold">
+                          KTM
+                        </span>
+                        <span className="text-xs text-accent/80 font-mono mt-1 font-medium tracking-wider">
+                          KATHMANDU, NEPAL
+                        </span>
                       </div>
                     ) : (
                       stat.number
                     )}
                   </div>
                   <div className="text-xs sm:text-sm text-fg-dim font-medium">
-                    {stat.number === "Kathmandu, Nepal" ? "Based in" : stat.label}
+                    {stat.number === "Kathmandu, Nepal"
+                      ? "Based in"
+                      : stat.label}
                   </div>
                 </motion.div>
               ))}
             </div>
           </div>
-
         </div>
       </motion.div>
     </section>

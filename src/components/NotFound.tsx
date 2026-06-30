@@ -1,5 +1,5 @@
-import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
+import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 
 export function NotFound() {
   return (
@@ -13,7 +13,7 @@ export function NotFound() {
         transition={{
           duration: 8,
           repeat: Infinity,
-          ease: "easeInOut"
+          ease: "easeInOut",
         }}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[600px] max-h-[600px] bg-accent/20 rounded-full blur-[100px] pointer-events-none"
       />
@@ -28,7 +28,7 @@ export function NotFound() {
             404
           </h1>
         </motion.div>
-        
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

@@ -1,5 +1,5 @@
-import { motion } from 'motion/react';
-import { ExperienceContent } from '../data/content';
+import { motion } from "motion/react";
+import { ExperienceContent } from "../data/content";
 
 const sectionVariants = {
   hidden: { opacity: 0 },
@@ -11,7 +11,11 @@ const sectionVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, x: -20 },
-  visible: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { type: "spring", stiffness: 300, damping: 24 },
+  },
 };
 
 export function Experience() {
@@ -21,7 +25,7 @@ export function Experience() {
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
+        viewport={{ once: true, margin: "-100px" }}
         className="max-w-4xl mx-auto"
       >
         <div className="mb-16">
@@ -46,7 +50,10 @@ export function Experience() {
               <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-4 gap-2">
                 <div>
                   <h3 className="text-xl font-display font-bold text-fg-bright">
-                    {exp.role} <span className="text-accent font-medium">@ {exp.company}</span>
+                    {exp.role}{" "}
+                    <span className="text-accent font-medium">
+                      @ {exp.company}
+                    </span>
                   </h3>
                 </div>
                 <div className="font-mono text-sm text-fg-dim">
@@ -57,7 +64,9 @@ export function Experience() {
               <ul className="space-y-3">
                 {exp.responsibilities.map((req, i) => (
                   <li key={i} className="flex items-start text-fg">
-                    <span className="mr-3 text-fg-dim mt-1.5 opacity-50 text-[10px]">▶</span>
+                    <span className="mr-3 text-fg-dim mt-1.5 opacity-50 text-[10px]">
+                      ▶
+                    </span>
                     <span className="leading-relaxed">{req}</span>
                   </li>
                 ))}

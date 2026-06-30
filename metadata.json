@@ -2,7 +2,5 @@
   "name": "Nirvik Dhungana Portfolio",
   "description": "A highly interactive, production-grade developer portfolio for Nirvik Dhungana featuring the Pyrope design system, React, Vite, Tailwind CSS, and Framer Motion.",
   "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

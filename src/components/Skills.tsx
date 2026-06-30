@@ -1,6 +1,6 @@
-import { motion } from 'motion/react';
-import { Layout, Server, Wrench, BarChart } from 'lucide-react';
-import { SkillsContent } from '../data/content';
+import { motion } from "motion/react";
+import { Layout, Server, Wrench, BarChart } from "lucide-react";
+import { SkillsContent } from "../data/content";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -13,7 +13,11 @@ const sectionVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 300, damping: 24 },
+  },
 };
 
 const iconMap = {
@@ -37,7 +41,7 @@ export function Skills() {
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
+        viewport={{ once: true, margin: "-100px" }}
         className="max-w-7xl mx-auto"
       >
         <div className="mb-12">
@@ -50,7 +54,9 @@ export function Skills() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {(Object.keys(SkillsContent) as Array<keyof typeof SkillsContent>).map((categoryKey) => {
+          {(
+            Object.keys(SkillsContent) as Array<keyof typeof SkillsContent>
+          ).map((categoryKey) => {
             const Icon = iconMap[categoryKey];
             const skills = SkillsContent[categoryKey];
 
@@ -67,7 +73,7 @@ export function Skills() {
                   {titleMap[categoryKey]}
                 </h3>
                 <div className="flex flex-wrap gap-2.5">
-                  {skills.map(skill => (
+                  {skills.map((skill) => (
                     <span
                       key={skill}
                       className="px-3 py-1.5 font-mono text-xs text-fg bg-bg-2 border border-bg-3 rounded-md transition-colors hover:border-accent hover:text-accent cursor-default"
