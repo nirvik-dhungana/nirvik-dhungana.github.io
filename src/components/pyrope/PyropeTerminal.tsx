@@ -180,7 +180,7 @@ export function PyropeTerminal() {
               <div className="w-2.5 h-2.5 rounded-full bg-accent" />
             </div>
             <span className="absolute left-1/2 -translate-x-1/2 font-mono text-xs text-fg-faint">
-              kitty — 100×28
+              Konsole — 100×28
             </span>
           </div>
 
