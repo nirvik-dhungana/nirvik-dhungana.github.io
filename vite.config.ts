@@ -34,24 +34,25 @@ export default defineConfig(() => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes("node_modules")) {
-              if (id.includes("react/") || id.includes("react-dom/")) {
-                return "react-vendor";
-              }
-              if (
-                id.includes("react-router-dom") ||
-                id.includes("react-router")
-              ) {
-                return "router-vendor";
-              }
-              if (id.includes("motion")) {
-                return "motion-vendor";
-              }
-              if (id.includes("lucide-react")) {
-                return "lucide-vendor";
-              }
-              return "vendor";
+            if (!id.includes("node_modules")) return;
+
+            // Bundle React + anything that touches React together.
+            // Splitting these apart is what causes circular chunk
+            // dependencies (scheduler, motion, lucide etc. all pull
+            // in React internally).
+            if (
+              id.includes("node_modules/react/") ||
+              id.includes("node_modules/react-dom/") ||
+              id.includes("node_modules/scheduler/") ||
+              id.includes("node_modules/react-router") ||
+              id.includes("node_modules/motion") ||
+              id.includes("node_modules/framer-motion") ||
+              id.includes("node_modules/lucide-react")
+            ) {
+              return "vendor-react";
             }
+
+            return "vendor";
           },
         },
       },
