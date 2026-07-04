@@ -1,6 +1,6 @@
 # Nirvik Dhungana
 
-> Frontend developer specializing in React, TypeScript, and Tailwind CSS. Based in Kathmandu, Nepal.
+> Frontend developer specializing in React, TypeScript, and Tailwind CSS. Based in Kathmandu, Nepal. Open to work.
 
 ## About
 Nirvik Dhungana is a frontend developer focused on building accessible, responsive, and performant user interfaces. Currently open to work.
@@ -9,6 +9,17 @@ Nirvik Dhungana is a frontend developer focused on building accessible, responsi
 - **Frontend:** React, TypeScript, JavaScript, Tailwind CSS, Framer Motion, HTML5, CSS3
 - **Tools & DevOps:** Vite, Git, Docker, Figma, npm/pnpm
 - **Backend/Database:** Node.js, Express, MongoDB
+
+## Projects
+
+### Pyrope Colorscheme
+A warm, dark, jewel-toned colorscheme designed for deutan (red-green color deficient) vision. Built with consistent role assignments across every tool — VS Code, Neovim, Zed, Kate, KDE Plasma, Kitty, Alacritty, and Lichess.
+
+- **Case study:** https://nirvikdhungana.com.np/projects/pyrope
+- **Full details for AI/LLM consumption:** https://nirvikdhungana.com.np/llms-full.txt
+- **Design philosophy:** Deuteranopia-aware. Warm pear-green accent (high red channel, low blue channel). Sapphire reserved for one meaning only (success). Lightness staggered as a backup cue. 7 explicit design rules.
+- **Palette:** 4 backgrounds, 4 foregrounds, 5 accent/status colors, 4 decorative jewel tones, 16 ANSI colors.
+- **Ports:** 8 applications supported with per-app theme files.
 
 ## Contact
 - Email: info.nirvik.dh@gmail.com
@@ -24,3 +35,4 @@ Nirvik Dhungana is a frontend developer focused on building accessible, responsi
 - [LeetCode Profile](https://leetcode.com/u/nirvik-dhungana/): Algorithmic problem-solving metrics and coding practice history.
 - [freeCodeCamp Profile](https://www.freecodecamp.org/nirvik-dhungana): Technical certifications and curriculum progress records.
 - [FIDE Profile](https://ratings.fide.com/profile/12359149): Official International Chess Federation rating profile (Rapid: 1651).
+- [Pyrope Colorscheme Case Study](https://nirvikdhungana.com.np/projects/pyrope): Detailed design case study for the deutan-aware colorscheme project.

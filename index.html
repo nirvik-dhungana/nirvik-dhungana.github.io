@@ -23,13 +23,34 @@
         <meta name="theme-color" content="#171513" />
         <meta name="color-scheme" content="dark" />
 
-        <!-- Canonical -->
-        <link rel="canonical" href="https://nirvikdhungana.com.np/" />
+        <!--
+          All variable SEO metadata (title, description, canonical, Open Graph,
+          Twitter Card, JSON-LD structured data) is injected dynamically per
+          route by the <SEO /> component via react-helmet-async.
+          See: src/components/SEO.tsx
+        -->
 
-        <!-- Resource hints -->
+        <!-- Resource hints: preconnect to external origins -->
         <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
 
-        <!-- HTML Meta Tags -->
+        <!-- Preload critical fonts for LCP (Space Grotesk 700 = Pyrope h1, Inter 400 = body) -->
+        <link
+            rel="preload"
+            href="/fonts/space-grotesk-latin-700.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link
+            rel="preload"
+            href="/fonts/inter-latin-400.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+
+        <!-- HTML Meta Tags (static fallbacks — overridden per route by <SEO />) -->
         <title>Nirvik Dhungana — Frontend Developer</title>
         <meta
             name="description"
@@ -38,116 +59,59 @@
         <meta name="robots" content="index, follow, max-image-preview:large" />
         <meta name="author" content="Nirvik Dhungana" />
 
-        <!-- Open Graph Meta Tags -->
-        <meta property="og:site_name" content="Nirvik Dhungana" />
-        <meta property="og:url" content="https://nirvikdhungana.com.np/" />
-        <meta property="og:type" content="website" />
-        <meta property="og:locale" content="en_US" />
-        <meta
-            property="og:title"
-            content="Nirvik Dhungana — Frontend Developer"
-        />
-        <meta
-            property="og:description"
-            content="Portfolio of Nirvik Dhungana — a frontend developer building accessible, responsive interfaces with React, TypeScript, and Tailwind CSS."
-        />
-        <meta
-            property="og:image"
-            content="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_1200,h_630,c_fill/v1782074268/og-image_ocdhpu.png"
-        />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:type" content="image/png" />
-        <meta
-            property="og:image:alt"
-            content="Nirvik Dhungana — Frontend Developer portfolio preview"
-        />
-        <meta property="fb:app_id" content="1574476827372709" />
-        <!-- verify this is a real, owned app ID -->
-
-        <!-- Twitter Meta Tags -->
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:domain" content="nirvikdhungana.com.np" />
-        <meta name="twitter:url" content="https://nirvikdhungana.com.np/" />
-        <meta name="twitter:site" content="@Dhungana_Nirvik" />
-        <meta name="twitter:creator" content="@Dhungana_Nirvik" />
-        <meta
-            name="twitter:title"
-            content="Nirvik Dhungana — Frontend Developer"
-        />
-        <meta
-            name="twitter:description"
-            content="Portfolio of Nirvik Dhungana — a frontend developer building accessible, responsive interfaces with React, TypeScript, and Tailwind CSS."
-        />
-        <meta
-            name="twitter:image"
-            content="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_1200,h_630,c_fill/v1782074268/og-image_ocdhpu.png"
-        />
-        <meta
-            name="twitter:image:alt"
-            content="Nirvik Dhungana — Frontend Developer portfolio preview"
-        />
-
-        <!-- Structured Data -->
-        <script type="application/ld+json">
-            {
-                "@context": "https://schema.org",
-                "@graph": [
-                    {
-                        "@type": "Person",
-                        "@id": "https://nirvikdhungana.com.np/#person",
-                        "name": "Nirvik Dhungana",
-                        "image": "https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto/v1762424795/pfp_yggogi.png",
-                        "url": "https://nirvikdhungana.com.np/",
-                        "jobTitle": "Frontend Developer",
-                        "email": "mailto:info.nirvik.dh@gmail.com",
-                        "sameAs": [
-                            "https://github.com/nirvik-dhungana",
-                            "https://www.linkedin.com/in/nirvik-dhungana/",
-                            "https://x.com/Dhungana_Nirvik",
-                            "https://gitlab.com/nirvik.dhungana",
-                            "https://leetcode.com/u/nirvik-dhungana/",
-                            "https://www.freecodecamp.org/nirvik-dhungana",
-                            "https://ratings.fide.com/profile/12359149"
-                        ],
-                        "knowsAbout": [
-                            "Frontend Development",
-                            "React",
-                            "TypeScript",
-                            "Tailwind CSS",
-                            "Framer Motion",
-                            "Accessible Web Design",
-                            "Web Performance",
-                            "Chess"
-                        ]
-                    },
-                    {
-                        "@type": "WebSite",
-                        "@id": "https://nirvikdhungana.com.np/#website",
-                        "name": "Nirvik Dhungana",
-                        "url": "https://nirvikdhungana.com.np/",
-                        "description": "Portfolio of Nirvik Dhungana — a frontend developer building accessible, responsive interfaces with React, TypeScript, and Tailwind CSS.",
-                        "inLanguage": "en",
-                        "publisher": {
-                            "@id": "https://nirvikdhungana.com.np/#person"
-                        }
-                    },
-                    {
-                        "@type": "ProfilePage",
-                        "@id": "https://nirvikdhungana.com.np/#profilepage",
-                        "url": "https://nirvikdhungana.com.np/",
-                        "dateCreated": "2026-06-22T00:00:00+05:45",
-                        "dateModified": "2026-06-30T00:00:00+05:45",
-                        "isPartOf": {
-                            "@id": "https://nirvikdhungana.com.np/#website"
-                        },
-                        "mainEntity": {
-                            "@id": "https://nirvikdhungana.com.np/#person"
-                        }
-                    }
-                ]
+        <!-- Critical CSS for above-the-fold (hero section + base theme tokens).
+             Inlined to eliminate render-blocking request for the LCP element. -->
+        <style>
+            /* Pyrope design tokens — inlined for instant first paint */
+            :root {
+                --color-bg-base: #171513;
+                --color-bg-1: #1e1b19;
+                --color-bg-2: #282420;
+                --color-bg-3: #3a3430;
+                --color-fg: #e6ddd0;
+                --color-fg-dim: #9c9186;
+                --color-fg-faint: #6b625a;
+                --color-fg-bright: #f0e9dd;
+                --color-accent: #a8c155;
+                --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+                --font-mono: "JetBrains Mono", ui-monospace, monospace;
+                --font-display: "Space Grotesk", "Inter", sans-serif;
             }
-        </script>
+            html {
+                scroll-padding-top: 6rem;
+                scroll-behavior: smooth;
+            }
+            body {
+                margin: 0;
+                background-color: var(--color-bg-base);
+                color: var(--color-fg);
+                font-family: var(--font-sans);
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                overflow-x: hidden;
+            }
+            @font-face {
+                font-family: "Space Grotesk";
+                font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+                src: url("/fonts/space-grotesk-latin-700.woff2") format("woff2");
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+            @font-face {
+                font-family: "Inter";
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url("/fonts/inter-latin-400.woff2") format("woff2");
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+            .font-display { font-family: var(--font-display); }
+            .text-fg-bright { color: var(--color-fg-bright); }
+            .text-accent { color: var(--color-accent); }
+            .text-fg-dim { color: var(--color-fg-dim); }
+            #root { min-height: 100vh; }
+        </style>
     </head>
     <body>
         <div id="root"></div>
@@ -155,6 +119,7 @@
             Nirvik Dhungana — Frontend Developer. This site requires JavaScript
             to display the full portfolio.
         </noscript>
+        <!-- Main bundle — Vite injects type="module" automatically (deferred by default) -->
         <script type="module" src="/src/main.tsx"></script>
     </body>
 </html>

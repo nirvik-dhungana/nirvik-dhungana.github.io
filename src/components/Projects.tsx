@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { ArrowRight, Github } from "lucide-react";
+import { Link } from "react-router-dom";
 import { ProjectsContent, PersonalInfo } from "../data/content";
 
 const sectionVariants = {
@@ -16,7 +17,7 @@ const cardVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 300, damping: 24 },
+    transition: { type: "spring" as const, stiffness: 300, damping: 24 },
   },
 };
 
@@ -115,12 +116,13 @@ export function Projects() {
                     </span>
                   ))}
                 </div>
-                <div className="mt-auto">
+                <div className="mt-auto flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
                   <a
                     href={featuredProject.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 font-medium text-fg uppercase tracking-wider text-sm transition-colors group-hover:text-accent relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1.5px] after:bg-accent after:transition-all after:duration-300 group-hover:after:w-full"
+                    aria-label={`View ${featuredProject.title} project on GitHub (opens in a new tab)`}
+                    className="inline-flex items-center gap-2 font-medium text-fg uppercase tracking-wider text-sm transition-colors group-hover:text-accent relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1.5px] after:bg-accent after:transition-all after:duration-300 group-hover:after:w-full w-fit focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base rounded"
                   >
                     View Project{" "}
                     <ArrowRight
@@ -128,6 +130,19 @@ export function Projects() {
                       className="transform transition-transform group-hover:translate-x-1"
                     />
                   </a>
+                  {/* Internal case study link — only the Personal Portfolio featured project has this */}
+                  {featuredProject.title === "Personal Portfolio" && (
+                    <Link
+                      to="/projects/pyrope"
+                      className="inline-flex items-center gap-2 font-medium text-accent uppercase tracking-wider text-sm transition-colors hover:text-fg-bright w-fit"
+                    >
+                      Case Study
+                      <ArrowRight
+                        size={16}
+                        className="transform transition-transform group-hover:translate-x-1"
+                      />
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>

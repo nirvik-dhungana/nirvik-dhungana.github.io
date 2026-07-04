@@ -4,8 +4,6 @@ import {
   Linkedin,
   Twitter,
   Gitlab,
-  Code2,
-  Terminal,
   ChevronDown,
   Mouse,
 } from "lucide-react";
@@ -27,7 +25,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 300, damping: 24 },
+    transition: { type: "spring" as const, stiffness: 300, damping: 24 },
   },
 };
 
@@ -35,7 +33,7 @@ const Photo = ({ className = "" }: { className?: string }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.9 }}
     animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
+    transition={{ duration: 0.8, delay: 0.2, type: "spring" as const }}
     className={`relative ${className}`}
   >
     <div className="absolute inset-0 bg-accent/20 rounded-full blur-2xl animate-pulse" />
@@ -69,7 +67,7 @@ const Photo = ({ className = "" }: { className?: string }) => (
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-20">
+    <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-28">
       {/* Background Blobs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div

@@ -11,6 +11,7 @@
   "lang": "en",
   "dir": "ltr",
   "orientation": "portrait-primary",
+  "categories": ["portfolio", "developer", "design"],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -29,6 +30,15 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Pyrope Colorscheme",
+      "short_name": "Pyrope",
+      "description": "A deutan-aware dark colorscheme case study",
+      "url": "/projects/pyrope",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

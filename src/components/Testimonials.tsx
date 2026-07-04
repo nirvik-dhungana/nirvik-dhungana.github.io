@@ -91,20 +91,22 @@ export function Testimonials() {
           className="flex gap-4 mt-6 md:mt-0"
         >
           <button
+            type="button"
             onClick={() => scroll("left")}
             disabled={!canScrollLeft}
-            className="w-12 h-12 rounded-full border border-bg-3 flex items-center justify-center text-fg hover:text-accent hover:border-accent transition-all disabled:opacity-30 disabled:hover:border-bg-3 disabled:hover:text-fg disabled:cursor-not-allowed"
+            className="w-12 h-12 rounded-full border border-bg-3 flex items-center justify-center text-fg hover:text-accent hover:border-accent transition-all disabled:opacity-30 disabled:hover:border-bg-3 disabled:hover:text-fg disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base"
             aria-label="Previous testimonial"
           >
-            <ChevronLeft size={24} />
+            <ChevronLeft size={24} aria-hidden="true" />
           </button>
           <button
+            type="button"
             onClick={() => scroll("right")}
             disabled={!canScrollRight}
-            className="w-12 h-12 rounded-full border border-bg-3 flex items-center justify-center text-fg hover:text-accent hover:border-accent transition-all disabled:opacity-30 disabled:hover:border-bg-3 disabled:hover:text-fg disabled:cursor-not-allowed"
+            className="w-12 h-12 rounded-full border border-bg-3 flex items-center justify-center text-fg hover:text-accent hover:border-accent transition-all disabled:opacity-30 disabled:hover:border-bg-3 disabled:hover:text-fg disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base"
             aria-label="Next testimonial"
           >
-            <ChevronRight size={24} />
+            <ChevronRight size={24} aria-hidden="true" />
           </button>
         </motion.div>
       </div>

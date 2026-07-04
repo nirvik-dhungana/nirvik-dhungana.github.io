@@ -1,0 +1,123 @@
+# Pyrope Colorscheme — Full Documentation for AI/LLM Consumption
+
+> Pyrope is a warm, dark, jewel-toned colorscheme designed for deutan (red-green color deficient) vision, with consistent role assignments across VS Code, Neovim, Zed, Kate, KDE Plasma, Kitty, Alacritty, and Lichess.
+
+- **URL:** https://nirvikdhungana.com.np/projects/pyrope
+- **Creator:** Nirvik Dhungana (https://nirvikdhungana.com.np)
+- **Year:** 2026
+- **License:** MIT
+- **Repository:** https://github.com/nirvik-dhungana/pyrope
+
+## What It Is
+
+Pyrope is a colorscheme (color theme) designed primarily for users with deuteranopia — the most common form of red-green color blindness, in which the green photoreceptors are absent or non-functional. Under deuteranopia, the blue visual channel runs at full strength, the red channel at approximately 75%, and the green channel near zero.
+
+Most dark colorschemes ignore color vision deficiencies entirely. Pyrope was designed around the deutan visual model from the start.
+
+## The Design Problem
+
+Under deuteranopia:
+1. Cool greens, mints, and seafoams — which carry a blue component — read as blue instead of green, because the fully-active blue cone overrides the muted red component.
+2. Amethyst and purple have the same problem.
+3. Pure saturated green is invisible because the green cone is non-functional.
+4. Anything riding purely on green hue is invisible regardless of how "safe" it looks in a standard color checker.
+
+## The Solution
+
+Pyrope's accent is a warm, yellow-leaning pear green (#a8c155) — high red channel, low blue channel — so it actually reads as green-gold to deutan viewers, not blue.
+
+The palette uses three core strategies:
+1. **Warm accents stay warm.** Blue-channel value under ~20% of total RGB is the real test, not the abstract color name.
+2. **One palette, every tool.** Sapphire is always "success." Amber is always "warning." Garnet is always "error" — whether it's a terminal, a text editor, a browser game, or a desktop environment. Cognitive load drops when the color-role mapping never changes.
+3. **Brightness as a backup signal.** Every status and accent color differs in lightness as well as hue, so if two colors blur together perceptually, one is still clearly brighter than the other.
+
+## The Palette
+
+### Backgrounds (the surface stack)
+- `bg-base` #171513 (rgb 23, 21, 19) — page background
+- `bg-1` #1e1b19 (rgb 30, 27, 25) — cards
+- `bg-2` #282420 (rgb 40, 36, 32) — sub-cards, inputs
+- `bg-3` #3a3430 (rgb 58, 52, 48) — borders
+
+### Foreground
+- `fg` #e6ddd0 — main text
+- `fg-dim` #9c9186 — secondary text
+- `fg-faint` #6b625a — disabled / tertiary
+- `fg-bright` #f0e9dd — emphasis
+
+### Accent & Status (meaning-bearing)
+- `accent` Pear Green #a8c155 — PRIMARY ACCENT (links, highlights, focus rings)
+- `success` Sapphire #5683c4 — SUCCESS ONLY (reserved for one meaning)
+- `warning` Amber #d4893f — WARNING
+- `error` Crimson #c33d5e — ERROR
+- `gold` Gold #d1a83e — SECONDARY (visited links, secondary highlights)
+
+### Decorative Jewel Tones (never meaning-bearing)
+- `garnet` #b5475c — decorative (also used as ANSI red / git diff "removed")
+- `rosewood` #b04f86 — decorative (also used as ANSI magenta / syntax strings)
+- `lagoon` #3f93a0 — decorative (also used as ANSI cyan / syntax types)
+- `verdant` #4f9c87 — decorative (also used as syntax functions)
+
+### ANSI 16 (terminal palette)
+- black #171513 | red #b5475c | green #a8c155 | yellow #d1a83e
+- blue #5683c4 | magenta #b04f86 | cyan #3f93a0 | white #c9bfb2
+- br-black #3a3430 | br-red #cf6478 | br-green #c3d978 | br-yellow #e0bc5a
+- br-blue #6f9bdb | br-magenta #c570a0 | br-cyan #56aab8 | br-white #f0e9dd
+
+Note: ANSI green IS the Pear accent itself (#a8c155), not a teal substitute. This is intentional.
+
+## The 7 Design Rules
+
+1. Never pair pure red and pure green for meaning. Route status pairs through brightness AND a non-red-green hue axis.
+2. Blue (sapphire) stays rare. Reserve it for one specific meaning (success) so it never gets visually crowded out.
+3. Stagger lightness, not just hue. Every status color differs in brightness as a backup cue.
+4. Keep warm accents actually warm. Blue-channel value under ~20% of total RGB is the real test, not the abstract color name.
+5. Background warmth stays subtle. Darkness does the contrast work — never push saturation up to compensate.
+6. Night Color / Redshift: cap night temperature around 4800–5000K, not the typical 3000–3500K — full warm shift suppresses blue further. Disable entirely during color-dependent work.
+7. Same hex, same role, every tool. Consistency across the entire desktop environment is the whole point.
+
+## Syntax Highlighting Roles
+
+The same role assignments apply identically across VS Code, Neovim, Zed, and Kate:
+- **Keywords** (function, const, return, if, import, from, export, default, type, interface): Pear Green #a8c155, bold
+- **Functions** (function names, calls): Verdant #4f9c87
+- **Types & class names** (React.FC, string, number, interface names): Lagoon #3f93a0, italic
+- **Strings** (any quoted string): Rosewood #b04f86
+- **Numbers & constants** (numeric literals, true, false, null, undefined): Garnet #b5475c
+- **Comments** (// and /* */): fg-dim #9c9186, italic
+- **Plain text / punctuation / variables**: fg #e6ddd0
+
+## Supported Ports
+
+One palette definition. Theme files generated per-application with consistent role assignments:
+
+- **VS Code** — `theme.json` — Semantic token mapping for full language support
+- **Neovim** — `init.lua` — Treesitter + LSP highlight group assignments
+- **Zed** — `.zed-theme` — Editor and UI token configuration
+- **Kate** — `kateschema` — KDE-native syntax color scheme
+- **KDE Plasma** — `.colors` — Full Breeze palette override for the desktop
+- **Kitty** — `kitty.conf` — 16-color ANSI + extended color configuration
+- **Alacritty** — `alacritty.toml` — Terminal ANSI palette and cursor colors
+- **Lichess** — CSS variables — Board, pieces, and interface theming
+
+## Excluded Colors (and why)
+
+Design by exclusion is as important as design by inclusion:
+
+1. **Amethyst / Purple** (#7b6fb0): Reads as blue once the blue cone overrides the muted red component. Looked "blue" in practice despite the math suggesting otherwise.
+2. **Terracotta / Red as primary accent** (#c96a3a): Disliked aesthetically. Unrelated to vision — just not the right visual fit for the warm-dark-jeweltone direction.
+3. **Cool mint / Seafoam** (#5bb8a0): Same problem as amethyst — the blue component dominates perceptually under a fully-active blue cone.
+4. **Pure saturated green as meaning-bearing** (#22c55e): With green cone function at ~0%, anything riding purely on green hue is invisible regardless of how "safe" it looks in a color checker.
+
+The blue-channel test: any color with a blue RGB component above ~20% of total is a candidate for perceptual collapse to blue.
+
+## Technical Implementation
+
+- **Typography:** Space Grotesk (display), Inter (body), JetBrains Mono (code)
+- **Accessibility:** Full keyboard navigation, focus-visible rings, ARIA labels, prefers-reduced-motion support, skip-to-content link
+- **Performance:** Lazy-loaded route chunk, gzip + brotli compression, code-split vendor chunks
+- **SEO:** Schema.org CreativeWork + BreadcrumbList JSON-LD, Open Graph, Twitter Card, canonical URL, XML sitemap
+
+## Keywords
+
+colorscheme, color scheme, dark theme, dark colorscheme, deuteranopia, deutan, color vision deficiency, color blindness, accessibility, a11y, design system, design tokens, ANSI 16, terminal theme, VS Code theme, Neovim colorscheme, Zed theme, Kate syntax, KDE Plasma theme, Kitty terminal, Alacritty config, Lichess theme, syntax highlighting, Treesitter, web accessibility, warm dark theme

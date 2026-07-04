@@ -1,4 +1,8 @@
 User-agent: *
-Disallow:
+Allow: /
+Allow: /projects/pyrope
+
+# Block nothing — this is a fully public portfolio.
+# All routes are crawlable.
 
 Sitemap: https://nirvikdhungana.com.np/sitemap.xml

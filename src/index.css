@@ -25,11 +25,35 @@
     --color-rosewood: #b04f86;
     --color-lagoon: #3f93a0;
     --color-verdant: #4f9c87;
+
+    /* ANSI 16 — bright variants (used by the Pyrope showcase terminal demo).
+       Non-bright ANSI colors map 1:1 to existing tokens:
+       black=bg-base, red=garnet, green=accent, yellow=gold,
+       blue=success, magenta=rosewood, cyan=lagoon, br-black=bg-3,
+       br-white=fg-bright. */
+    --color-ansi-white: #c9bfb2;
+    --color-ansi-br-red: #cf6478;
+    --color-ansi-br-green: #c3d978;
+    --color-ansi-br-yellow: #e0bc5a;
+    --color-ansi-br-blue: #6f9bdb;
+    --color-ansi-br-magenta: #c570a0;
+    --color-ansi-br-cyan: #56aab8;
+
+    /* Excluded-from-palette swatches (shown only in Section 7 of the Pyrope
+       case study to demonstrate what was rejected and why). Never used as
+       design tokens anywhere else. */
+    --color-excluded-amethyst: #7b6fb0;
+    --color-excluded-terracotta: #c96a3a;
+    --color-excluded-mint: #5bb8a0;
+    --color-excluded-green: #22c55e;
 }
 
 @layer base {
     html {
-        scroll-padding-top: 5rem;
+        /* Offset for floating navbar so sections aren't hidden behind it
+           when scrolled to via anchor links or keyboard navigation.
+           Navbar is 64px tall + 16px breathing room = 80px = 5rem. */
+        scroll-padding-top: 6rem;
         scroll-behavior: smooth;
     }
 
@@ -87,4 +111,41 @@
 ::selection {
     background-color: var(--color-accent);
     color: var(--color-bg-base);
+}
+
+/* Reduced-motion safeguard — disables smooth scroll at the CSS level.
+   Component-level animations are handled via motion's useReducedMotion(). */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* Hide scrollbar on horizontal scroll containers (mobile nav chip strip) */
+.hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Section anchor offset — ensures sections scrolled to via keyboard or
+   anchor link aren't hidden behind the floating navbar. Works in tandem
+   with html { scroll-padding-top } for `scrollIntoView` + `#hash` jumps. */
+section[id] {
+    scroll-margin-top: 6rem;
+}
+
+/* Screen-reader-only utility (used by skip link + keyboard shortcut help) */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }

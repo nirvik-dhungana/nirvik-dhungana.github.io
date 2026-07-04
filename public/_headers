@@ -2,5 +2,31 @@
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: geolocation=(), camera=(), microphone=()
-  Content-Security-Policy: default-src 'self'; img-src 'self' data: blob: https:; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://cloudflareinsights.com
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-DNS-Prefetch-Control: on
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: blob: https:; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://cloudflareinsights.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+
+# Long-cache immutable assets (Vite hashed files)
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fonts — immutable, 1 year
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# OG image — cache for a week
+/og-pyrope.png
+  Cache-Control: public, max-age=604800
+
+# XML sitemap — re-crawl weekly
+/sitemap.xml
+  Cache-Control: public, max-age=604800
+
+# LLM content files — cache for a day
+/llms.txt
+  Cache-Control: public, max-age=86400
+/llms-full.txt
+  Cache-Control: public, max-age=86400
