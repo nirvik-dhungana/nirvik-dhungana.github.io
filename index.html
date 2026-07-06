@@ -24,10 +24,16 @@
         <meta name="color-scheme" content="dark" />
 
         <!--
-          All variable SEO metadata (title, description, canonical, Open Graph,
-          Twitter Card, JSON-LD structured data) is injected dynamically per
-          route by the <SEO /> component via react-helmet-async.
-          See: src/components/SEO.tsx
+          SEO metadata (title, description, canonical, Open Graph, Twitter
+          Card, JSON-LD structured data) is injected per-route by the <SEO />
+          component via react-helmet-async. At build time, the prerender
+          script (scripts/prerender.mjs) renders each route to static HTML
+          and injects the complete metadata into the <head>.
+
+          The minimal <title> and <meta name="description"> below serve as
+          fallbacks ONLY for the SPA 404 route (which is not prerendered).
+          For prerendered routes (/ and /projects/pyrope), react-helmet-async
+          overwrites these at build time.
         -->
 
         <!-- Resource hints: preconnect to external origins -->
@@ -50,7 +56,7 @@
             crossorigin
         />
 
-        <!-- HTML Meta Tags (static fallbacks — overridden per route by <SEO />) -->
+        <!-- Fallback title/description for the non-prerendered 404 route -->
         <title>Nirvik Dhungana — Frontend Developer</title>
         <meta
             name="description"

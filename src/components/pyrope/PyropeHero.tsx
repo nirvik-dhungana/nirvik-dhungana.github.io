@@ -169,7 +169,7 @@ export function PyropeHero() {
           animate={reduceMotion ? undefined : { y: [0, 5, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
         >
-          <ChevronDown size={16} strokeWidth={2} />
+          <ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
         </motion.div>
       </motion.div>
     </section>

@@ -307,9 +307,11 @@ export function Navbar() {
         window.clearTimeout(t);
         document.body.style.overflow = "";
       };
-    } else {
-      lastFocusedRef.current?.focus?.();
     }
+    // else branch: restore focus to the element that opened the menu.
+    // No cleanup needed here.
+    lastFocusedRef.current?.focus?.();
+    return undefined;
   }, [isMobileMenuOpen]);
 
   useEffect(() => {

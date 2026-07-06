@@ -64,7 +64,7 @@ export function Experience() {
               <ul className="space-y-3">
                 {exp.responsibilities.map((req, i) => (
                   <li key={i} className="flex items-start text-fg">
-                    <span className="mr-3 text-fg-dim mt-1.5 opacity-50 text-[10px]">
+                    <span className="mr-3 text-fg-dim mt-1.5 opacity-50 text-[10px]" aria-hidden="true">
                       ▶
                     </span>
                     <span className="leading-relaxed">{req}</span>

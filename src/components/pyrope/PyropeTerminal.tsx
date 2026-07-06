@@ -19,54 +19,45 @@ const itemVariants = {
 // ANSI 16 colors — non-bright variants map to existing Pyrope tokens,
 // bright variants use the dedicated ansi-br-* tokens.
 const ansi16 = [
-  { cls: "bg-bg-base", hex: "#171513" }, // 0 black
-  { cls: "bg-garnet", hex: "#b5475c" }, // 1 red
-  { cls: "bg-accent", hex: "#a8c155" }, // 2 green
-  { cls: "bg-gold", hex: "#d1a83e" }, // 3 yellow
-  { cls: "bg-success", hex: "#5683c4" }, // 4 blue
-  { cls: "bg-rosewood", hex: "#b04f86" }, // 5 magenta
-  { cls: "bg-lagoon", hex: "#3f93a0" }, // 6 cyan
-  { cls: "bg-ansi-white", hex: "#c9bfb2" }, // 7 white
-  { cls: "bg-bg-3", hex: "#3a3430" }, // 8 bright black
-  { cls: "bg-ansi-br-red", hex: "#cf6478" }, // 9 bright red
-  { cls: "bg-ansi-br-green", hex: "#c3d978" }, // 10 bright green
-  { cls: "bg-ansi-br-yellow", hex: "#e0bc5a" }, // 11 bright yellow
-  { cls: "bg-ansi-br-blue", hex: "#6f9bdb" }, // 12 bright blue
-  { cls: "bg-ansi-br-magenta", hex: "#c570a0" }, // 13 bright magenta
-  { cls: "bg-ansi-br-cyan", hex: "#56aab8" }, // 14 bright cyan
-  { cls: "bg-fg-bright", hex: "#f0e9dd" }, // 15 bright white
+  { cls: "bg-bg-base", hex: "#171513" },         // 0 black
+  { cls: "bg-garnet", hex: "#b5475c" },           // 1 red
+  { cls: "bg-accent", hex: "#a8c155" },           // 2 green
+  { cls: "bg-gold", hex: "#d1a83e" },             // 3 yellow
+  { cls: "bg-success", hex: "#5683c4" },          // 4 blue
+  { cls: "bg-rosewood", hex: "#b04f86" },         // 5 magenta
+  { cls: "bg-lagoon", hex: "#3f93a0" },           // 6 cyan
+  { cls: "bg-ansi-white", hex: "#c9bfb2" },       // 7 white
+  { cls: "bg-bg-3", hex: "#3a3430" },             // 8 bright black
+  { cls: "bg-ansi-br-red", hex: "#cf6478" },      // 9 bright red
+  { cls: "bg-ansi-br-green", hex: "#c3d978" },    // 10 bright green
+  { cls: "bg-ansi-br-yellow", hex: "#e0bc5a" },   // 11 bright yellow
+  { cls: "bg-ansi-br-blue", hex: "#6f9bdb" },     // 12 bright blue
+  { cls: "bg-ansi-br-magenta", hex: "#c570a0" },  // 13 bright magenta
+  { cls: "bg-ansi-br-cyan", hex: "#56aab8" },     // 14 bright cyan
+  { cls: "bg-fg-bright", hex: "#f0e9dd" },        // 15 bright white
 ];
 
 // Fedora ASCII logo — rendered in ANSI blue (text-success), exactly as
 // real neofetch would output it via ESC[34m. The logo is the compact
 // Fedora "f" badge shape.
-const FEDORA_LOGO = `         _nnnn_
-        dGGGGMMb
-       @p~qp~~qMb
-       M|@||@) M|
-       @,----.JM|
-      JS^\\__/  qKL
-     dZP        qKRb
-    dZP          qKKb
-   fZP            SMMb
-   HZM            MMMM
-   FqM            MMMM
- __| ".        |\\dS"qML
- |    \`.       | \`' \\Zq
-_)      \\.___.,|     .'
-\\____   )MMMMMP|   .'
-     \`-'       \`--'
-`;
+const FEDORA_LOGO = `      _______
+     /       \\
+    |  _____  |
+    | |  F  | |
+    | |_____| |
+    |         |
+     \\_______/`;
+
 // Neofetch system info — Fedora 40 + Neovim-focused setup.
 // Each entry is [label, value, valueClass?].
 const neofetchInfo: Array<[string, string, string?]> = [
-  ["OS", "Fedora Linux 44 (Workstation)"],
+  ["OS", "Fedora Linux 40 (Workstation)"],
   ["Kernel", "6.9.7-200.fc40.x86_64"],
   ["Uptime", "4 hrs, 12 mins"],
   ["Shell", "zsh 5.9"],
-  ["DE", "KDE Plasma 6.7"],
+  ["DE", "KDE Plasma 6.1"],
   ["WM", "KWin"],
-  ["Terminal", "Konsole"],
+  ["Terminal", "kitty"],
   ["CPU", "AMD Ryzen 7 5800X"],
   ["Editor", "Neovim v0.10.0"],
   ["Plugins", "42 (lazy.nvim)"],
@@ -79,12 +70,8 @@ const PROMPT_LINE = "nirvik@pyrope:~ $ neofetch";
 
 export function PyropeTerminal() {
   const reduceMotion = useReducedMotion();
-  const [typedChars, setTypedChars] = useState<number>(
-    reduceMotion ? PROMPT_LINE.length : 0,
-  );
-  const [showRest, setShowRest] = useState<boolean>(
-    reduceMotion ? true : false,
-  );
+  const [typedChars, setTypedChars] = useState<number>(reduceMotion ? PROMPT_LINE.length : 0);
+  const [showRest, setShowRest] = useState<boolean>(reduceMotion ? true : false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const hasStarted = useRef<boolean>(false);
 
@@ -98,18 +85,24 @@ export function PyropeTerminal() {
     const el = sectionRef.current;
     if (!el) return;
 
+    // Track the active interval + timeout so we can clean them up if the
+    // component unmounts mid-typing. Without this, the interval keeps
+    // calling setTypedChars on an unmounted component (React warning + leak).
+    let activeInterval: ReturnType<typeof setInterval> | null = null;
+    let activeTimeout: ReturnType<typeof setTimeout> | null = null;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !hasStarted.current) {
             hasStarted.current = true;
             let i = 0;
-            const interval = setInterval(() => {
+            activeInterval = setInterval(() => {
               i++;
               setTypedChars(i);
               if (i >= PROMPT_LINE.length) {
-                clearInterval(interval);
-                setTimeout(() => setShowRest(true), 280);
+                if (activeInterval) clearInterval(activeInterval);
+                activeTimeout = setTimeout(() => setShowRest(true), 280);
               }
             }, 55);
           }
@@ -119,7 +112,11 @@ export function PyropeTerminal() {
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (activeInterval) clearInterval(activeInterval);
+      if (activeTimeout) clearTimeout(activeTimeout);
+    };
   }, [reduceMotion]);
 
   const renderPromptLine = () => {
@@ -159,8 +156,8 @@ export function PyropeTerminal() {
             ANSI 16 in Action
           </h2>
           <p className="text-fg-dim mt-4 max-w-2xl leading-[1.7]">
-            The 16-color ANSI palette is the backbone of terminal theming. Every
-            color maps directly to a Pyrope token.
+            The 16-color ANSI palette is the backbone of terminal theming.
+            Every color maps directly to a Pyrope token.
           </p>
           <p className="text-fg-faint mt-2 font-mono text-xs">
             Click any color block to copy its hex value.
@@ -180,7 +177,7 @@ export function PyropeTerminal() {
               <div className="w-2.5 h-2.5 rounded-full bg-accent" />
             </div>
             <span className="absolute left-1/2 -translate-x-1/2 font-mono text-xs text-fg-faint">
-              Konsole — 100×28
+              kitty — 100×28
             </span>
           </div>
 
@@ -262,8 +259,8 @@ export function PyropeTerminal() {
                 <div className="text-garnet">- removed line in old code</div>
                 <div className="text-accent">+ added line in new code</div>
                 <div className="text-fg-dim italic text-[12px] mt-1">
-                  (git diff reads as garnet-red vs pear-gold-green — two
-                  genuinely separated hues, not a guess)
+                  (git diff reads as garnet-red vs pear-gold-green — two genuinely
+                  separated hues, not a guess)
                 </div>
               </motion.div>
             )}

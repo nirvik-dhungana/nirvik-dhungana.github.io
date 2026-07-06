@@ -11,7 +11,7 @@ const ringColors = [
 ];
 
 export function Testimonials() {
-  const ref = useRef(null);
+  const ref = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -19,38 +19,44 @@ export function Testimonials() {
 
   useEffect(() => {
     const container = scrollRef.current;
-    if (!container || container.children.length === 0) return;
+    if (!container) return;
 
-    // Filter out style tags to get actual testimonial elements
-    const items = Array.from(container.children).filter(
-      (child) => child.tagName !== "STYLE",
-    );
-    if (items.length === 0) return;
+    // Defer the observer setup until after the testimonial cards have
+    // mounted and laid out, so the children filter is accurate.
+    let observer: IntersectionObserver | null = null;
+    const rafId = window.requestAnimationFrame(() => {
+      const items = Array.from(container.children).filter(
+        (child) => child.tagName !== "STYLE",
+      );
+      const firstItem = items[0];
+      const lastItem = items[items.length - 1];
+      if (!firstItem || !lastItem) return;
 
-    const firstItem = items[0];
-    const lastItem = items[items.length - 1];
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.target === firstItem) {
+              setCanScrollLeft(!entry.isIntersecting);
+            }
+            if (entry.target === lastItem) {
+              setCanScrollRight(!entry.isIntersecting);
+            }
+          });
+        },
+        {
+          root: container,
+          threshold: 0.95,
+        },
+      );
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.target === firstItem) {
-            setCanScrollLeft(!entry.isIntersecting);
-          }
-          if (entry.target === lastItem) {
-            setCanScrollRight(!entry.isIntersecting);
-          }
-        });
-      },
-      {
-        root: container,
-        threshold: 0.95, // trigger when mostly visible
-      },
-    );
+      observer.observe(firstItem);
+      observer.observe(lastItem);
+    });
 
-    observer.observe(firstItem);
-    observer.observe(lastItem);
-
-    return () => observer.disconnect();
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      observer?.disconnect();
+    };
   }, []);
 
   const scroll = useCallback((direction: "left" | "right") => {
@@ -117,16 +123,6 @@ export function Testimonials() {
           className="overflow-x-auto snap-x snap-mandatory flex gap-6 hide-scrollbar cursor-grab active:cursor-grabbing pb-8"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          <style
-            dangerouslySetInnerHTML={{
-              __html: `
-              .hide-scrollbar::-webkit-scrollbar {
-                  display: none;
-              }
-           `,
-            }}
-          />
-
           {TestimonialsContent.map((item, idx) => (
             <motion.div
               key={`${item.name}-${idx}`}

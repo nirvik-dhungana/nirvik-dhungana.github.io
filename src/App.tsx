@@ -1,14 +1,32 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
+ *
+ * Shared App shell — used by both the client entry (main.tsx) and the
+ * build-time prerender script (scripts/prerender.mjs).
+ *
+ * The `baseUrl` prop is used by react-router's StaticRouter during SSR
+ * to know which route to render. On the client, BrowserRouter ignores it.
  */
 
 import { Suspense, lazy, useEffect } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  StaticRouter,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
 import { NotFound } from "./components/NotFound";
-import { SEO, PERSON_JSONLD, WEBSITE_JSONLD, PROFILE_PAGE_JSONLD } from "./components/SEO";
+import {
+  SEO,
+  PERSON_JSONLD,
+  WEBSITE_JSONLD,
+  PROFILE_PAGE_JSONLD,
+} from "./components/SEO";
 
 const About = lazy(() =>
   import("./components/About").then((module) => ({ default: module.About })),
@@ -51,14 +69,12 @@ const PyropePage = lazy(() =>
   })),
 );
 
-// Handles scroll-to-section after cross-route navigation (e.g. when the Pyrope
-// page's "Back to Projects" button navigates to "/" with state.scrollTo).
+// Handles scroll-to-section after cross-route navigation.
 function ScrollHandler() {
   const { state } = useLocation();
   useEffect(() => {
     if (state && typeof state === "object" && "scrollTo" in state) {
       const target = (state as { scrollTo: string }).scrollTo;
-      // Defer until after the home route's DOM has rendered.
       const tryScroll = () => {
         const el = document.querySelector(target);
         if (el) {
@@ -68,7 +84,6 @@ function ScrollHandler() {
         return false;
       };
       if (!tryScroll()) {
-        // Projects is lazy-loaded — retry until it mounts.
         let attempts = 0;
         const id = window.setInterval(() => {
           if (tryScroll() || attempts > 20) {
@@ -124,8 +139,46 @@ function Home() {
   );
 }
 
-export default function App() {
-  return (
+/**
+ * The App shell. On the client, `baseUrl` is undefined and BrowserRouter
+ * is used. During SSR/prerender, `baseUrl` is the route path and
+ * StaticRouter is used to render that specific route.
+ *
+ * `helmetContext` is passed through to HelmetProvider so the prerender
+ * script can extract the <head> tags after rendering. On the client it's
+ * left undefined (HelmetProvider creates its own context internally).
+ */
+export function App({
+  baseUrl,
+  helmetContext,
+}: {
+  baseUrl?: string;
+  helmetContext?: Record<string, unknown>;
+} = {}) {
+  const router = baseUrl ? (
+    <StaticRouter location={baseUrl}>
+      <ScrollHandler />
+      <div className="bg-grain" />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/projects/pyrope"
+          element={
+            <Suspense
+              fallback={
+                <div className="min-h-screen flex items-center justify-center text-fg-dim font-mono text-sm">
+                  Loading Pyrope…
+                </div>
+              }
+            >
+              <PyropePage />
+            </Suspense>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </StaticRouter>
+  ) : (
     <BrowserRouter>
       <ScrollHandler />
       <div className="bg-grain" />
@@ -149,4 +202,15 @@ export default function App() {
       </Routes>
     </BrowserRouter>
   );
+
+  return <HelmetProvider context={helmetContext}>{router}</HelmetProvider>;
 }
+
+export default App;
+
+/**
+ * List of routes to prerender at build time. To add a new prerendered
+ * route, add its path here — the prerender script will automatically
+ * generate a static HTML file for it.
+ */
+export const PRERENDER_ROUTES = ["/", "/projects/pyrope"];

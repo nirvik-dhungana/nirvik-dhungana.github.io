@@ -57,7 +57,7 @@ export function CopyToast() {
               copied
             </span>
             {/* Check icon */}
-            <Check size={14} className="text-accent" strokeWidth={2.5} />
+            <Check size={14} className="text-accent" strokeWidth={2.5} aria-hidden="true" />
           </div>
         </motion.div>
       )}

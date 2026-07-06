@@ -89,7 +89,7 @@ function InfoBanner({
     <div
       className={`mt-6 bg-bg-2 border-l-2 ${borderColor} rounded-r-md px-5 py-4 flex gap-3 items-start`}
     >
-      <Info size={16} className={`${iconColor} shrink-0 mt-0.5`} />
+      <Info size={16} className={`${iconColor} shrink-0 mt-0.5`} aria-hidden="true" />
       <p className="text-fg-dim text-sm leading-relaxed">{children}</p>
     </div>
   );

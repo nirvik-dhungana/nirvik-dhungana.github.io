@@ -73,16 +73,15 @@ export function CTA() {
         <motion.div variants={itemVariants} className="mb-24">
           <a
             href={`mailto:${CTAContent.email}`}
-            className="group inline-flex items-center gap-3 px-8 py-4 bg-accent text-bg-base rounded-full font-bold text-lg transition-all duration-300 hover:bg-fg-bright hover:shadow-[0_0_30px_rgba(168,193,85,0.4)]"
+            className="group inline-flex items-center gap-3 px-8 py-4 bg-accent text-bg-base rounded-full font-bold text-lg transition-all duration-300 hover:bg-fg-bright hover:shadow-[0_0_30px_rgba(168,193,85,0.4)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1"
           >
             Start a Conversation
-            <motion.span className="inline-block">
-              <ArrowRight
-                size={20}
-                className="transition-transform duration-300 group-hover:translate-x-1.5"
-                strokeWidth={2.5}
-              />
-            </motion.span>
+            <ArrowRight
+              size={20}
+              aria-hidden="true"
+              className="transition-transform duration-300 group-hover:translate-x-1.5"
+              strokeWidth={2.5}
+            />
           </a>
         </motion.div>
 
@@ -123,16 +122,16 @@ export function CTA() {
                 href: PersonalInfo.freecodecamp,
                 label: "freeCodeCamp Profile",
               },
-            ].map((social, idx) => (
+            ].map((social) => (
               <a
-                key={idx}
+                key={social.label}
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={social.label}
-                className="text-fg-dim hover:text-accent transition-colors duration-300"
+                aria-label={`${social.label} (opens in a new tab)`}
+                className="text-fg-dim hover:text-accent transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1 rounded-md"
               >
-                <social.icon size={24} strokeWidth={1.5} />
+                <social.icon size={24} strokeWidth={1.5} aria-hidden="true" />
               </a>
             ))}
           </div>

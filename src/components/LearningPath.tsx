@@ -235,8 +235,10 @@ export function LearningPath() {
         </div>
 
         {/* "More to come" indicator — only if the last stage is "present" */}
-        {stages.length > 0 &&
-          inferStatus(stages[stages.length - 1].status) === "present" && (
+        {(() => {
+          const lastStage = stages[stages.length - 1];
+          if (!lastStage) return null;
+          return inferStatus(lastStage.status) === "present" ? (
             <motion.div
               variants={itemVariants}
               className="pl-12 flex items-center gap-3 text-fg-faint"
@@ -246,7 +248,8 @@ export function LearningPath() {
                 More to come
               </span>
             </motion.div>
-          )}
+          ) : null;
+        })()}
       </motion.div>
     </section>
   );

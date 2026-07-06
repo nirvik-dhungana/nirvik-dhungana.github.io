@@ -157,24 +157,38 @@ export function Hero() {
           >
             <a
               href="#projects"
-              className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-3.5 bg-accent text-bg-base rounded-full text-sm sm:text-base font-bold transition-all duration-300 hover:bg-fg-bright hover:shadow-[0_0_20px_rgba(168,193,85,0.4)] text-center"
+              className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-3.5 bg-accent text-bg-base rounded-full text-sm sm:text-base font-bold transition-all duration-300 hover:bg-fg-bright hover:shadow-[0_0_20px_rgba(168,193,85,0.4)] text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base"
               onClick={(e) => {
                 e.preventDefault();
-                document
-                  .querySelector("#projects")
-                  ?.scrollIntoView({ behavior: "smooth" });
+                const el = document.querySelector("#projects");
+                if (el) {
+                  // Apply navbar offset manually — Hero doesn't have access
+                  // to the Navbar's scrollToSection, so we replicate the math.
+                  const rect = el.getBoundingClientRect();
+                  const offset = 96 + 24; // navbar height + breathing room
+                  window.scrollTo({
+                    top: window.scrollY + rect.top - offset,
+                    behavior: "smooth",
+                  });
+                }
               }}
             >
               View Projects
             </a>
             <a
               href="#contact"
-              className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-3.5 bg-transparent text-accent rounded-full text-sm sm:text-base font-bold border-2 border-accent transition-all duration-300 hover:bg-accent/10 text-center"
+              className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-3.5 bg-transparent text-accent rounded-full text-sm sm:text-base font-bold border-2 border-accent transition-all duration-300 hover:bg-accent/10 text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base"
               onClick={(e) => {
                 e.preventDefault();
-                document
-                  .querySelector("#contact")
-                  ?.scrollIntoView({ behavior: "smooth" });
+                const el = document.querySelector("#contact");
+                if (el) {
+                  const rect = el.getBoundingClientRect();
+                  const offset = 96 + 24;
+                  window.scrollTo({
+                    top: window.scrollY + rect.top - offset,
+                    behavior: "smooth",
+                  });
+                }
               }}
             >
               Get in Touch
@@ -195,16 +209,16 @@ export function Hero() {
               },
               { icon: Twitter, href: PersonalInfo.twitter, label: "Twitter" },
               { icon: Gitlab, href: PersonalInfo.gitlab, label: "GitLab" },
-            ].map((social, idx) => (
+            ].map((social) => (
               <a
-                key={idx}
+                key={social.label}
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={social.label}
-                className="text-fg-dim hover:text-accent transition-all duration-300 hover:-translate-y-1 hover:drop-shadow-[0_0_8px_rgba(168,193,85,0.6)]"
+                aria-label={`${social.label} profile (opens in a new tab)`}
+                className="text-fg-dim hover:text-accent transition-all duration-300 hover:-translate-y-1 hover:drop-shadow-[0_0_8px_rgba(168,193,85,0.6)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base rounded-md"
               >
-                <social.icon size={24} strokeWidth={1.5} />
+                <social.icon size={24} strokeWidth={1.5} aria-hidden="true" />
               </a>
             ))}
           </motion.div>

@@ -51,19 +51,22 @@ export function About() {
               className="text-lg text-fg leading-[1.7]"
             >
               <p>
-                {
-                  AboutContent.bio[0].split(
+                {(() => {
+                  const bio = AboutContent.bio[0];
+                  if (!bio) return null;
+                  const [before, after] = bio.split(
                     "accessible, responsive, and performant",
-                  )[0]
-                }
-                <span className="text-accent font-medium">
-                  accessible, responsive, and performant
-                </span>
-                {
-                  AboutContent.bio[0].split(
-                    "accessible, responsive, and performant",
-                  )[1]
-                }
+                  );
+                  return (
+                    <>
+                      {before}
+                      <span className="text-accent font-medium">
+                        accessible, responsive, and performant
+                      </span>
+                      {after}
+                    </>
+                  );
+                })()}
               </p>
             </motion.div>
 
@@ -85,7 +88,7 @@ export function About() {
           {/* Right Column (40%) */}
           <div className="lg:w-2/5 w-full flex flex-col gap-6">
             <div className="grid grid-cols-2 gap-4">
-              {AboutContent.stats.map((stat, idx) => (
+              {AboutContent.stats.map((stat) => (
                 <motion.div
                   key={stat.label}
                   variants={itemVariants}

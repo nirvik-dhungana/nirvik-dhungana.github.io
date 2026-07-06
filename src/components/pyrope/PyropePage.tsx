@@ -23,11 +23,14 @@ const PYROPE_TITLE = "Pyrope Colorscheme";
 const PYROPE_DESC =
   "Pyrope is a warm, dark, jewel-toned colorscheme designed for deutan (red-green deficient) vision, with consistent role assignments across VS Code, Neovim, Zed, Kate, KDE Plasma, and terminal emulators.";
 
-// Enhanced CreativeWork + SoftwareSourceCode structured data.
+// Enhanced structured data: CreativeWork + SoftwareSourceCode + SoftwareApplication.
 // @id and isPartOf link this entity back to the main website entity.
+// SoftwareApplication is added in addition to SoftwareSourceCode because Pyrope
+// is a consumable theme product (not just source code) — it has an
+// applicationCategory, operatingSystem, and is accessible for free.
 const PYROPE_JSONLD: JsonLdBlock = {
   "@context": "https://schema.org",
-  "@type": ["CreativeWork", "SoftwareSourceCode"],
+  "@type": ["CreativeWork", "SoftwareSourceCode", "SoftwareApplication"],
   "@id": "https://nirvikdhungana.com.np/projects/pyrope#creativeWork",
   name: "Pyrope Colorscheme",
   creator: {
@@ -52,6 +55,11 @@ const PYROPE_JSONLD: JsonLdBlock = {
   applicationCategory: "DesignApplication",
   operatingSystem: "Cross-platform",
   isAccessibleForFree: true,
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
 };
 
 const BREADCRUMB_JSONLD = breadcrumbJsonLd([

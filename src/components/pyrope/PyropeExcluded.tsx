@@ -109,7 +109,7 @@ export function PyropeExcluded() {
           variants={cardVariants}
           className="mt-6 bg-bg-2 border-l-2 border-gold rounded-r-md px-5 py-4 flex gap-3 items-start"
         >
-          <Info size={16} className="text-gold shrink-0 mt-0.5" />
+          <Info size={16} className="text-gold shrink-0 mt-0.5" aria-hidden="true" />
           <p className="text-fg-dim text-sm leading-relaxed">
             The blue-channel test: any color with a blue RGB component above
             ~20% of total is a candidate for perceptual collapse to blue. This

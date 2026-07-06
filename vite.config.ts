@@ -35,11 +35,10 @@ export default defineConfig(() => {
         output: {
           manualChunks(id) {
             if (!id.includes("node_modules")) return;
-
-            // Bundle React + anything that touches React together.
-            // Splitting these apart is what causes circular chunk
-            // dependencies (scheduler, motion, lucide etc. all pull
-            // in React internally).
+            // Consolidate React + its ecosystem into a single vendor-react
+            // chunk. Splitting them across separate chunks (react-vendor,
+            // router-vendor, motion-vendor, lucide-vendor) creates circular
+            // chunk dependencies that break rendering in production builds.
             if (
               id.includes("node_modules/react/") ||
               id.includes("node_modules/react-dom/") ||
@@ -51,7 +50,6 @@ export default defineConfig(() => {
             ) {
               return "vendor-react";
             }
-
             return "vendor";
           },
         },

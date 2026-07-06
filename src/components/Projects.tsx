@@ -30,7 +30,12 @@ const pillColors = [
 
 export function Projects() {
   const featuredProject =
-    ProjectsContent.find((p) => p.featured) || ProjectsContent[0];
+    ProjectsContent.find((p) => p.featured) ?? ProjectsContent[0];
+
+  // If there are no projects at all, render nothing. This guards against
+  // undefined access if ProjectsContent is ever emptied.
+  if (!featuredProject) return null;
+
   const otherProjects = ProjectsContent.filter((p) => p !== featuredProject);
 
   return (

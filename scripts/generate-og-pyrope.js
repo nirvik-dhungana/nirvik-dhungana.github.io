@@ -7,7 +7,6 @@
  * Output: public/og-pyrope.png
  */
 import sharp from "sharp";
-import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -103,18 +102,7 @@ const svg = `
     <!-- Descriptor -->
     <text x="80" y="345" font-family="Inter, sans-serif" font-size="18" fill="${C.fg}">One palette. Seven design rules. Consistent roles across every tool.</text>
 
-    <!-- Port chips -->
-    <g font-family="JetBrains Mono, monospace" font-size="12" fill="${C.fgDim}">
-      ${["VS Code", "Neovim", "Zed", "Kate", "KDE", "Kitty", "Alacritty", "Lichess"]
-        .map((label, i) => {
-          const chipW = label.length * 7.5 + 24;
-          const x = 80 + i * 0; // placeholder, computed below
-          return "";
-        })
-        .join("")}
-    </g>
-
-    <!-- Port chips — laid out manually -->
+    <!-- Port chips — laid out with wrapping -->
     <g>
       ${(() => {
         const ports = ["VS Code", "Neovim", "Zed", "Kate", "KDE", "Kitty", "Alacritty", "Lichess"];

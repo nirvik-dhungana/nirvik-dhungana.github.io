@@ -37,7 +37,7 @@ export function PyropeBackLink() {
                 state={{ scrollTo: "#projects" }}
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-transparent border border-bg-3 text-fg-bright hover:text-accent hover:border-accent transition-colors duration-300 rounded-lg text-sm font-semibold whitespace-nowrap"
               >
-                <ArrowLeft size={16} />
+                <ArrowLeft size={16} aria-hidden="true" />
                 Back to Projects
               </Link>
               <a
@@ -47,7 +47,7 @@ export function PyropeBackLink() {
                 className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-accent hover:bg-fg-bright text-bg-base transition-colors duration-300 rounded-lg text-sm font-semibold whitespace-nowrap"
               >
                 View on GitHub
-                <ArrowRight size={16} />
+                <ArrowRight size={16} aria-hidden="true" />
               </a>
             </div>
           </div>

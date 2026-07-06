@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import type { JSX } from "react";
+import { registerSSRMetadata } from "../ssr-metadata";
 
 /**
  * ============================================================================
@@ -138,7 +139,6 @@ function normalizeCanonical(path?: string): string {
 //  Default fallbacks (harvested from the original index.html)
 // ----------------------------------------------------------------------------
 
-const DEFAULT_TITLE = "Frontend Developer";
 const DEFAULT_DESCRIPTION =
   "Portfolio of Nirvik Dhungana — a frontend developer building accessible, responsive interfaces with React, TypeScript, and Tailwind CSS.";
 
@@ -184,6 +184,23 @@ export function SEO({
       : [jsonLd]
     : [];
 
+  // SSR-only: register the metadata so the prerender script can extract it
+  // and inject it into the static HTML <head>. This is a no-op on the client
+  // (registerSSRMetadata is only called during renderToString). On the client,
+  // the <Helmet> below handles head tag injection via react-helmet-async.
+  if (typeof window === "undefined") {
+    registerSSRMetadata({
+      title: finalTitle,
+      description,
+      canonical: canonicalUrl,
+      robots,
+      ogType,
+      ogImage,
+      ogImageAlt,
+      jsonLd: jsonLdBlocks,
+    });
+  }
+
   return (
     <Helmet prioritizeSeoTags>
       {/* --- Standard HTML --- */}
@@ -201,6 +218,7 @@ export function SEO({
       <meta property="og:title" key="og:title" content={finalTitle} />
       <meta property="og:description" key="og:description" content={description} />
       <meta property="og:image" key="og:image" content={ogImage} />
+      <meta property="og:image:type" key="og:image:type" content="image/png" />
       <meta property="og:image:width" key="og:image:width" content="1200" />
       <meta property="og:image:height" key="og:image:height" content="630" />
       <meta property="og:image:alt" key="og:image:alt" content={ogImageAlt} />
@@ -210,6 +228,8 @@ export function SEO({
       <meta name="twitter:card" key="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" key="twitter:site" content={TWITTER_HANDLE} />
       <meta name="twitter:creator" key="twitter:creator" content={TWITTER_HANDLE} />
+      <meta name="twitter:domain" key="twitter:domain" content="nirvikdhungana.com.np" />
+      <meta name="twitter:url" key="twitter:url" content={canonicalUrl} />
       <meta name="twitter:title" key="twitter:title" content={finalTitle} />
       <meta name="twitter:description" key="twitter:description" content={description} />
       <meta name="twitter:image" key="twitter:image" content={ogImage} />

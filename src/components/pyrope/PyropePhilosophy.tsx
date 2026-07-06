@@ -28,19 +28,19 @@ const cardVariants = {
 const principles = [
   {
     icon: Eye,
-    glyph: "1",
+    glyph: "❶",
     title: "The green problem",
     body: "Cool greens, mints, and seafoams carry a blue component that, under a fully-active blue cone, reads as blue instead of green. Amethyst and purple do the same thing. Pyrope's accent is a warm, yellow-leaning pear green — high red channel, low blue channel — so it actually reads as green-gold, not blue.",
   },
   {
     icon: Layers,
-    glyph: "2",
+    glyph: "❷",
     title: "One palette, every tool",
     body: "Sapphire is always 'success.' Amber is always 'warning.' Garnet is always 'error' — whether it's a terminal, a text editor, a browser game, or a desktop environment. Cognitive load drops when the color-role mapping never changes between tools.",
   },
   {
     icon: Sun,
-    glyph: "3",
+    glyph: "❸",
     title: "Brightness as a backup signal",
     body: "Every status and accent color in the palette differs in lightness as well as hue, so that if two colors ever blur together perceptually, one is still clearly brighter than the other. Hue alone is never the only signal.",
   },
@@ -99,8 +99,8 @@ export function PyropePhilosophy() {
           <p className="text-fg-dim mt-4 max-w-3xl leading-[1.7]">
             Deuteranopia means the green photoreceptors are absent or
             non-functional. The blue channel runs at full strength. The red
-            channel at ~75%. The green channel near zero. Most dark colorschemes
-            ignore this entirely — Pyrope was built around it.
+            channel at ~75%. The green channel near zero. Most dark
+            colorschemes ignore this entirely — Pyrope was built around it.
           </p>
         </motion.div>
 
@@ -118,20 +118,17 @@ export function PyropePhilosophy() {
                 className="bg-bg-1 border border-bg-3/40 rounded-xl p-6 transition-colors hover:border-accent/20"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-md bg-bg-2 border border-bg-3/50 flex items-center justify-center text-accent">
+                  <div className="w-10 h-10 rounded-md bg-bg-2 border border-bg-3/50 flex items-center justify-center text-accent" aria-hidden="true">
                     <Icon size={20} strokeWidth={1.75} />
                   </div>
-                  <span className="text-2xl text-accent/30 font-display font-bold">
+                  <span className="text-2xl text-accent/30 font-display font-bold" aria-hidden="true">
                     {p.glyph}
                   </span>
                 </div>
                 <h3 className="font-display font-bold text-fg-bright text-lg mb-3">
                   {p.title}
                 </h3>
-                <p
-                  className="text-fg-dim leading-[1.7]"
-                  style={{ fontSize: "14px" }}
-                >
+                <p className="text-fg-dim leading-[1.7]" style={{ fontSize: "14px" }}>
                   {p.body}
                 </p>
               </motion.div>
@@ -167,25 +164,15 @@ export function PyropePhilosophy() {
               >
                 <span
                   className="font-display font-bold text-accent shrink-0 text-right"
-                  style={{
-                    fontSize: "1.75rem",
-                    lineHeight: 1.1,
-                    minWidth: "2rem",
-                  }}
+                  style={{ fontSize: "1.75rem", lineHeight: 1.1, minWidth: "2rem" }}
                 >
                   {idx + 1}
                 </span>
                 <div className="flex-1">
-                  <div
-                    className="font-bold text-fg-bright mb-1"
-                    style={{ fontSize: "15px" }}
-                  >
+                  <div className="font-bold text-fg-bright mb-1" style={{ fontSize: "15px" }}>
                     {rule.title}
                   </div>
-                  <div
-                    className="text-fg-dim"
-                    style={{ fontSize: "14px", lineHeight: 1.6 }}
-                  >
+                  <div className="text-fg-dim" style={{ fontSize: "14px", lineHeight: 1.6 }}>
                     {rule.body}
                   </div>
                 </div>

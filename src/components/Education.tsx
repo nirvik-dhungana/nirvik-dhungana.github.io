@@ -49,7 +49,7 @@ export function Education() {
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
                 <div>
                   <h3 className="text-xl md:text-2xl font-display font-bold text-fg-bright flex items-center gap-3">
-                    <GraduationCap className="text-fg-dim" size={24} />
+                    <GraduationCap className="text-fg-dim" size={24} aria-hidden="true" />
                     {edu.school}
                   </h3>
                   <div className="text-accent mt-1">{edu.level}</div>
@@ -70,7 +70,7 @@ export function Education() {
               <ul className="space-y-2 mt-4 ml-1 md:ml-9">
                 {edu.activities.map((act, i) => (
                   <li key={i} className="flex items-start text-fg-dim">
-                    <span className="mr-3 text-bg-3 mt-1.5 opacity-80 text-[10px]">
+                    <span className="mr-3 text-bg-3 mt-1.5 opacity-80 text-[10px]" aria-hidden="true">
                       ■
                     </span>
                     <span className="leading-relaxed">{act}</span>
