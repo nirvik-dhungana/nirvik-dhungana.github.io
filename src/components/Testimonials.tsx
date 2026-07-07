@@ -3,13 +3,6 @@ import { motion, useInView } from "motion/react";
 import { TestimonialsContent } from "../data/content";
 import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
 
-const ringColors = [
-  "border-rosewood text-rosewood",
-  "border-lagoon text-lagoon",
-  "border-verdant text-verdant",
-  "border-gold text-gold",
-];
-
 export function Testimonials() {
   const ref = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -137,22 +130,12 @@ export function Testimonials() {
                 "{item.quote}"
               </p>
 
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 mt-auto relative z-10 w-full">
-                <div
-                  className={`w-10 h-10 md:w-14 md:h-14 shrink-0 rounded-full border-2 flex items-center justify-center bg-bg-base font-display font-bold text-sm md:text-lg ${ringColors[idx % ringColors.length]}`}
-                >
-                  {item.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
+              <div className="flex flex-col mt-auto relative z-10 w-full">
+                <div className="text-base md:text-lg font-display font-bold text-fg-bright truncate">
+                  {item.name}
                 </div>
-                <div className="overflow-hidden w-full">
-                  <div className="text-base md:text-lg font-display font-bold text-fg-bright truncate">
-                    {item.name}
-                  </div>
-                  <div className="text-[11px] md:text-sm font-mono text-fg-dim truncate">
-                    {item.role} @ {item.company}
-                  </div>
+                <div className="text-[11px] md:text-sm font-mono text-fg-dim truncate">
+                  {item.role} @ {item.company}
                 </div>
               </div>
             </motion.div>

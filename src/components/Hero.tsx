@@ -67,9 +67,9 @@ const Photo = ({ className = "" }: { className?: string }) => (
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-28">
-      {/* Background Blobs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-28 isolate">
+      {/* Background Blobs — isolated so they never bleed into adjacent sections */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
         <motion.div
           animate={{
             x: [0, 30, -20, 0],
@@ -216,7 +216,7 @@ export function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`${social.label} profile (opens in a new tab)`}
-                className="text-fg-dim hover:text-accent transition-all duration-300 hover:-translate-y-1 hover:drop-shadow-[0_0_8px_rgba(168,193,85,0.6)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base rounded-md"
+                className="min-w-[40px] min-h-[40px] flex items-center justify-center text-fg-dim hover:text-accent transition-all duration-300 hover:-translate-y-1 hover:drop-shadow-[0_0_8px_rgba(168,193,85,0.6)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base rounded-md"
               >
                 <social.icon size={24} strokeWidth={1.5} aria-hidden="true" />
               </a>

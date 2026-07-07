@@ -142,26 +142,35 @@ export function Navbar() {
   //    - `g` auto-resets after 800ms if no second key follows.
   // -------------------------------------------------------------------------
   const handleVimKey = useCallback(
-    (key: string, isTyping: boolean) => {
-      // j / k — scroll by half viewport
+    (key: string, isTyping: boolean, isRepeat: boolean) => {
+      // j / k — scroll by half viewport.
+      // When the key is held down (e.repeat === true), use `behavior: "auto"`
+      // instead of "smooth". This prevents the stuttered scroll that happens
+      // when multiple smooth-scroll animations are queued at the OS key-repeat
+      // rate (~30ms) and constantly interrupt each other. With "auto", each
+      // repeat jumps immediately by a small delta, producing a smooth
+      // continuous scroll that tracks the key-hold duration.
+      const scrollBehavior = isRepeat
+        ? "auto"
+        : reduceMotion
+          ? "auto"
+          : "smooth";
+
       if (key === "j") {
         if (isTyping) return false;
-        window.scrollBy({
-          top: window.innerHeight * 0.5,
-          behavior: reduceMotion ? "auto" : "smooth",
-        });
+        // Smaller delta on repeat so the continuous scroll is controllable.
+        const delta = isRepeat ? window.innerHeight * 0.15 : window.innerHeight * 0.5;
+        window.scrollBy({ top: delta, behavior: scrollBehavior });
         return true;
       }
       if (key === "k") {
         if (isTyping) return false;
-        window.scrollBy({
-          top: -window.innerHeight * 0.5,
-          behavior: reduceMotion ? "auto" : "smooth",
-        });
+        const delta = isRepeat ? -window.innerHeight * 0.15 : -window.innerHeight * 0.5;
+        window.scrollBy({ top: delta, behavior: scrollBehavior });
         return true;
       }
-      // G (Shift+g) — jump to bottom
-      if (key === "G") {
+      // G (Shift+g) — jump to bottom (ignore key repeat)
+      if (key === "G" && !isRepeat) {
         if (isTyping) return false;
         window.scrollTo({
           top: document.documentElement.scrollHeight,
@@ -169,8 +178,8 @@ export function Navbar() {
         });
         return true;
       }
-      // t — next section
-      if (key === "t" && !vimPending) {
+      // t — next section (ignore key repeat)
+      if (key === "t" && !vimPending && !isRepeat) {
         if (isTyping) return false;
         const currentIdx = navLinks.findIndex((l) => l.sectionId === activeSection);
         const nextIdx = Math.min(currentIdx + 1, navLinks.length - 1);
@@ -180,8 +189,8 @@ export function Navbar() {
         }
         return true;
       }
-      // T (Shift+t) — previous section
-      if (key === "T") {
+      // T (Shift+t) — previous section (ignore key repeat)
+      if (key === "T" && !isRepeat) {
         if (isTyping) return false;
         const currentIdx = navLinks.findIndex((l) => l.sectionId === activeSection);
         const prevIdx = Math.max(currentIdx - 1, 0);
@@ -268,7 +277,7 @@ export function Navbar() {
       }
 
       // Vim single-key commands (j, k, G, t, T)
-      const handled = handleVimKey(key, isTyping);
+      const handled = handleVimKey(key, isTyping, e.repeat);
       if (handled) {
         e.preventDefault();
       }
@@ -434,14 +443,6 @@ export function Navbar() {
 
             {/* --- Mobile Actions --- */}
             <div className="flex md:hidden items-center gap-1 shrink-0">
-              <button
-                type="button"
-                onClick={() => setIsShortcutHelpOpen(true)}
-                aria-label="View keyboard shortcuts"
-                className="p-2 rounded-lg text-fg-dim hover:text-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-              >
-                <KeyboardIcon size={18} aria-hidden="true" />
-              </button>
               <button
                 type="button"
                 className="p-2 rounded-lg text-fg-dim hover:text-fg-bright hover:bg-bg-2/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
@@ -682,7 +683,7 @@ export function Navbar() {
               sessionStorage.setItem("pyrope-intro-dismissed", "1");
             }}
             aria-label="This site supports vim-style keyboard navigation. Press J or K to scroll, G G to jump to top, Shift question mark for all shortcuts. Click to dismiss."
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[65] bg-bg-1 border border-accent/40 rounded-xl px-5 py-3.5 shadow-2xl flex items-center gap-3 cursor-pointer hover:border-accent/70 transition-colors max-w-[calc(100vw-2rem)]"
+            className="hidden md:flex fixed bottom-6 left-1/2 -translate-x-1/2 z-[65] bg-bg-1 border border-accent/40 rounded-xl px-5 py-3.5 shadow-2xl items-center gap-3 cursor-pointer hover:border-accent/70 transition-colors max-w-[calc(100vw-2rem)]"
           >
             <kbd className="font-mono text-xs text-accent shrink-0">⌨</kbd>
             <div className="text-left">

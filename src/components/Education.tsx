@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { EducationContent } from "../data/content";
 import { GraduationCap } from "lucide-react";
+import { Badge } from "./Badge";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -56,13 +57,13 @@ export function Education() {
                 </div>
 
                 <div className="flex flex-wrap gap-3 items-center">
-                  <span className="px-3 py-1 font-mono text-xs rounded-full bg-bg-2 border border-bg-3 text-fg-dim">
+                  <Badge variant="muted" className="font-mono">
                     {edu.period}
-                  </span>
+                  </Badge>
                   {edu.gpa && (
-                    <span className="px-3 py-1 font-mono text-xs font-bold rounded-full bg-gold/10 border border-gold text-gold">
+                    <Badge variant="gold" className="font-mono font-bold">
                       {edu.gpa}
-                    </span>
+                    </Badge>
                   )}
                 </div>
               </div>

@@ -19,6 +19,10 @@ const itemVariants = {
 };
 
 export function Experience() {
+  // Scale the header gap with the number of entries — a single-entry timeline
+  // doesn't need the large `mb-16` gap reserved for multi-entry sections.
+  const headerGap = ExperienceContent.length > 2 ? "mb-16" : "mb-12";
+
   return (
     <section id="experience" className="px-6 relative z-10">
       <motion.div
@@ -28,7 +32,7 @@ export function Experience() {
         viewport={{ once: true, margin: "-100px" }}
         className="max-w-4xl mx-auto"
       >
-        <div className="mb-16">
+        <div className={headerGap}>
           <span className="font-mono text-xs text-accent tracking-[0.2em] font-medium uppercase">
             // 04 — EXPERIENCE
           </span>

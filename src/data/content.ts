@@ -23,13 +23,29 @@ export const AboutContent = {
   stats: [
     { number: "1.5+", label: "Years Learning" },
     { number: "10+", label: "Projects Completed" },
-    { number: "100%", label: "Dedication" },
-    { number: "Kathmandu, Nepal", label: "Based in" },
   ],
   tags: ["Web Development", "UI/UX Design", "Modern Tech"],
 };
 
-export const ProjectsContent = [
+export interface ProjectData {
+  title: string;
+  description: string;
+  tags: string[];
+  link: string;
+  featured?: boolean;
+  /** Optional screenshot image URL (absolute or relative to /public). When
+   *  provided, the project card displays this image inside the browser chrome
+   *  mockup instead of the placeholder. */
+  image?: string;
+  /** Optional live-site URL for an iframe embed. When provided (and `image`
+   *  is not), the card embeds the live site in a sandboxed iframe inside the
+   *  browser chrome mockup. Use for projects with a live deployment. */
+  iframe?: string;
+  /** Internal route for a case-study page (e.g. "/projects/pyrope"). */
+  caseStudy?: string;
+}
+
+export const ProjectsContent: ProjectData[] = [
   {
     title: "Personal Portfolio",
     description:
@@ -37,6 +53,10 @@ export const ProjectsContent = [
     tags: ["React", "TypeScript", "Tailwind CSS", "Framer Motion"],
     link: "https://github.com",
     featured: true,
+    // Add a screenshot at public/images/portfolio-screenshot.png or use an
+    // absolute URL. Leave undefined to show "Screenshot coming soon".
+    image: undefined,
+    caseStudy: "/projects/pyrope",
   },
   {
     title: "Gadgade Basic School",
@@ -45,6 +65,7 @@ export const ProjectsContent = [
     tags: ["HTML", "Tailwind CSS", "JavaScript"],
     link: "https://github.com",
     featured: false,
+    image: undefined,
   },
 ];
 
@@ -60,12 +81,6 @@ export const SkillsContent = {
     "CI/CD",
     "Linux",
     "AI Prompting",
-  ],
-  marketing: [
-    "Google Ads",
-    "Meta Ads",
-    "Content Creation",
-    "Digital Marketing",
   ],
 };
 

@@ -142,7 +142,7 @@ export function CTA() {
               reserved.
             </p>
             <p className="text-xs font-mono text-fg-faint/60 tracking-wider">
-              BUILT WITH REACT, TYPESCRIPT & TAILWIND
+              KATHMANDU, NEPAL · BUILT WITH REACT, TYPESCRIPT &amp; TAILWIND
             </p>
             <p className="text-xs text-fg-faint mt-1">
               This site uses cookie-free analytics. No personal data is

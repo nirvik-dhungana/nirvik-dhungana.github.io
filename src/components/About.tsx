@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { AboutContent } from "../data/content";
+import { Badge, type BadgeVariant } from "./Badge";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -18,11 +19,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-const pillColors = [
-  "text-gold border-gold/30 bg-gold/5",
-  "text-lagoon border-lagoon/30 bg-lagoon/5",
-  "text-verdant border-verdant/30 bg-verdant/5",
-];
+const tagVariants: BadgeVariant[] = ["gold", "lagoon", "verdant"];
 
 export function About() {
   return (
@@ -75,12 +72,9 @@ export function About() {
               className="mt-10 flex flex-wrap gap-3"
             >
               {AboutContent.tags.map((tag, idx) => (
-                <span
-                  key={tag}
-                  className={`px-4 py-2 rounded-full text-sm font-medium border ${pillColors[idx % pillColors.length]}`}
-                >
+                <Badge key={tag} variant={tagVariants[idx % tagVariants.length]}>
                   {tag}
-                </span>
+                </Badge>
               ))}
             </motion.div>
           </div>
@@ -94,26 +88,11 @@ export function About() {
                   variants={itemVariants}
                   className="bg-bg-1 border border-bg-3/40 rounded-2xl p-6 transition-transform hover:-translate-y-1 hover:border-accent/30 hover:shadow-[0_0_15px_rgba(168,193,85,0.05)] flex flex-col justify-center min-h-[120px]"
                 >
-                  <div
-                    className={`${stat.number.length > 5 ? "text-base sm:text-xl lg:text-2xl mt-1 leading-tight mb-2" : "text-3xl lg:text-4xl mb-2"} font-display font-bold text-accent break-words`}
-                  >
-                    {stat.number === "Kathmandu, Nepal" ? (
-                      <div className="flex flex-col">
-                        <span className="text-2xl md:text-3xl lg:text-4xl font-bold">
-                          KTM
-                        </span>
-                        <span className="text-xs text-accent/80 font-mono mt-1 font-medium tracking-wider">
-                          KATHMANDU, NEPAL
-                        </span>
-                      </div>
-                    ) : (
-                      stat.number
-                    )}
+                  <div className="text-3xl lg:text-4xl mb-2 font-display font-bold text-accent break-words">
+                    {stat.number}
                   </div>
                   <div className="text-xs sm:text-sm text-fg-dim font-medium">
-                    {stat.number === "Kathmandu, Nepal"
-                      ? "Based in"
-                      : stat.label}
+                    {stat.label}
                   </div>
                 </motion.div>
               ))}

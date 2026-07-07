@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Layout, Server, Wrench, BarChart } from "lucide-react";
+import { Layout, Server, Wrench } from "lucide-react";
 import { SkillsContent } from "../data/content";
 
 const sectionVariants = {
@@ -24,14 +24,12 @@ const iconMap = {
   frontend: Layout,
   backend: Server,
   tools: Wrench,
-  marketing: BarChart,
 };
 
 const titleMap = {
   frontend: "Frontend",
   backend: "Backend",
   tools: "Tools & Others",
-  marketing: "Digital Marketing & Content",
 };
 
 export function Skills() {
@@ -53,7 +51,7 @@ export function Skills() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {(
             Object.keys(SkillsContent) as Array<keyof typeof SkillsContent>
           ).map((categoryKey) => {
@@ -66,7 +64,7 @@ export function Skills() {
                 variants={cardVariants}
                 className="bg-bg-1 border border-bg-3/40 rounded-2xl p-6 transition-transform hover:-translate-y-1 hover:border-accent/20"
               >
-                <div className="w-10 h-10 rounded-lg bg-bg-2 flex items-center justify-center mb-5 text-accent border border-bg-3/50">
+                <div className="w-10 h-10 rounded-lg bg-bg-2 flex items-center justify-center mb-5 text-accent border border-bg-3/50" aria-hidden="true">
                   <Icon size={20} />
                 </div>
                 <h3 className="text-lg font-display font-semibold text-fg-bright mb-6">
