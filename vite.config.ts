@@ -4,6 +4,8 @@ import viteCompression from "vite-plugin-compression";
 import path from "path";
 import { defineConfig } from "vite";
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 export default defineConfig(() => {
   return {
     plugins: [
@@ -11,6 +13,7 @@ export default defineConfig(() => {
       tailwindcss(),
       viteCompression({ algorithm: "gzip" }),
       viteCompression({ algorithm: "brotliCompress", ext: ".br" }),
+      cloudflare()
     ],
     resolve: {
       alias: {
