@@ -196,7 +196,7 @@ export function PyropeSyntax() {
         {/* Legend — wrapped in a card */}
         <motion.div
           variants={itemVariants}
-          className="mt-6 bg-bg-1 border border-bg-3/40 rounded-xl px-5 py-4"
+          className="mt-6 glass-card px-5 py-4"
         >
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5">
             {legend.map((l) => (

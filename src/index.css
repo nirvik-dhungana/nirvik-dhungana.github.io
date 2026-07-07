@@ -12,7 +12,7 @@
 
     --color-fg: #e6ddd0;
     --color-fg-dim: #9c9186;
-    --color-fg-faint: #6b625a;
+    --color-fg-faint: #8a7f75;
     --color-fg-bright: #f0e9dd;
 
     --color-accent: #a8c155;
@@ -26,11 +26,7 @@
     --color-lagoon: #3f93a0;
     --color-verdant: #4f9c87;
 
-    /* ANSI 16 — bright variants (used by the Pyrope showcase terminal demo).
-       Non-bright ANSI colors map 1:1 to existing tokens:
-       black=bg-base, red=garnet, green=accent, yellow=gold,
-       blue=success, magenta=rosewood, cyan=lagoon, br-black=bg-3,
-       br-white=fg-bright. */
+    /* ANSI 16 — bright variants (used by the Pyrope showcase terminal demo). */
     --color-ansi-white: #c9bfb2;
     --color-ansi-br-red: #cf6478;
     --color-ansi-br-green: #c3d978;
@@ -39,20 +35,45 @@
     --color-ansi-br-magenta: #c570a0;
     --color-ansi-br-cyan: #56aab8;
 
-    /* Excluded-from-palette swatches (shown only in Section 7 of the Pyrope
-       case study to demonstrate what was rejected and why). Never used as
-       design tokens anywhere else. */
+    /* Excluded-from-palette swatches (Pyrope case study only). */
     --color-excluded-amethyst: #7b6fb0;
     --color-excluded-terracotta: #c96a3a;
     --color-excluded-mint: #5bb8a0;
     --color-excluded-green: #22c55e;
+
+    /* Glassmorphism tokens — warm-tinted translucency for layered depth. */
+    --color-glass-bg: rgba(40, 36, 32, 0.55);
+    --color-glass-bg-strong: rgba(40, 36, 32, 0.78);
+    --color-glass-border: rgba(230, 221, 208, 0.08);
+    --color-glass-border-hover: rgba(168, 193, 85, 0.35);
+
+    /* Premium soft shadows — warm-tinted, layered for realistic elevation. */
+    --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+    --shadow-lift: 0 4px 8px rgba(0, 0, 0, 0.3), 0 16px 40px rgba(0, 0, 0, 0.35);
+    --shadow-glow-accent: 0 0 30px rgba(168, 193, 85, 0.18), 0 0 60px rgba(168, 193, 85, 0.08);
+    --shadow-glow-gold: 0 0 30px rgba(209, 168, 62, 0.18), 0 0 60px rgba(209, 168, 62, 0.08);
+
+    /* Section vertical rhythm — generous breathing room between sections. */
+    --section-py: clamp(5rem, 10vw, 8rem);
+
+    /* Unified card padding scale — use these instead of ad-hoc p-6/p-7/p-8
+       so every surface in the app shares the same rhythm. */
+    --card-pad-sm: 1.25rem;   /* p-5  — compact cards, stat tiles */
+    --card-pad:    1.5rem;    /* p-6  — default card */
+    --card-pad-lg: 1.75rem;   /* p-7  — primary cards on md+ */
+    --card-pad-xl: 2.25rem;   /* p-9  — featured / hero card on md+ */
+
+    /* Unified border-radius scale. */
+    --radius-sm: 0.5rem;      /* rounded-lg */
+    --radius:    0.75rem;     /* rounded-xl */
+    --radius-lg: 1rem;        /* rounded-2xl */
+    --radius-xl: 1.25rem;     /* glass-card default */
+    --radius-2xl: 1.5rem;     /* rounded-3xl — modal, hero */
+    --radius-pill: 9999px;
 }
 
 @layer base {
     html {
-        /* Offset for floating navbar so sections aren't hidden behind it
-           when scrolled to via anchor links or keyboard navigation.
-           Navbar is 64px tall + 16px breathing room = 80px = 5rem. */
         scroll-padding-top: 6rem;
         scroll-behavior: smooth;
     }
@@ -69,15 +90,24 @@
     a:focus-visible,
     button:focus-visible,
     input:focus-visible,
-    textarea:focus-visible {
+    textarea:focus-visible,
+    [role="button"]:focus-visible,
+    [tabindex]:focus-visible {
         outline: none;
         box-shadow:
             0 0 0 2px var(--color-bg-base),
             0 0 0 4px var(--color-accent);
     }
+
+    /* Section anchor offset */
+    section[id] {
+        scroll-margin-top: 6rem;
+    }
 }
 
-/* Subtle Animated Grain Overlay */
+/* =========================================================================
+   Animated Grain Overlay — adds filmic texture without harming performance.
+   ========================================================================= */
 .bg-grain {
     position: fixed;
     top: 0;
@@ -86,11 +116,13 @@
     height: 100vh;
     pointer-events: none;
     z-index: 50;
-    opacity: 0.03;
+    opacity: 0.035;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-/* Custom Scrollbar */
+/* =========================================================================
+   Custom Scrollbar
+   ========================================================================= */
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -113,15 +145,25 @@
     color: var(--color-bg-base);
 }
 
-/* Reduced-motion safeguard — disables smooth scroll at the CSS level.
-   Component-level animations are handled via motion's useReducedMotion(). */
+/* =========================================================================
+   Reduced-motion safeguard — disables smooth scroll + ambient animations.
+   ========================================================================= */
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
     }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
 }
 
-/* Hide scrollbar on horizontal scroll containers (mobile nav chip strip) */
+/* Hide scrollbar on horizontal scroll containers */
 .hide-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -130,14 +172,7 @@
     display: none;
 }
 
-/* Section anchor offset — ensures sections scrolled to via keyboard or
-   anchor link aren't hidden behind the floating navbar. Works in tandem
-   with html { scroll-padding-top } for `scrollIntoView` + `#hash` jumps. */
-section[id] {
-    scroll-margin-top: 6rem;
-}
-
-/* Screen-reader-only utility (used by skip link + keyboard shortcut help) */
+/* Screen-reader-only utility */
 .sr-only {
     position: absolute;
     width: 1px;
@@ -149,3 +184,389 @@ section[id] {
     white-space: nowrap;
     border: 0;
 }
+
+/* =========================================================================
+   GLASS CARD — the unified elevated-surface primitive.
+   Used by About, Skills, Experience, Education, Project cards, modal panels.
+   Replaces 5+ ad-hoc card styles with one consistent treatment.
+   ========================================================================= */
+.glass-card {
+    position: relative;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: 1.25rem;
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+                border-color 0.4s ease,
+                box-shadow 0.4s ease;
+}
+
+.glass-card-interactive:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-glass-border-hover);
+    box-shadow: var(--shadow-lift), var(--shadow-glow-accent);
+}
+
+/* Subtle top-edge highlight — gives the card a "lit from above" feel. */
+.glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(180deg,
+        rgba(230, 221, 208, 0.12) 0%,
+        rgba(230, 221, 208, 0) 30%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+/* =========================================================================
+   GLOW UTILITIES — for CTA buttons, badges, icons on hover.
+   ========================================================================= */
+.glow-accent {
+    box-shadow: 0 0 0 0 rgba(168, 193, 85, 0);
+    transition: box-shadow 0.4s ease, transform 0.3s ease;
+}
+.glow-accent:hover {
+    box-shadow: var(--shadow-glow-accent);
+}
+
+.glow-gold:hover {
+    box-shadow: var(--shadow-glow-gold);
+}
+
+/* =========================================================================
+   GRADIENT TEXT — premium accent on key headings.
+   ========================================================================= */
+.text-gradient-accent {
+    background: linear-gradient(120deg, var(--color-accent) 0%, var(--color-gold) 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+/* =========================================================================
+   SECTION DIVIDER — a subtle horizontal gradient line that gives the page
+   visual rhythm without being heavy. Sits between sections.
+   ========================================================================= */
+.section-divider {
+    position: relative;
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--color-bg-3) 20%,
+        var(--color-bg-3) 80%,
+        transparent 100%);
+    opacity: 0.6;
+}
+
+.section-divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 12px var(--color-accent);
+    opacity: 0.5;
+}
+
+/* =========================================================================
+   AMBIENT KEYFRAME ANIMATIONS — for backgrounds, scroll indicators,
+   status dots, and other always-on motion. Each is GPU-friendly (transform
+   + opacity only) and disabled by reduced-motion via the global rule above.
+   ========================================================================= */
+
+/* Slow aurora drift — used in Hero background mesh. */
+@keyframes aurora-drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%      { transform: translate(3%, -2%) scale(1.05); }
+    66%      { transform: translate(-2%, 3%) scale(0.97); }
+}
+.animate-aurora {
+    animation: aurora-drift 18s ease-in-out infinite;
+}
+
+/* Gentle vertical float — for decorative shapes. */
+@keyframes float-y {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+}
+.animate-float {
+    animation: float-y 6s ease-in-out infinite;
+}
+
+/* Slow rotation — for orbiting accent rings. */
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+    animation: spin-slow 40s linear infinite;
+}
+
+/* Pulse glow — for status dots (e.g. "Open to Work"). */
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(86, 131, 196, 0.5); }
+    50%      { box-shadow: 0 0 0 8px rgba(86, 131, 196, 0); }
+}
+.animate-pulse-glow {
+    animation: pulse-glow 2s ease-out infinite;
+}
+
+/* Shimmer — sweeps a highlight across a surface (used on badges, skeleton). */
+@keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(230, 221, 208, 0.06) 50%,
+        transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2.5s linear infinite;
+}
+
+/* Scroll indicator — small bouncing chevron. */
+@keyframes scroll-bounce {
+    0%, 100% { transform: translateY(0); opacity: 0.4; }
+    50%      { transform: translateY(6px); opacity: 1; }
+}
+.animate-scroll-bounce {
+    animation: scroll-bounce 1.8s ease-in-out infinite;
+}
+
+/* =========================================================================
+   MARQUEE — for the "tech ribbon" that scrolls horizontally behind Skills.
+   ========================================================================= */
+@keyframes marquee-x {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+.animate-marquee {
+    animation: marquee-x 40s linear infinite;
+}
+.marquee-pause-on-hover:hover .animate-marquee {
+    animation-play-state: paused;
+}
+
+/* =========================================================================
+   DOTTED GRID BACKGROUND — subtle dotted pattern for section backgrounds
+   to add texture without competing with content.
+   ========================================================================= */
+.bg-dotted-grid {
+    background-image: radial-gradient(circle, rgba(230, 221, 208, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+/* Radial spotlight — used behind hero photo and key CTAs. */
+.bg-radial-spotlight {
+    background: radial-gradient(circle at center,
+        rgba(168, 193, 85, 0.12) 0%,
+        transparent 70%);
+}
+
+/* =========================================================================
+   TOOLTIP — accessible tooltip shown on hover/focus for compact icon buttons.
+   ========================================================================= */
+.tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    padding: 4px 10px;
+    background: var(--color-bg-3);
+    color: var(--color-fg-bright);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 60;
+    box-shadow: var(--shadow-soft);
+}
+.tooltip-host:hover .tooltip,
+.tooltip-host:focus-visible .tooltip,
+.tooltip-host:focus-within .tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+.tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: var(--color-bg-3);
+}
+
+/* =========================================================================
+   LINK UNDERLINE GROW — for nav + text links. Animated underline that
+   grows from left on hover.
+   ========================================================================= */
+.link-underline {
+    position: relative;
+}
+.link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 0;
+    height: 1.5px;
+    background: var(--color-accent);
+    transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+    width: 100%;
+}
+
+/* =========================================================================
+   PILL BUTTON — labeled social/primitive button with icon + label.
+   ========================================================================= */
+.pill-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-glass-border);
+    background: rgba(40, 36, 32, 0.4);
+    color: var(--color-fg-dim);
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+.pill-button:hover {
+    color: var(--color-accent);
+    border-color: var(--color-glass-border-hover);
+    background: rgba(168, 193, 85, 0.06);
+    transform: translateY(-2px);
+}
+
+/* =========================================================================
+   PHOTO RING — elegant layered ring around the hero avatar.
+   Replaces the previous conic-gradient + mask ring (which rendered
+   inconsistently across browsers and spun distractingly). The new
+   treatment uses three static layers:
+     1. Outer soft halo (blurred accent glow)
+     2. A subtle two-stop gradient ring (no mask, no spin)
+     3. A 1px inner highlight that catches the "lit from above" feel
+   No animation, no mask — visually quiet, premium, and consistent.
+   ========================================================================= */
+.photo-ring {
+    position: relative;
+    border-radius: 9999px;
+    isolation: isolate;
+}
+/* Outer halo — soft accent glow. */
+.photo-ring::before {
+    content: "";
+    position: absolute;
+    inset: -14%;
+    border-radius: inherit;
+    background: radial-gradient(circle at 50% 50%,
+        rgba(168, 193, 85, 0.22) 0%,
+        rgba(168, 193, 85, 0.08) 40%,
+        transparent 70%);
+    filter: blur(16px);
+    z-index: -2;
+    pointer-events: none;
+}
+/* Gradient ring — a thin annulus drawn with a padded background and
+   negative margin on a pseudo-element. No `mask` needed. */
+.photo-ring::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(140deg,
+        rgba(168, 193, 85, 0.55) 0%,
+        rgba(168, 193, 85, 0.10) 30%,
+        rgba(209, 168, 62, 0.20) 60%,
+        rgba(168, 193, 85, 0.45) 100%);
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    z-index: -1;
+    pointer-events: none;
+}
+/* Inner 1px highlight — "lit from above" top edge. */
+.photo-ring > .photo-ring__inner {
+    box-shadow:
+        inset 0 1px 0 rgba(230, 221, 208, 0.10),
+        inset 0 0 0 1px rgba(230, 221, 208, 0.04);
+}
+
+/* =========================================================================
+   SEGMENTED CONTROL — accessible tab/segmented selector used as a
+   mobile-friendly alternative to desktop sidebars. Composes with
+   `role="tablist"` + `role="tab"` in markup.
+   ========================================================================= */
+.segmented {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-pill);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    box-shadow: var(--shadow-soft);
+}
+.segmented__tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.95rem;
+    border-radius: var(--radius-pill);
+    color: var(--color-fg-dim);
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: color 0.25s ease, background 0.25s ease;
+    white-space: nowrap;
+    min-height: 36px;
+}
+.segmented__tab:hover {
+    color: var(--color-fg-bright);
+}
+.segmented__tab[aria-selected="true"] {
+    color: var(--color-bg-base);
+    background: var(--color-accent);
+    box-shadow: 0 4px 14px rgba(168, 193, 85, 0.25);
+}
+
+/* =========================================================================
+   ACCORDION — collapse primitive that releases vertical space when
+   closed. Pair with motion.div height="auto" animation in React.
+   ========================================================================= */
+.accordion-panel {
+    overflow: hidden;
+}
+.accordion-panel[data-state="closed"] {
+    height: 0;
+    opacity: 0;
+}
+

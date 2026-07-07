@@ -21,6 +21,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
 import { NotFound } from "./components/NotFound";
+import { ScrollProgress } from "./components/ScrollProgress";
 import {
   SEO,
   PERSON_JSONLD,
@@ -113,6 +114,7 @@ function Home() {
         Skip to main content
       </a>
       <Navbar />
+      <ScrollProgress />
       <main
         id="main-content"
         className="flex flex-col gap-[96px] lg:gap-[140px] pb-[96px] lg:pb-[140px]"

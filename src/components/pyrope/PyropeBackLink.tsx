@@ -18,7 +18,7 @@ export function PyropeBackLink() {
         viewport={{ once: true, margin: "-100px" }}
         className="max-w-7xl mx-auto"
       >
-        <div className="bg-bg-1 border border-bg-3/40 rounded-xl px-6 md:px-8 py-6 md:py-7">
+        <div className="glass-card px-6 md:px-8 py-6 md:py-7">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             {/* Attribution */}
             <div>

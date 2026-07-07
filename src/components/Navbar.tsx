@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { Menu, X, Keyboard as KeyboardIcon } from "lucide-react";
+import { Menu, Keyboard as KeyboardIcon, ArrowRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PersonalInfo } from "../data/content";
+import { Modal } from "./primitives/Modal";
 
 // ---------------------------------------------------------------------------
 //  Navigation data
@@ -45,8 +46,6 @@ export function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const isPyropePage = location.pathname.startsWith("/projects/pyrope");
-  const mobileMenuCloseRef = useRef<HTMLButtonElement>(null);
-  const lastFocusedRef = useRef<HTMLElement | null>(null);
   const isProgrammaticScrollRef = useRef(false);
   const vimPendingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -124,32 +123,11 @@ export function Navbar() {
 
   // -------------------------------------------------------------------------
   //  Vim-style + g-prefix keyboard navigation
-  // -------------------------------------------------------------------------
-  //  Vim keys implemented (all single-key, no modifiers):
-  //    j / ↓     — scroll down one "page" (50% viewport)
-  //    k / ↑     — scroll up one "page"
-  //    G         — jump to bottom of page
-  //    gg        — jump to top of page (g pressed twice)
-  //    t         — next section (cycle forward)
-  //    T         — previous section (cycle backward)
-  //    g {letter} — jump to a specific section (a/p/s/e/d/l/t/c)
-  //    ?         — open shortcut help
-  //    Esc       — close any dialog
-  //
-  //  Safety:
-  //    - Disabled while typing in <input>, <textarea>, contentEditable.
-  //    - Never fires when metaKey/ctrlKey/altKey are held (no browser/OS conflict).
-  //    - `g` auto-resets after 800ms if no second key follows.
+  //  (j/k = scroll, G = bottom, gg = top, t/T = next/prev section,
+  //   g{letter} = jump to section, ? = help, Esc = close dialog)
   // -------------------------------------------------------------------------
   const handleVimKey = useCallback(
     (key: string, isTyping: boolean, isRepeat: boolean) => {
-      // j / k — scroll by half viewport.
-      // When the key is held down (e.repeat === true), use `behavior: "auto"`
-      // instead of "smooth". This prevents the stuttered scroll that happens
-      // when multiple smooth-scroll animations are queued at the OS key-repeat
-      // rate (~30ms) and constantly interrupt each other. With "auto", each
-      // repeat jumps immediately by a small delta, producing a smooth
-      // continuous scroll that tracks the key-hold duration.
       const scrollBehavior = isRepeat
         ? "auto"
         : reduceMotion
@@ -158,7 +136,6 @@ export function Navbar() {
 
       if (key === "j") {
         if (isTyping) return false;
-        // Smaller delta on repeat so the continuous scroll is controllable.
         const delta = isRepeat ? window.innerHeight * 0.15 : window.innerHeight * 0.5;
         window.scrollBy({ top: delta, behavior: scrollBehavior });
         return true;
@@ -169,7 +146,6 @@ export function Navbar() {
         window.scrollBy({ top: delta, behavior: scrollBehavior });
         return true;
       }
-      // G (Shift+g) — jump to bottom (ignore key repeat)
       if (key === "G" && !isRepeat) {
         if (isTyping) return false;
         window.scrollTo({
@@ -178,7 +154,6 @@ export function Navbar() {
         });
         return true;
       }
-      // t — next section (ignore key repeat)
       if (key === "t" && !vimPending && !isRepeat) {
         if (isTyping) return false;
         const currentIdx = navLinks.findIndex((l) => l.sectionId === activeSection);
@@ -189,7 +164,6 @@ export function Navbar() {
         }
         return true;
       }
-      // T (Shift+t) — previous section (ignore key repeat)
       if (key === "T" && !isRepeat) {
         if (isTyping) return false;
         const currentIdx = navLinks.findIndex((l) => l.sectionId === activeSection);
@@ -213,10 +187,9 @@ export function Navbar() {
         target?.tagName === "TEXTAREA" ||
         target?.isContentEditable === true;
 
-      // Escape — close any open overlay
+      // Escape — close any open overlay. (Modal handles its own Escape, but
+      // we also clear the vim prefix here.)
       if (e.key === "Escape") {
-        if (isMobileMenuOpen) setIsMobileMenuOpen(false);
-        if (isShortcutHelpOpen) setIsShortcutHelpOpen(false);
         setVimPending("");
         return;
       }
@@ -245,14 +218,12 @@ export function Navbar() {
       // Handle `g` prefix (gg = top, g{letter} = section)
       if (key === "g" || key === "G") {
         if (!vimPending) {
-          // First `g` — arm the prefix
           setVimPending("g");
           if (vimPendingTimer.current) clearTimeout(vimPendingTimer.current);
           vimPendingTimer.current = setTimeout(() => setVimPending(""), 800);
           e.preventDefault();
           return;
         }
-        // Second `g` (gg) — jump to top
         if (vimPending === "g" && key === "g") {
           e.preventDefault();
           window.scrollTo({
@@ -264,7 +235,6 @@ export function Navbar() {
         }
       }
 
-      // If `g` prefix is armed, expect a section letter
       if (vimPending === "g") {
         const lowerKey = key.toLowerCase();
         const link = navLinks.find((l) => l.shortcut === lowerKey);
@@ -276,7 +246,6 @@ export function Navbar() {
         return;
       }
 
-      // Vim single-key commands (j, k, G, t, T)
       const handled = handleVimKey(key, isTyping, e.repeat);
       if (handled) {
         e.preventDefault();
@@ -288,7 +257,7 @@ export function Navbar() {
       window.removeEventListener("keydown", onKey);
       if (vimPendingTimer.current) clearTimeout(vimPendingTimer.current);
     };
-  }, [vimPending, isMobileMenuOpen, isShortcutHelpOpen, handleVimKey, goToSection, reduceMotion]);
+  }, [vimPending, handleVimKey, goToSection, reduceMotion]);
 
   // -------------------------------------------------------------------------
   //  2-second intro hint — shows on first load
@@ -304,36 +273,29 @@ export function Navbar() {
     return () => window.clearTimeout(t);
   }, []);
 
-  // -------------------------------------------------------------------------
-  //  Mobile menu: focus trap + restore
-  // -------------------------------------------------------------------------
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      lastFocusedRef.current = document.activeElement as HTMLElement;
-      const t = window.setTimeout(() => mobileMenuCloseRef.current?.focus(), 100);
-      document.body.style.overflow = "hidden";
-      return () => {
-        window.clearTimeout(t);
-        document.body.style.overflow = "";
-      };
-    }
-    // else branch: restore focus to the element that opened the menu.
-    // No cleanup needed here.
-    lastFocusedRef.current?.focus?.();
-    return undefined;
-  }, [isMobileMenuOpen]);
-
+  // Close mobile menu on route change.
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
   // -------------------------------------------------------------------------
+  //  Mobile menu link click handler — closes the menu, then navigates.
+  // -------------------------------------------------------------------------
+  const handleMobileNavClick = (e: React.MouseEvent, href: string, sectionId: string) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+    // Defer navigation until after the modal closes so the scroll lands
+    // cleanly on the target section.
+    window.setTimeout(() => goToSection(href, sectionId), 250);
+  };
+
+  // -------------------------------------------------------------------------
   return (
     <>
       {/* ====================================================================
-          FLOATING NAVBAR — always blurred, always visible
-          ARIA: plain <nav> + <ul>/<li>. No menubar/menuitem roles — those
-          are for application menus, not website navigation.
+          FLOATING NAVBAR — desktop only shows the full nav; mobile shows
+          ONLY the logo + hamburger. The traditional nav links are hidden
+          on mobile and accessed exclusively through the expanded menu.
           ==================================================================== */}
       <motion.nav
         initial={{ y: -100 }}
@@ -342,7 +304,7 @@ export function Navbar() {
         aria-label="Primary"
         className="fixed top-3 md:top-4 left-0 right-0 z-40 px-3 md:px-6"
       >
-        <div className="max-w-7xl mx-auto bg-bg-1/80 backdrop-blur-md border border-bg-3/40 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+        <div className="max-w-7xl mx-auto bg-bg-1/75 backdrop-blur-xl border border-bg-3/40 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.25),0_0_0_1px_rgba(230,221,208,0.04)]">
           <div className="px-4 md:px-5 h-14 md:h-16 flex items-center justify-between gap-2">
             {/* --- Logo (home link) --- */}
             <a
@@ -364,7 +326,7 @@ export function Navbar() {
               </span>
             </a>
 
-            {/* --- Desktop Nav Links — native <ul>/<li> pattern --- */}
+            {/* --- Desktop Nav Links — hidden on mobile --- */}
             <ul className="hidden md:flex items-center space-x-0.5 lg:space-x-1 list-none m-0 p-0">
               {navLinks.map((link) => {
                 const isActive = isPyropePage
@@ -384,13 +346,26 @@ export function Navbar() {
                       {isActive && (
                         <motion.div
                           layoutId="nav-cover"
-                          className="absolute inset-0 bg-bg-2 rounded-lg z-0"
+                          className="absolute inset-0 bg-bg-2 rounded-lg z-0 shadow-[0_0_20px_rgba(168,193,85,0.15)]"
                           aria-hidden="true"
                           transition={{
                             type: "spring" as const,
                             stiffness: 320,
                             damping: 28,
                             mass: 0.8,
+                          }}
+                        />
+                      )}
+                      {isActive && (
+                        <motion.span
+                          layoutId="nav-underline"
+                          className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-accent rounded-full z-20"
+                          style={{ boxShadow: "0 0 6px var(--color-accent)" }}
+                          aria-hidden="true"
+                          transition={{
+                            type: "spring" as const,
+                            stiffness: 320,
+                            damping: 28,
                           }}
                         />
                       )}
@@ -422,7 +397,7 @@ export function Navbar() {
               </button>
               <a
                 href="#contact"
-                className="px-4 py-2 bg-accent hover:bg-fg-bright text-bg-base transition-colors duration-300 rounded-lg text-sm font-semibold whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1"
+                className="px-4 py-2 bg-accent hover:bg-fg-bright text-bg-base transition-all duration-300 rounded-lg text-sm font-semibold whitespace-nowrap glow-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1"
                 onClick={(e) => {
                   e.preventDefault();
                   goToSection("#contact");
@@ -441,11 +416,14 @@ export function Navbar() {
               </a>
             </div>
 
-            {/* --- Mobile Actions --- */}
+            {/* --- Mobile: ONLY the hamburger (no inline nav links, no
+                inline actions). The desktop "Let's Talk" / "Resume"
+                buttons are NOT shown on mobile — they're accessed inside
+                the expanded menu. --- */}
             <div className="flex md:hidden items-center gap-1 shrink-0">
               <button
                 type="button"
-                className="p-2 rounded-lg text-fg-dim hover:text-fg-bright hover:bg-bg-2/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                className="p-2.5 -mr-1 rounded-lg text-fg-dim hover:text-fg-bright hover:bg-bg-2/50 transition-all min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 onClick={() => setIsMobileMenuOpen(true)}
                 aria-label="Open navigation menu"
                 aria-expanded={isMobileMenuOpen}
@@ -459,213 +437,192 @@ export function Navbar() {
       </motion.nav>
 
       {/* ====================================================================
-          MOBILE MENU
+          MOBILE MENU — uses the unified Modal primitive.
+          Full-screen sheet variant. Active section is highlighted with an
+          accent pill so users always know where they are while scrolling.
           ==================================================================== */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            id="mobile-menu"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Navigation menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-bg-base/95 backdrop-blur-md flex flex-col"
-          >
-            <div className="flex items-center justify-between px-6 h-16 border-b border-bg-3/40">
-              <span className="font-mono text-xs text-fg-dim tracking-[0.2em] uppercase">
-                Menu
-              </span>
-              <button
-                ref={mobileMenuCloseRef}
-                className="p-2 rounded-lg text-fg-dim hover:text-fg-bright hover:bg-bg-2/50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                onClick={() => setIsMobileMenuOpen(false)}
-                aria-label="Close navigation menu"
-              >
-                <X size={24} aria-hidden="true" />
-              </button>
-            </div>
+      <Modal
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        ariaLabel="Navigation menu"
+        variant="sheet"
+        maxWidthClass="max-w-2xl"
+        closeOnBackdropClick={true}
+        closeButtonLabel="Close navigation menu"
+        className="!bg-bg-base/95 !backdrop-blur-md !rounded-none sm:!rounded-t-3xl !max-h-screen sm:!max-h-[90vh]"
+      >
+        {/* The Modal's built-in close button is sticky-top-right. We add a
+            "Menu" label header above the link list for context. */}
+        <div className="px-6 pt-6 pb-2">
+          <span className="font-mono text-xs text-fg-dim tracking-[0.2em] uppercase">
+            Menu
+          </span>
+        </div>
 
-            <div className="flex-1 overflow-y-auto hide-scrollbar px-6 py-8">
-              <nav className="flex flex-col gap-2" aria-label="Mobile">
-                <ul className="list-none m-0 p-0 flex flex-col gap-1">
-                  {navLinks.map((link, i) => (
-                    <motion.li
-                      key={link.name}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ delay: i * 0.04 }}
-                    >
-                      <a
-                        href={link.href}
-                        aria-current={activeSection === link.sectionId ? "true" : undefined}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setIsMobileMenuOpen(false);
-                          setTimeout(() => goToSection(link.href, link.sectionId), 200);
-                        }}
-                        className="group flex items-center justify-between py-3 border-b border-bg-3/30 font-display text-2xl font-semibold text-fg hover:text-accent transition-colors"
-                      >
-                        <span>{link.name}</span>
-                        <kbd className="font-mono text-[10px] text-fg-faint opacity-0 group-hover:opacity-100 transition-opacity">
-                          g {link.shortcut}
-                        </kbd>
-                      </a>
-                    </motion.li>
-                  ))}
-                </ul>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ delay: navLinks.length * 0.04 }}
-                  className="mt-8 flex flex-col gap-3"
+        <nav className="flex flex-col px-6 pb-8" aria-label="Mobile">
+          <ul className="list-none m-0 p-0 flex flex-col gap-1">
+            {navLinks.map((link, i) => {
+              const isActive = isPyropePage
+                ? link.name === "Projects"
+                : activeSection === link.sectionId;
+              return (
+                <motion.li
+                  key={link.name}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ delay: i * 0.04 }}
                 >
                   <a
-                    href="#contact"
-                    className="px-5 py-3 bg-accent text-bg-base rounded-lg font-semibold text-center hover:bg-fg-bright transition-colors"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsMobileMenuOpen(false);
-                      setTimeout(() => goToSection("#contact"), 200);
-                    }}
+                    href={link.href}
+                    aria-current={isActive ? "true" : undefined}
+                    onClick={(e) => handleMobileNavClick(e, link.href, link.sectionId)}
+                    className={`group flex items-center justify-between py-3.5 border-b border-bg-3/30 font-display text-2xl font-semibold transition-colors ${
+                      isActive ? "text-accent" : "text-fg hover:text-accent"
+                    }`}
                   >
-                    Let&apos;s Talk
+                    <span className="flex items-center gap-3">
+                      {/* Active indicator — accent pill that sits naturally
+                          before the link text. */}
+                      {isActive && (
+                        <span className="inline-block w-2 h-2 rounded-full bg-accent shrink-0" style={{ boxShadow: "0 0 8px var(--color-accent)" }} aria-hidden="true" />
+                      )}
+                      {link.name}
+                    </span>
+                    <kbd className="font-mono text-[10px] text-fg-faint opacity-0 group-hover:opacity-100 transition-opacity">
+                      g {link.shortcut}
+                    </kbd>
                   </a>
-                  <a
-                    href="/resume.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Open resume PDF in a new tab"
-                    className="px-5 py-3 border border-bg-3 text-fg-bright rounded-lg font-semibold text-center hover:border-accent hover:text-accent transition-colors"
-                  >
-                    Download Resume
-                  </a>
-                </motion.div>
-              </nav>
-            </div>
+                </motion.li>
+              );
+            })}
+          </ul>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ delay: navLinks.length * 0.04 }}
+            className="mt-8 flex flex-col gap-3"
+          >
+            <a
+              href="#contact"
+              className="px-5 py-3 bg-accent text-bg-base rounded-lg font-semibold text-center hover:bg-fg-bright transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsMobileMenuOpen(false);
+                window.setTimeout(() => goToSection("#contact"), 250);
+              }}
+            >
+              Let&apos;s Talk
+            </a>
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open resume PDF in a new tab"
+              className="px-5 py-3 border border-bg-3 text-fg-bright rounded-lg font-semibold text-center hover:border-accent hover:text-accent transition-colors"
+            >
+              Download Resume
+            </a>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </nav>
+      </Modal>
 
       {/* ====================================================================
-          KEYBOARD SHORTCUT HELP DIALOG
+          KEYBOARD SHORTCUT HELP — uses the unified Modal primitive (center
+          variant). Same architecture, same styling, same focus/escape
+          behavior as the project details modal.
           ==================================================================== */}
-      <AnimatePresence>
-        {isShortcutHelpOpen && (
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Keyboard shortcuts"
-            aria-labelledby="shortcut-help-title"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] bg-bg-base/80 backdrop-blur-sm flex items-center justify-center p-6"
-            onClick={() => setIsShortcutHelpOpen(false)}
+      <Modal
+        isOpen={isShortcutHelpOpen}
+        onClose={() => setIsShortcutHelpOpen(false)}
+        ariaLabel="Keyboard shortcuts"
+        ariaLabelledBy="shortcut-help-title"
+        variant="center"
+        maxWidthClass="max-w-lg"
+        closeButtonLabel="Close shortcut help"
+        className="!bg-bg-1 !border !border-bg-3/60 p-6 md:p-8"
+      >
+        <div className="mb-6">
+          <h2
+            id="shortcut-help-title"
+            className="font-display text-xl font-bold text-fg-bright"
           >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.2 }}
-              className="bg-bg-1 border border-bg-3/60 rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2
-                    id="shortcut-help-title"
-                    className="font-display text-xl font-bold text-fg-bright"
-                  >
-                    Keyboard Shortcuts
-                  </h2>
-                  <p className="text-fg-faint text-xs mt-1 font-mono">
-                    Vim-style. Disabled while typing in inputs.
-                  </p>
-                </div>
-                <button
-                  className="p-2 rounded-lg text-fg-dim hover:text-fg-bright hover:bg-bg-2/50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                  onClick={() => setIsShortcutHelpOpen(false)}
-                  aria-label="Close shortcut help"
-                >
-                  <X size={20} aria-hidden="true" />
-                </button>
-              </div>
+            Keyboard Shortcuts
+          </h2>
+          <p className="text-fg-faint text-xs mt-1 font-mono">
+            Vim-style. Disabled while typing in inputs.
+          </p>
+        </div>
 
-              {/* Vim navigation */}
-              <p className="font-mono text-[11px] text-accent uppercase tracking-wider mb-3">
-                Scrolling
-              </p>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-2.5 mb-6">
-                <div className="flex items-center justify-between">
-                  <span className="text-fg text-sm">Down half page</span>
-                  <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">j</kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-fg text-sm">Up half page</span>
-                  <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">k</kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-fg text-sm">Top of page</span>
-                  <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">g g</kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-fg text-sm">Bottom of page</span>
-                  <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">G</kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-fg text-sm">Next section</span>
-                  <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">t</kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-fg text-sm">Previous section</span>
-                  <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">T</kbd>
-                </div>
-              </div>
+        {/* Vim navigation */}
+        <p className="font-mono text-[11px] text-accent uppercase tracking-wider mb-3">
+          Scrolling
+        </p>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-2.5 mb-6">
+          <div className="flex items-center justify-between">
+            <span className="text-fg text-sm">Down half page</span>
+            <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">j</kbd>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-fg text-sm">Up half page</span>
+            <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">k</kbd>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-fg text-sm">Top of page</span>
+            <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">g g</kbd>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-fg text-sm">Bottom of page</span>
+            <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">G</kbd>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-fg text-sm">Next section</span>
+            <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">t</kbd>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-fg text-sm">Previous section</span>
+            <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">T</kbd>
+          </div>
+        </div>
 
-              <div className="border-t border-bg-3/40 my-5" />
+        <div className="border-t border-bg-3/40 my-5" />
 
-              <p className="font-mono text-[11px] text-accent uppercase tracking-wider mb-3">
-                Jump to Section
-              </p>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-2.5 mb-6">
-                {navLinks.map((link) => (
-                  <div key={link.name} className="flex items-center justify-between">
-                    <span className="text-fg text-sm">{link.name}</span>
-                    <span className="flex items-center gap-1">
-                      <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">g</kbd>
-                      <span className="text-fg-faint text-xs">then</span>
-                      <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">{link.shortcut}</kbd>
-                    </span>
-                  </div>
-                ))}
-              </div>
+        <p className="font-mono text-[11px] text-accent uppercase tracking-wider mb-3">
+          Jump to Section
+        </p>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-2.5 mb-6">
+          {navLinks.map((link) => (
+            <div key={link.name} className="flex items-center justify-between">
+              <span className="text-fg text-sm">{link.name}</span>
+              <span className="flex items-center gap-1">
+                <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">g</kbd>
+                <span className="text-fg-faint text-xs">then</span>
+                <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">{link.shortcut}</kbd>
+              </span>
+            </div>
+          ))}
+        </div>
 
-              <div className="border-t border-bg-3/40 my-5" />
+        <div className="border-t border-bg-3/40 my-5" />
 
-              <div className="flex flex-col gap-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-fg text-sm">Open this help</span>
-                  <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">Shift + ?</kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-fg text-sm">Close any dialog</span>
-                  <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">Esc</kbd>
-                </div>
-              </div>
+        <div className="flex flex-col gap-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-fg text-sm">Open this help</span>
+            <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">Shift + ?</kbd>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-fg text-sm">Close any dialog</span>
+            <kbd className="font-mono text-[11px] px-2 py-1 bg-bg-2 border border-bg-3 rounded text-fg-bright">Esc</kbd>
+          </div>
+        </div>
 
-              <p className="text-fg-faint text-xs mt-6 leading-relaxed">
-                Shortcuts never override browser, OS, or screen-reader shortcuts
-                (Cmd/Ctrl/Alt combinations are always respected).
-              </p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        <p className="text-fg-faint text-xs mt-6 leading-relaxed">
+          Shortcuts never override browser, OS, or screen-reader shortcuts
+          (Cmd/Ctrl/Alt combinations are always respected).
+        </p>
+      </Modal>
 
       {/* ====================================================================
           2-SECOND INTRO HINT — tells the user about vim keys
@@ -710,6 +667,7 @@ export function Navbar() {
             <div className="bg-bg-1 border border-accent/40 rounded-lg px-4 py-2 shadow-lg flex items-center gap-2">
               <kbd className="font-mono text-xs text-accent">g</kbd>
               <span className="text-fg-dim text-xs">then press a letter…</span>
+              <ArrowRight size={12} className="text-accent animate-pulse" aria-hidden="true" />
             </div>
           </motion.div>
         )}

@@ -103,7 +103,7 @@ function SwatchCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-bg-1 border border-bg-3/40 rounded-xl p-6 md:p-8">
+    <div className="glass-card p-6 md:p-8">
       <p className="font-mono text-xs text-fg-dim uppercase tracking-wider mb-6">
         {label}
       </p>

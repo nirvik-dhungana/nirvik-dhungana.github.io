@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { motion } from "motion/react";
 import { Navbar } from "../Navbar";
+import { ScrollProgress } from "../ScrollProgress";
 import { CTA } from "../CTA";
 import { PyropeHero } from "./PyropeHero";
 import { PyropePalette } from "./PyropePalette";
@@ -93,6 +94,7 @@ export function PyropePage() {
         Skip to main content
       </a>
       <Navbar />
+      <ScrollProgress />
       <main
         id="main-content"
         className="flex flex-col gap-[96px] lg:gap-[140px] pb-[96px] lg:pb-[140px] pt-24"

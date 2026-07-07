@@ -13,10 +13,6 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Fonts — immutable, 1 year
-/fonts/*
-  Cache-Control: public, max-age=31536000, immutable
-
 # OG image — cache for a week
 /og-pyrope.png
   Cache-Control: public, max-age=604800

@@ -3,8 +3,10 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 
 // Latin-only @fontsource imports — avoids loading cyrillic/greek/vietnamese
-// subsets that aren't used on this site. The latin-400 and latin-700 weights
-// are also preloaded via <link rel="preload"> in index.html for LCP.
+// subsets that aren't used on this site. Fonts are NOT statically preloaded
+// in index.html; instead @fontsource's `font-display: swap` ensures text
+// paints immediately with a system fallback, then swaps to the real font.
+// See the comment in index.html for the full rationale.
 import "@fontsource/inter/latin-400.css";
 import "@fontsource/inter/latin-500.css";
 import "@fontsource/inter/latin-600.css";

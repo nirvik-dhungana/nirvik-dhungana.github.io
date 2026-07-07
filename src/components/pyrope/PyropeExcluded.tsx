@@ -79,7 +79,7 @@ export function PyropeExcluded() {
             <motion.div
               key={c.hex}
               variants={cardVariants}
-              className="bg-bg-1 border border-bg-3/40 rounded-xl overflow-hidden flex transition-colors hover:border-bg-3"
+              className="glass-card glass-card-interactive overflow-hidden flex"
             >
               {/* Left stripe — the rejected color */}
               <div className={`${c.stripeCls} w-1.5 shrink-0`} />

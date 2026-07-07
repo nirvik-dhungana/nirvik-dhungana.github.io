@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
 import { useReducedMotion } from "motion/react";
-import { ChevronDown } from "lucide-react";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -109,10 +108,10 @@ export function PyropeHero() {
           One palette. Seven design rules. Consistent roles across every tool.
         </motion.p>
 
-        {/* Port chips — wrapped in a subtle card */}
+        {/* Port chips — wrapped in a glass card */}
         <motion.div
           variants={itemV}
-          className="mt-10 bg-bg-1 border border-bg-3/40 rounded-xl px-5 py-4"
+          className="mt-10 glass-card px-5 py-4"
         >
           <div className="flex flex-wrap items-center justify-center gap-2">
             {ports.map((port, idx) => (
@@ -142,34 +141,16 @@ export function PyropeHero() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className="bg-bg-1 border border-bg-3/40 rounded-xl p-6 flex flex-col justify-center min-h-[120px] transition-colors hover:border-accent/20"
+              className="glass-card glass-card-interactive p-6 flex flex-col justify-center min-h-[120px]"
             >
-              <div className="text-4xl lg:text-5xl font-display font-bold text-accent mb-2">
+              <div className="text-4xl lg:text-5xl font-display font-bold text-gradient-accent mb-2">
                 {stat.number}
               </div>
-              <div className="text-xs sm:text-sm text-fg-dim font-medium">
+              <div className="text-xs sm:text-sm text-fg-dim font-medium uppercase tracking-wider">
                 {stat.label}
               </div>
             </div>
           ))}
-        </motion.div>
-      </motion.div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-fg-dim"
-      >
-        <span className="font-mono text-[10px] tracking-[0.3em] uppercase">
-          Scroll
-        </span>
-        <motion.div
-          animate={reduceMotion ? undefined : { y: [0, 5, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
         </motion.div>
       </motion.div>
     </section>

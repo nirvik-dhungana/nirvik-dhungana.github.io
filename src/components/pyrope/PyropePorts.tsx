@@ -124,7 +124,7 @@ export function PyropePorts() {
                 rel="noopener noreferrer"
                 aria-label={`Open ${p.name} theme file on GitHub in a new tab`}
                 variants={cardVariants}
-                className="group block bg-bg-1 border border-bg-3/40 rounded-xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-[0_0_25px_rgba(168,193,85,0.05)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base"
+                className="group block glass-card glass-card-interactive p-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base"
               >
                 <div className="flex items-start justify-between mb-5">
                   <div className="w-10 h-10 rounded-md bg-bg-2 border border-bg-3/50 flex items-center justify-center text-accent" aria-hidden="true">

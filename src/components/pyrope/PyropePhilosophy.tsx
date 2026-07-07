@@ -115,7 +115,7 @@ export function PyropePhilosophy() {
                 initial={reduceMotion ? undefined : "hidden"}
                 whileInView={reduceMotion ? undefined : "visible"}
                 viewport={{ once: true, margin: "-100px" }}
-                className="bg-bg-1 border border-bg-3/40 rounded-xl p-6 transition-colors hover:border-accent/20"
+                className="glass-card glass-card-interactive p-6"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-md bg-bg-2 border border-bg-3/50 flex items-center justify-center text-accent" aria-hidden="true">
@@ -142,7 +142,7 @@ export function PyropePhilosophy() {
           initial={reduceMotion ? undefined : "hidden"}
           whileInView={reduceMotion ? undefined : "visible"}
           viewport={{ once: true, margin: "-100px" }}
-          className="bg-bg-1 border border-bg-3/40 rounded-xl overflow-hidden"
+          className="glass-card overflow-hidden"
         >
           {/* Card header */}
           <div className="px-6 md:px-8 py-5 border-b border-bg-3/40 bg-bg-2/50 flex items-center gap-3">
