@@ -44,9 +44,25 @@ npx wrangler deploy    # upload dist/ to Cloudflare
 
 | File | Purpose |
 |------|---------|
-| `wrangler.jsonc` | Wrangler config — names the Worker, points to `dist/`, configures SPA fallback |
+| `wrangler.jsonc` | Wrangler config — names the Worker, points to `dist/`, configures SPA fallback via `not_found_handling: "single-page-application"` |
 | `public/_headers` | Cloudflare security headers + caching rules (CSP, HSTS, immutable asset caching) |
-| `public/_redirects` | SPA fallback rule (`/* → /index.html 200`) — safety net for the Pages path |
+
+> **No `_redirects` file is used.** SPA fallback is handled entirely by `wrangler.jsonc`'s `not_found_handling: "single-page-application"`. A `/* /index.html 200` rule in `_redirects` would cause an infinite redirect loop because Cloudflare's `_redirects` engine strips `.html` / `/index` from the destination, which re-matches the same `/*` rule. The `not_found_handling` setting avoids this because it operates at the asset-serving layer, not the redirect engine.
+
+## Routing architecture
+
+| URL requested | What happens | Mechanism |
+|---|---|---|
+| `/` | Serves `dist/index.html` (prerendered) | Static file match |
+| `/projects/pyrope` | Serves `dist/projects/pyrope/index.html` (prerendered) | Static file + `html_handling: auto-trailing-slash` |
+| `/projects/pyrope/` | Same file (trailing slash normalized) | `html_handling: auto-trailing-slash` |
+| `/projects/pyrope/index.html` | Same file (`.html` stripped) | `html_handling: auto-trailing-slash` |
+| `/about` (hash anchor on home) | Serves `dist/index.html` | Static file match |
+| `/non-existent` | Serves `dist/index.html` with 200 → React Router shows NotFound | `not_found_handling: single-page-application` |
+| `/assets/*` | Serves hashed asset | Static file match |
+| `/sitemap.xml`, `/robots.txt`, etc. | Serves the static file | Static file match |
+
+**No redirect rules needed.** Prerendered routes serve their HTML directly; unmatched paths fall back to `index.html` for client-side routing.
 
 ## First-time deployment
 
