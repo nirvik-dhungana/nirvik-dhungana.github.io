@@ -209,7 +209,7 @@ export function LearningPath() {
     const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
 
     return (
-        <section id="growth" className="px-6 relative z-10">
+        <section id="growth" className="px-6 relative">
             <div className="max-w-4xl mx-auto">
                 <SectionHeading
                     eyebrow="06 — GROWTH"

@@ -126,7 +126,7 @@ function EducationCard({ entry, index }: { entry: EducationEntry; index: number 
 
 export function Education() {
     return (
-        <section id="education" className="px-6 relative z-10">
+        <section id="education" className="px-6 relative">
             <div className="max-w-4xl mx-auto">
                 <SectionHeading
                     eyebrow="05 — EDUCATION"

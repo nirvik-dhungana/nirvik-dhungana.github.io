@@ -1,6 +1,8 @@
 import { useEffect, useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { X } from "lucide-react";
+import { zIndex } from "../../lib/zIndex";
 
 /* ===========================================================================
  *  MODAL — the unified overlay primitive for the entire portfolio.
@@ -8,25 +10,36 @@ import { X } from "lucide-react";
  *  One architecture for every popup, dialog, slide-over, and overlay:
  *    - Project details modal
  *    - Keyboard shortcuts help
+ *    - Mobile navigation sheet
  *    - Future overlay components
  *
  *  Guarantees:
- *    1. Highest layer: renders at z-[100] (above the navbar at z-40 and the
- *       mobile menu at z-60). The navbar ALWAYS appears beneath the overlay.
- *    2. Background scroll locked while open (body overflow hidden).
- *    3. Escape key closes the modal.
- *    4. Click on the backdrop closes the modal (unless `closeOnBackdropClick`
+ *    1. Highest layer: renders at `zIndex.modal` (above the navbar, scroll
+ *       progress, and ambient hints). The layering is centralized in
+ *       `src/lib/zIndex.ts` so the entire stacking system is readable in
+ *       one place.
+ *    2. PORTAL RENDERING — the overlay is rendered into `document.body`
+ *       via `createPortal`. This is the critical architectural decision
+ *       that prevents the bug where a modal was visually trapped beneath
+ *       the navbar because an ancestor `<section>` had `relative z-10`,
+ *       which created a stacking context that swallowed the modal's
+ *       z-index. By portaling to `document.body`, the modal's z-index is
+ *       interpreted at the document root, where it always wins.
+ *    3. Background scroll locked while open (body overflow hidden).
+ *    4. Escape key closes the modal.
+ *    5. Click on the backdrop closes the modal (unless `closeOnBackdropClick`
  *       is false — useful for non-dismissable dialogs).
- *    5. Focus trap: focus moves into the modal on open, restores to the
+ *    6. Focus trap: focus moves into the modal on open, restores to the
  *       previously-focused element on close. Tab/Shift+Tab cycles within.
- *    6. Accessible: role="dialog", aria-modal="true", aria-labelledby.
- *    7. Reduced-motion: animation disabled, content appears instantly.
- *    8. Consistent transitions: backdrop fades, panel slides up (mobile) /
+ *    7. Accessible: role="dialog", aria-modal="true", aria-labelledby.
+ *    8. Reduced-motion: animation disabled, content appears instantly.
+ *    9. Consistent transitions: backdrop fades, panel slides up (mobile) /
  *       scales in (desktop). Spring physics for a premium feel.
  *
  *  Variants:
  *    - "sheet"  (default) — slides up from the bottom on mobile, scales in
- *                on desktop. Used for content-rich modals (project details).
+ *                on desktop. Used for content-rich modals (project details,
+ *                mobile navigation).
  *    - "center" — scales in from the center on all breakpoints. Used for
  *                focused dialogs (keyboard shortcuts help).
  * ========================================================================= */
@@ -159,10 +172,32 @@ export function Modal({
 
     const containerClass =
         variant === "sheet"
-            ? "fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-6"
-            : "fixed inset-0 z-[100] bg-bg-base/80 backdrop-blur-sm flex items-center justify-center p-6";
+            ? "fixed inset-0 flex items-end md:items-center justify-center p-0 md:p-6"
+            : "fixed inset-0 bg-bg-base/80 backdrop-blur-sm flex items-center justify-center p-6";
 
-    return (
+    const containerStyle = { zIndex: zIndex.modal } as const;
+
+    // The portal target is `document.body`. Rendering here means the modal's
+    // `z-index` is interpreted at the document root, so it can NEVER be
+    // trapped inside an ancestor's stacking context. This is the
+    // architectural fix for the navbar/modal overlap bug.
+    //
+    // During SSR/prerender `document` is undefined, so we render nothing —
+    // the modal is open-state-driven and never part of the SSR HTML anyway.
+    //
+    // STRUCTURE NOTE: The Portal is rendered on the OUTSIDE and
+    // `AnimatePresence` on the INSIDE. The reverse (Portal inside
+    // AnimatePresence) does NOT work — AnimatePresence can only track the
+    // mount/unmount of motion components it can clone props onto, and a
+    // Portal element is opaque to it. With this structure the portal target
+    // stays stable across renders and AnimatePresence cleanly animates the
+    // inner motion.div in and out.
+    const portalTarget =
+        typeof document !== "undefined" ? document.body : null;
+
+    if (!portalTarget) return null;
+
+    return createPortal(
         <AnimatePresence>
             {isOpen && (
                 <motion.div
@@ -171,6 +206,7 @@ export function Modal({
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.25 }}
                     className={containerClass}
+                    style={containerStyle}
                     role="dialog"
                     aria-modal="true"
                     aria-label={ariaLabel}
@@ -217,7 +253,8 @@ export function Modal({
                     </motion.div>
                 </motion.div>
             )}
-        </AnimatePresence>
+        </AnimatePresence>,
+        portalTarget,
     );
 }
 

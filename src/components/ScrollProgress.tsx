@@ -1,4 +1,5 @@
 import { motion, useScroll, useSpring, useReducedMotion } from "motion/react";
+import { zIndex } from "../lib/zIndex";
 
 /**
  * ScrollProgress — a thin accent-colored bar fixed at the very top of the
@@ -19,8 +20,8 @@ export function ScrollProgress() {
 
   return (
     <motion.div
-      style={{ scaleX: reduceMotion ? scrollYProgress : scaleX }}
-      className="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-accent via-accent to-gold origin-left z-[80] pointer-events-none"
+      style={{ scaleX: reduceMotion ? scrollYProgress : scaleX, zIndex: zIndex.scrollProgress }}
+      className="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-accent via-accent to-gold origin-left pointer-events-none"
       aria-hidden="true"
     />
   );

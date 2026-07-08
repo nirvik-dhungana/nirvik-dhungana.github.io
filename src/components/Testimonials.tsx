@@ -132,7 +132,7 @@ export function Testimonials() {
     return (
         <section
             id="testimonials"
-            className="relative z-10 overflow-hidden"
+            className="relative overflow-hidden"
             ref={ref}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}

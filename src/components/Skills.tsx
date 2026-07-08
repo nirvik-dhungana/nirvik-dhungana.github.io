@@ -85,7 +85,7 @@ function SkillBadge({ skill, index }: { skill: SkillCategory["skills"][number]; 
 
 export function Skills() {
     return (
-        <section id="skills" className="px-6 relative z-10">
+        <section id="skills" className="px-6 relative">
             <div className="max-w-7xl mx-auto">
                 <SectionHeading
                     eyebrow="03 — SKILLS"

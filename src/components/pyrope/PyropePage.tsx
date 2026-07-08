@@ -12,10 +12,13 @@ import { PyropePorts } from "./PyropePorts";
 import { PyropeExcluded } from "./PyropeExcluded";
 import { PyropeBackLink } from "./PyropeBackLink";
 import { CopyToast } from "./CopyToast";
-import { SEO, breadcrumbJsonLd, type JsonLdBlock } from "../SEO";
+import {
+  SEO,
+  breadcrumbJsonLd,
+  type JsonLdBlock,
+} from "../SEO";
 
-const PYROPE_OG_IMAGE =
-  "https://res.cloudinary.com/dxt7szquk/image/upload/v1783448884/og-pyrope_v07o1b.png";
+const PYROPE_OG_IMAGE = "https://nirvikdhungana.com.np/og-pyrope.png";
 
 const PYROPE_TITLE = "Pyrope Colorscheme";
 const PYROPE_DESC =
@@ -63,10 +66,7 @@ const PYROPE_JSONLD: JsonLdBlock = {
 const BREADCRUMB_JSONLD = breadcrumbJsonLd([
   { name: "Home", url: "https://nirvikdhungana.com.np" },
   { name: "Projects", url: "https://nirvikdhungana.com.np/#projects" },
-  {
-    name: "Pyrope Colorscheme",
-    url: "https://nirvikdhungana.com.np/projects/pyrope",
-  },
+  { name: "Pyrope Colorscheme", url: "https://nirvikdhungana.com.np/projects/pyrope" },
 ]);
 
 export function PyropePage() {
@@ -108,11 +108,7 @@ export function PyropePage() {
         <PyropeExcluded />
         <PyropeBackLink />
       </main>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
         <CTA />
       </motion.div>
       <CopyToast />

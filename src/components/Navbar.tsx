@@ -4,6 +4,7 @@ import { Menu, Keyboard as KeyboardIcon, ArrowRight } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PersonalInfo } from "../data/content";
 import { Modal } from "./primitives/Modal";
+import { zIndex } from "../lib/zIndex";
 
 // ---------------------------------------------------------------------------
 //  Navigation data
@@ -302,7 +303,8 @@ export function Navbar() {
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         aria-label="Primary"
-        className="fixed top-3 md:top-4 left-0 right-0 z-40 px-3 md:px-6"
+        className="fixed top-3 md:top-4 left-0 right-0 px-3 md:px-6"
+        style={{ zIndex: zIndex.navbar }}
       >
         <div className="max-w-7xl mx-auto bg-bg-1/75 backdrop-blur-xl border border-bg-3/40 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.25),0_0_0_1px_rgba(230,221,208,0.04)]">
           <div className="px-4 md:px-5 h-14 md:h-16 flex items-center justify-between gap-2">
@@ -640,7 +642,8 @@ export function Navbar() {
               sessionStorage.setItem("pyrope-intro-dismissed", "1");
             }}
             aria-label="This site supports vim-style keyboard navigation. Press J or K to scroll, G G to jump to top, Shift question mark for all shortcuts. Click to dismiss."
-            className="hidden md:flex fixed bottom-6 left-1/2 -translate-x-1/2 z-[65] bg-bg-1 border border-accent/40 rounded-xl px-5 py-3.5 shadow-2xl items-center gap-3 cursor-pointer hover:border-accent/70 transition-colors max-w-[calc(100vw-2rem)]"
+            className="hidden md:flex fixed bottom-6 left-1/2 -translate-x-1/2 bg-bg-1 border border-accent/40 rounded-xl px-5 py-3.5 shadow-2xl items-center gap-3 cursor-pointer hover:border-accent/70 transition-colors max-w-[calc(100vw-2rem)]"
+            style={{ zIndex: zIndex.hint }}
           >
             <kbd className="font-mono text-xs text-accent shrink-0">⌨</kbd>
             <div className="text-left">
@@ -662,7 +665,8 @@ export function Navbar() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[55] pointer-events-none"
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 pointer-events-none"
+            style={{ zIndex: zIndex.hint }}
           >
             <div className="bg-bg-1 border border-accent/40 rounded-lg px-4 py-2 shadow-lg flex items-center gap-2">
               <kbd className="font-mono text-xs text-accent">g</kbd>

@@ -645,7 +645,7 @@ export function Projects() {
         (filter === "all" || filter === "design" || matchesFilter(productProject, filter));
 
     return (
-        <section id="projects" className="px-6 relative z-10">
+        <section id="projects" className="px-6 relative">
             <div className="max-w-7xl mx-auto">
                 <SectionHeading
                     eyebrow="02 — PROJECTS"

@@ -180,7 +180,7 @@ function ExperienceCard({ entry, index }: { entry: ExperienceEntry; index: numbe
 
 export function Experience() {
     return (
-        <section id="experience" className="px-6 relative z-10">
+        <section id="experience" className="px-6 relative">
             <div className="max-w-5xl mx-auto">
                 <SectionHeading
                     eyebrow="04 — EXPERIENCE"
