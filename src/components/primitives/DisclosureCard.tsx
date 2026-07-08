@@ -49,6 +49,16 @@ interface DisclosureCardProps {
     toggleLabel?: string;
     /** Extra classes on the outer card. */
     className?: string;
+    /** Extra classes on the header <button>. Useful when the header uses a
+     *  grid layout that the body should also participate in (e.g. a 12-col
+     *  grid where the header places content in cols 1-4 and 5-12, and the
+     *  body should align with cols 5-12). */
+    headerClassName?: string;
+    /** Extra classes on the expandable body wrapper. Useful when the body
+     *  needs to align to a specific grid column (e.g. when the header uses
+     *  a 12-col grid and the body should align with one of those columns
+     *  rather than spanning full width). */
+    bodyClassName?: string;
     /** Whether to auto-append a DisclosureChevron (only when `header` is a
      *  static ReactNode, not a render function). Default: true. */
     showChevron?: boolean;
@@ -64,6 +74,8 @@ export function DisclosureCard({
     onToggle,
     toggleLabel = "Toggle details",
     className = "",
+    headerClassName = "",
+    bodyClassName = "",
     showChevron = true,
     idSuffix,
 }: DisclosureCardProps) {
@@ -99,26 +111,36 @@ export function DisclosureCard({
                 aria-expanded={expanded}
                 aria-controls={`disclosure-panel-${idSuffix}`}
                 aria-label={toggleLabel}
-                className="relative w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base rounded-[inherit]"
+                className={`relative w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base rounded-[inherit] ${headerClassName}`}
             >
                 {headerContent}
             </button>
 
             {/* Expandable content — AnimatePresence for proper mount/unmount
-                so the collapsed state genuinely releases vertical space. */}
+                so the collapsed state genuinely releases vertical space.
+
+                Animation layers (all respect reduced-motion):
+                  - height: 0 → auto     (the primary mechanism)
+                  - opacity: 0 → 1       (fade in to soften the height pop)
+                  - y: 8 → 0             (subtle slide-up for premium feel)
+
+                The translateY is capped at 8px so it reads as a gentle
+                settle rather than a slide-in. Anything larger would feel
+                like a separate panel entering, which is exactly the
+                "disconnected" sensation we want to avoid. */}
             <AnimatePresence initial={false}>
                 {expanded && (
                     <motion.div
                         id={`disclosure-panel-${idSuffix}`}
                         key="disclosure-content"
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
+                        initial={reduceMotion ? { height: 0, opacity: 0 } : { height: 0, opacity: 0, y: 8 }}
+                        animate={reduceMotion ? { height: "auto", opacity: 1 } : { height: "auto", opacity: 1, y: 0 }}
+                        exit={reduceMotion ? { height: 0, opacity: 0 } : { height: 0, opacity: 0, y: 8 }}
                         transition={{
-                            duration: reduceMotion ? 0 : 0.3,
+                            duration: reduceMotion ? 0 : 0.32,
                             ease: [0.2, 0.8, 0.2, 1],
                         }}
-                        className="overflow-hidden"
+                        className={`overflow-hidden ${bodyClassName}`}
                     >
                         {children}
                     </motion.div>

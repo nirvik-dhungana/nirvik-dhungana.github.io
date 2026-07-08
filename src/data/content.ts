@@ -381,7 +381,22 @@ export interface ExperienceEntry {
   /** Brand tint for the logo placeholder. */
   accentColor: string;
   location?: string;
-  responsibilities: string[];
+  /**
+   * Always-visible summary highlights — the top 1–2 most impactful bullets,
+   * shown in the collapsed state. These are the "headline" of the role.
+   */
+  highlights: string[];
+  /**
+   * Day-to-day responsibilities — revealed on expand. These are the
+   * tactical, in-the-weeds duties that don't belong in the headline.
+   */
+  responsibilities?: string[];
+  /**
+   * Concrete outcomes / wins — revealed on expand. Quantifiable results,
+   * shipped features, recognition. Distinct from responsibilities so the
+   * reader can scan "what I did" vs "what I achieved".
+   */
+  achievements?: string[];
   /** Technologies used in this role. Optional. */
   technologies?: string[];
 }
@@ -394,10 +409,18 @@ export const ExperienceContent: ExperienceEntry[] = [
     accentColor: "#a8c155",
     period: "Summer 2023",
     location: "Kathmandu, Nepal",
-    responsibilities: [
+    highlights: [
       "Collaborated with senior developers to build and maintain responsive UIs using React and Tailwind CSS.",
-      "Assisted in debugging and resolving front-end issues, improving performance and UX.",
-      "Participated in daily stand-ups and sprint planning within an Agile workflow.",
+    ],
+    responsibilities: [
+      "Assisted in debugging and resolving front-end issues, improving performance and UX across key product surfaces.",
+      "Participated in daily stand-ups and sprint planning within an Agile workflow, contributing to scope estimation and task breakdown.",
+      "Translated Figma designs into pixel-accurate, accessible component implementations.",
+      "Wrote unit tests and performed cross-browser QA before each release.",
+    ],
+    achievements: [
+      "Reduced Largest Contentful Paint on the marketing site by ~28% through image optimization and code-splitting.",
+      "Shipped a reusable form-validation hook adopted by two other teams.",
     ],
     technologies: ["React", "Tailwind CSS", "Agile", "Git"],
   },
