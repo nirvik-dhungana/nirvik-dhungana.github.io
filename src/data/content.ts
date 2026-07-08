@@ -515,44 +515,59 @@ export interface Testimonial {
   initials: string;
   /** Accent tint for the avatar. */
   accentColor: string;
+  /** Relationship to Nirvik — shown as a small pill badge in the author area. */
+  relationship: string;
+  /** Optional LinkedIn profile URL. Renders a LinkedIn icon link when present. */
+  linkedin?: string;
+  /** Optional verification indicator — renders a checkmark on the avatar. */
+  verified?: boolean;
 }
 
 export const TestimonialsContent: Testimonial[] = [
   {
     quote:
-      "Nirvik has a remarkable ability to grasp complex concepts quickly and apply them effectively. His passion for clean code and user-centric design is evident in all his work. A true asset to any development team.",
+      "Nirvik has a remarkable ability to grasp complex concepts quickly and translate them into clean, considered interfaces. His instinct for user-centric detail shows up in every PR. A genuine asset to any frontend team.",
     name: "Jane Doe",
     role: "Senior Developer",
     company: "TechCorp",
     initials: "JD",
     accentColor: "#a8c155",
+    relationship: "Mentor",
+    linkedin: "https://www.linkedin.com/",
+    verified: true,
   },
   {
     quote:
-      "Working with Nirvik was a pleasure. He's a proactive learner, always seeking feedback and pushing the boundaries of his knowledge. His positive attitude and collaborative spirit make him a joy to work with.",
+      "Working with Nirvik was a pleasure. He's a proactive learner who asks the right questions early, ships consistently, and elevates the work of everyone around him. Rare combination of humility and craft.",
     name: "John Smith",
     role: "Project Manager",
     company: "Innovate LLC",
     initials: "JS",
     accentColor: "#5683c4",
+    relationship: "Collaborator",
+    linkedin: "https://www.linkedin.com/",
   },
   {
     quote:
-      "I was impressed by Nirvik's dedication to quality and his keen eye for detail. He consistently delivered high-quality work and was always eager to take on new challenges. He has a bright future ahead of him.",
+      "I was impressed by Nirvik's dedication to quality and his eye for detail. He consistently delivered high-quality work, pushed back on vague specs thoughtfully, and treated accessibility as a baseline, not a nice-to-have.",
     name: "Emily White",
     role: "UI/UX Designer",
     company: "Creative Solutions",
     initials: "EW",
     accentColor: "#d1a83e",
+    relationship: "Collaborator",
+    linkedin: "https://www.linkedin.com/",
+    verified: true,
   },
   {
     quote:
-      "Nirvik is a fast learner and a dedicated developer. His enthusiasm for tackling new challenges and his collaborative approach make him a valuable team member.",
+      "Nirvik is a fast learner and a dedicated developer. His enthusiasm for new challenges is matched by the discipline to actually finish them well. He'd be a valuable addition to any engineering team.",
     name: "Michael Brown",
     role: "Lead Instructor",
     company: "Code Academy",
     initials: "MB",
     accentColor: "#b04f86",
+    relationship: "Instructor",
   },
 ];
 
