@@ -6,8 +6,5 @@
     "directory": "./dist",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "single-page-application"
-  },
-  routes = [
-  { pattern = "nirvikdhungana.com.np/*", zone_name = "nirvikdhungana.com.np" }
-  ]
+  }
 }
