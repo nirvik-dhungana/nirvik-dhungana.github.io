@@ -41,17 +41,24 @@ export function CopyToast() {
           exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
           className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-none"
+          // role=status + aria-live=polite: screen readers announce
+          // "Copied {hex}" when the toast appears, giving non-visual
+          // confirmation that the click copied the value to the clipboard.
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
         >
           <div className="bg-bg-1 border border-bg-3/60 rounded-lg shadow-2xl px-5 py-3.5 flex items-center gap-3">
             {/* Swatch showing the actual copied color */}
             <div
               className="w-5 h-5 rounded-md border border-bg-3/60 shrink-0"
               style={{ backgroundColor: copied }}
+              aria-hidden="true"
             />
-            {/* Hex value */}
+            {/* Hex value + label — the announced text */}
             <span className="font-mono text-sm text-fg-bright">{copied}</span>
             {/* Divider */}
-            <div className="w-px h-4 bg-bg-3" />
+            <div className="w-px h-4 bg-bg-3" aria-hidden="true" />
             {/* Label */}
             <span className="text-fg-dim text-xs uppercase tracking-wider">
               copied

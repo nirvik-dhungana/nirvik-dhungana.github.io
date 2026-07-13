@@ -384,7 +384,9 @@ function FeaturedProject({ project, onOpen }: { project: ProjectData; onOpen: ()
                         ))}
                     </div>
                     <div className="mt-auto flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
-                        <span className="inline-flex items-center gap-2 font-medium text-fg uppercase tracking-wider text-sm group-hover:text-accent transition-colors link-underline">
+                        {/* aria-hidden: the parent card has aria-label="View details for X",
+                            so this visible "View Details" text is redundant for SR users. */}
+                        <span className="inline-flex items-center gap-2 font-medium text-fg uppercase tracking-wider text-sm group-hover:text-accent transition-colors link-underline" aria-hidden="true">
                             View Details
                             <ArrowRight size={16} aria-hidden="true" className="transform transition-transform group-hover:translate-x-1" />
                         </span>
@@ -522,7 +524,8 @@ function ProductCard({ project, onOpen }: { project: ProjectData; onOpen: () => 
                         ))}
                     </div>
                     <div className="mt-auto flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
-                        <span className="inline-flex items-center gap-2 font-medium text-fg uppercase tracking-wider text-sm group-hover:text-accent transition-colors link-underline">
+                        {/* aria-hidden: parent card already has aria-label="View details for X". */}
+                        <span className="inline-flex items-center gap-2 font-medium text-fg uppercase tracking-wider text-sm group-hover:text-accent transition-colors link-underline" aria-hidden="true">
                             View Details
                             <ArrowRight size={16} aria-hidden="true" className="transform transition-transform group-hover:translate-x-1" />
                         </span>
@@ -534,7 +537,7 @@ function ProductCard({ project, onOpen }: { project: ProjectData; onOpen: () => 
                                 className="inline-flex items-center gap-1.5 text-xs font-mono uppercase text-fg-dim hover:text-accent transition-colors"
                             >
                                 <ExternalLink size={14} aria-hidden="true" />
-                                Open Showcase
+                                {project.title} Showcase
                             </Link>
                         )}
                     </div>
@@ -595,7 +598,8 @@ function ProjectCard({ project, onOpen }: { project: ProjectData; onOpen: () => 
                     ))}
                 </div>
                 <div className="mt-auto flex items-center justify-between gap-2">
-                    <span className="inline-flex items-center gap-2 font-medium text-fg uppercase tracking-wider text-sm group-hover:text-accent transition-colors link-underline">
+                    {/* aria-hidden: parent card already has aria-label="View details for X". */}
+                    <span className="inline-flex items-center gap-2 font-medium text-fg uppercase tracking-wider text-sm group-hover:text-accent transition-colors link-underline" aria-hidden="true">
                         View Details
                         <ArrowRight size={16} aria-hidden="true" className="transform transition-transform group-hover:translate-x-1" />
                     </span>

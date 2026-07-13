@@ -59,7 +59,12 @@ export function useTestimonialAutoplay({
     resetKey,
 }: UseTestimonialAutoplayOptions) {
     const reduceMotion = useReducedMotion();
-    const enabled = !reduceMotion;
+    // SSR-safe: `reduceMotion` is null during SSR and the first client render.
+    // Default `enabled` to false so the prerendered HTML and the first
+    // hydration render agree (no play/pause button). On the client, after
+    // mount, `reduceMotion` resolves to a boolean and `enabled` flips to
+    // true (unless the user has reduced motion on).
+    const enabled = reduceMotion === false;
 
     // Elapsed time within the current slide, in ms. Lives in a ref so the
     // rAF loop can mutate it without re-rendering every frame.

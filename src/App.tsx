@@ -70,31 +70,54 @@ const PyropePage = lazy(() =>
   })),
 );
 
-// Handles scroll-to-section after cross-route navigation.
+// Handles scroll-to-section after cross-route navigation, AND scrolls to
+// top of page on every route change (unless a specific scrollTo target was
+// requested via router state).
 function ScrollHandler() {
-  const { state } = useLocation();
+  const { pathname, state } = useLocation();
+
+  // Scroll-to-top on pathname change. Runs before the scroll-to-section
+  // effect below so a fresh route load starts at the top before any
+  // section-targeted scroll is attempted.
   useEffect(() => {
-    if (state && typeof state === "object" && "scrollTo" in state) {
-      const target = (state as { scrollTo: string }).scrollTo;
-      const tryScroll = () => {
-        const el = document.querySelector(target);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth" });
-          return true;
-        }
-        return false;
-      };
-      if (!tryScroll()) {
-        let attempts = 0;
-        const id = window.setInterval(() => {
-          if (tryScroll() || attempts > 20) {
-            window.clearInterval(id);
-          }
-          attempts++;
-        }, 100);
+    // Don't scroll to top if the navigation includes a scrollTo target —
+    // the section effect below will handle the final position.
+    if (state && typeof state === "object" && "scrollTo" in state) return;
+    window.scrollTo(0, 0);
+  }, [pathname, state]);
+
+  // Scroll-to-section after cross-route navigation (e.g. clicking "Projects"
+  // on the Pyrope page navigates to "/" then scrolls to #projects).
+  useEffect(() => {
+    if (!state || typeof state !== "object" || !("scrollTo" in state)) return;
+    const target = (state as { scrollTo: string }).scrollTo;
+    const tryScroll = () => {
+      const el = document.querySelector(target);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+        return true;
       }
-    }
+      return false;
+    };
+    if (tryScroll()) return;
+
+    // Poll for up to 2s (20 attempts × 100ms) — the target section may be
+    // mounted late by a lazy-loaded Suspense boundary.
+    let attempts = 0;
+    let id: number | null = null;
+    id = window.setInterval(() => {
+      if (tryScroll() || attempts > 20) {
+        if (id !== null) window.clearInterval(id);
+      }
+      attempts++;
+    }, 100);
+    // Cleanup on unmount or re-trigger: prevents the interval from leaking
+    // if the user navigates away before the target appears.
+    return () => {
+      if (id !== null) window.clearInterval(id);
+    };
   }, [state]);
+
   return null;
 }
 

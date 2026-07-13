@@ -1,5 +1,5 @@
 import { motion, useInView, type Variants } from "motion/react";
-import { useRef, type ReactNode, type ElementType } from "react";
+import { useMemo, useRef, type ReactNode, type ElementType } from "react";
 import { useReducedMotion } from "motion/react";
 
 /**
@@ -65,6 +65,12 @@ export function Reveal({
     const inView = useInView(ref as any, { once, margin: margin as any });
     const reduceMotion = useReducedMotion();
 
+    // Memoize the MotionTag so we don't recreate the motion component on
+    // every render. `motion.create(Tag)` returns a stable component for a
+    // given Tag, but only if we cache it — calling it inline leaks a new
+    // component identity per render and breaks reconciliation.
+    const MotionTag = useMemo(() => motion.create(Tag as ElementType), [Tag]);
+
     if (reduceMotion) {
         return <Tag className={className}>{children}</Tag>;
     }
@@ -90,11 +96,22 @@ export function Reveal({
           }
         : {};
 
-    // motion.create() is the v12 API (motion() is deprecated).
-    // Creating the component once per render is cheap because motion caches
-    // the wrapper; this is the documented pattern for polymorphic motion
-    // components.
-    const MotionTag = motion.create(Tag);
+    // When staggering, wrap each child in a motion.div with stable keys.
+    // `React.Children.toArray` flattens nested arrays and removes empty
+    // nodes, giving us a stable list to key off. We use the child's index
+    // as the key — stable as long as the children list doesn't change order
+    // between renders, which is the standard pattern for static card grids.
+    // (If the list becomes dynamic in the future, the consumer should pass
+    // a `key` on each child and we'd need to extract it — but for the
+    // current portfolio all staggered lists are static.)
+    const staggeredChildren = stagger
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (Array.isArray(children) ? children : [children]).map((child: any, i: number) => (
+              <motion.div key={child?.key ?? i} variants={itemVariants}>
+                  {child}
+              </motion.div>
+          ))
+        : children;
 
     return (
         <MotionTag
@@ -104,15 +121,7 @@ export function Reveal({
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
         >
-            {stagger
-                ? Array.isArray(children)
-                    ? children.map((child, i) => (
-                          <motion.div key={i} variants={itemVariants}>
-                              {child}
-                          </motion.div>
-                      ))
-                    : <motion.div variants={itemVariants}>{children}</motion.div>
-                : children}
+            {staggeredChildren}
         </MotionTag>
     );
 }

@@ -31,7 +31,12 @@ export function MagneticButton({
     type = "button",
     ...rest
 }: MagneticButtonProps) {
-    const ref = useRef<HTMLAnchorElement & HTMLButtonElement>(null);
+    // HTMLElement is the common base of HTMLAnchorElement and HTMLButtonElement.
+    // The ref is attached to either <motion.a> or <motion.button> depending on
+    // the `as` prop — at runtime it's one or the other, never both. Casting to
+    // HTMLElement avoids the misleading intersection type and is the standard
+    // pattern for polymorphic refs.
+    const ref = useRef<HTMLElement>(null);
     const [offset, setOffset] = useState({ x: 0, y: 0 });
     const reduceMotion = useReducedMotion();
 
@@ -59,7 +64,7 @@ export function MagneticButton({
     if (as === "button") {
         return (
             <motion.button
-                ref={ref}
+                ref={ref as React.Ref<HTMLButtonElement>}
                 type={type}
                 className={className}
                 onMouseMove={handleMove}
@@ -75,7 +80,7 @@ export function MagneticButton({
 
     return (
         <motion.a
-            ref={ref}
+            ref={ref as React.Ref<HTMLAnchorElement>}
             href={href}
             className={className}
             onMouseMove={handleMove}

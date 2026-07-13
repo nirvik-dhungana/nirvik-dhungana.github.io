@@ -18,8 +18,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json}\"",
-    "favicons": "node scripts/generate-favicons.js",
-    "og:pyrope": "node scripts/generate-og-pyrope.js"
+    "favicons": "node scripts/generate-favicons.js"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
@@ -49,7 +48,6 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "globals": "^15.12.0",
     "prettier": "^3.4.1",
-    "sharp": "^0.35.2",
     "tailwindcss": "^4.1.14",
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.15.0",

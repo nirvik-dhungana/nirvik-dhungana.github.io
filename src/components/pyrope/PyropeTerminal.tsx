@@ -70,12 +70,16 @@ const PROMPT_LINE = "nirvik@pyrope:~ $ neofetch";
 
 export function PyropeTerminal() {
   const reduceMotion = useReducedMotion();
-  const [typedChars, setTypedChars] = useState<number>(reduceMotion ? PROMPT_LINE.length : 0);
-  const [showRest, setShowRest] = useState<boolean>(reduceMotion ? true : false);
+  // SSR-safe initial state: always start with the "pre-animation" form so
+  // the prerendered HTML and the client's first hydration render agree.
+  // The reduceMotion-corrected state is applied in useEffect below.
+  const [typedChars, setTypedChars] = useState<number>(0);
+  const [showRest, setShowRest] = useState<boolean>(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const hasStarted = useRef<boolean>(false);
 
   useEffect(() => {
+    // On the client, if reduced motion is on, snap to the final state.
     if (reduceMotion) {
       setTypedChars(PROMPT_LINE.length);
       setShowRest(true);
@@ -125,15 +129,26 @@ export function PyropeTerminal() {
       Math.max(0, typedChars - "nirvik@pyrope:~ $ ".length),
     );
     return (
-      <div className="font-mono text-[13px] leading-[1.6]">
-        <span className="text-accent">nirvik@pyrope</span>
-        <span className="text-fg-dim">:</span>
-        <span className="text-lagoon">~</span>
-        <span className="text-fg"> $ </span>
-        <span className="text-fg-bright">{typedCommand}</span>
-        {typedChars < PROMPT_LINE.length && (
-          <span className="inline-block w-[7px] h-[14px] bg-accent align-middle ml-0.5 animate-pulse" />
-        )}
+      // The animated typing is decorative — screen readers should hear the
+      // final prompt line, not character-by-character updates. We anchor
+      // the SR announcement with aria-label on the container and hide the
+      // animated spans from the a11y tree.
+      <div
+        className="font-mono text-[13px] leading-[1.6]"
+        aria-label={PROMPT_LINE}
+        role="text"
+      >
+        <span className="sr-only">{PROMPT_LINE}</span>
+        <span aria-hidden="true">
+          <span className="text-accent">nirvik@pyrope</span>
+          <span className="text-fg-dim">:</span>
+          <span className="text-lagoon">~</span>
+          <span className="text-fg"> $ </span>
+          <span className="text-fg-bright">{typedCommand}</span>
+          {typedChars < PROMPT_LINE.length && (
+            <span className="inline-block w-[7px] h-[14px] bg-accent align-middle ml-0.5 animate-pulse" />
+          )}
+        </span>
       </div>
     );
   };
@@ -219,9 +234,9 @@ export function PyropeTerminal() {
                 {/* ANSI 16 color grid — full width below the neofetch info */}
                 <div className="mt-5 pt-4 border-t border-bg-3/30">
                   <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5 md:gap-2">
-                    {ansi16.map((c, idx) => (
+                    {ansi16.map((c) => (
                       <button
-                        key={idx}
+                        key={c.hex}
                         type="button"
                         onClick={() => copyColor(c.hex)}
                         aria-label={`Copy color ${c.hex} to clipboard`}

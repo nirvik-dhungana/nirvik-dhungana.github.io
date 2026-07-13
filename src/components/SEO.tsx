@@ -1,4 +1,6 @@
 import { Helmet } from "react-helmet-async";
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import type { JSX } from "react";
 import { registerSSRMetadata } from "../ssr-metadata";
 
@@ -19,10 +21,32 @@ import { registerSSRMetadata } from "../ssr-metadata";
  *       slash. A single trailing slash (other than the root "/") is stripped.
  *       Root path stays as the bare origin.
  *
- *  Tag deduplication:
- *    Every meta/link tag inside <Helmet> carries a unique `key` attribute.
- *    react-helmet-async uses these keys to overwrite previous-route tags
- *    atomically during client-side navigation — no vestigial tags remain.
+ *  Tag deduplication (FIX for the post-hydration duplicate-metadata bug):
+ *    The architecture is:
+ *      - SSR registry → prerender script → static <head> tags
+ *        (serves Googlebot and the initial browser paint).
+ *      - <Helmet> → react-helmet-async v3 → React19Dispatcher → React 19
+ *        native hoisting → updates <head> on client-side navigation.
+ *
+ *    react-helmet-async@3 + React 19 does NOT deduplicate against existing
+ *    <head> tags. So if <Helmet> renders on the initial hydration pass, it
+ *    creates a second full set of <title>/<meta>/<link>/<script> tags
+ *    alongside the prerendered set — verified duplicates in DevTools.
+ *
+ *    Fix: render <Helmet> ONLY when this <SEO /> instance is mounted as a
+ *    result of a client-side navigation (not the initial hydration). The
+ *    `useIsInitialLoad()` hook below returns `true` for the very first
+ *    render of <SEO /> in the page lifecycle, and `false` thereafter.
+ *
+ *    Additionally, when <Helmet> does render (on client nav), we strip
+ *    every prerendered tag (marked with `data-prerendered`) from <head>
+ *    so they don't accumulate. This keeps the live DOM clean even after
+ *    multiple client-side route changes.
+ *
+ *  JSON-LD URL consistency:
+ *    All JSON-LD `url` fields use the exact same form as the canonical URL
+ *    (no trailing slash on the homepage, lowercase, absolute) so Google's
+ *    entity binder can match the JSON-LD `@id`/`url` to the canonical URL.
  * ============================================================================
  */
 
@@ -84,6 +108,13 @@ export interface SEOProps {
   ogImageAlt?: string;
   /** Robots directive. Defaults to `index, follow, max-image-preview:large`. */
   robots?: RobotsDirective;
+  /**
+   * Optional publication/modified timestamps. Only emitted when `ogType`
+   * is `article` (as `article:published_time` / `article:modified_time`).
+   * ISO 8601 form, e.g. "2026-07-04T00:00:00+05:45".
+   */
+  articlePublishedTime?: string;
+  articleModifiedTime?: string;
   /** One or more JSON-LD blocks to inject as structured data. */
   jsonLd?: JsonLdBlock | JsonLdBlock[];
 }
@@ -161,6 +192,42 @@ function buildTitle(pageTitle: string): string {
 }
 
 // ----------------------------------------------------------------------------
+//  useIsInitialLoad — true only for the first <SEO /> render in the page
+//  lifecycle. Used to suppress <Helmet> on initial hydration (the prerender
+//  script already injected the correct tags into the static <head>).
+// ----------------------------------------------------------------------------
+
+function useIsInitialLoad(): boolean {
+  // `useState(true)` initial value is set during the first render (both on
+  // the server and on the client's first hydration render). The value is
+  // flipped to `false` in a useEffect, which only runs on the client AFTER
+  // hydration completes. So:
+  //   - SSR (renderToString):        isInitialLoad = true  → Helmet skipped
+  //   - Client initial hydration:    isInitialLoad = true  → Helmet skipped
+  //   - Client after mount:          isInitialLoad = false → Helmet active
+  //   - Client-side route change:    new <SEO /> mounts with isInitialLoad=false
+  //                                  → Helmet active immediately
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  useEffect(() => {
+    setIsInitialLoad(false);
+  }, []);
+  return isInitialLoad;
+}
+
+// ----------------------------------------------------------------------------
+//  stripPrerenderedHeadTags — removes every [data-prerendered] tag from
+//  <head>. Called from a useEffect before <Helmet> renders new tags on a
+//  client-side navigation, so the prerendered set for the previous route
+//  doesn't linger alongside the new Helmet-rendered set.
+// ----------------------------------------------------------------------------
+
+function stripPrerenderedHeadTags(): void {
+  if (typeof document === "undefined") return;
+  const stale = document.head.querySelectorAll("[data-prerendered]");
+  stale.forEach((node) => node.parentNode?.removeChild(node));
+}
+
+// ----------------------------------------------------------------------------
 //  Component
 // ----------------------------------------------------------------------------
 
@@ -172,10 +239,17 @@ export function SEO({
   ogImage = DEFAULT_OG_IMAGE,
   ogImageAlt = "Nirvik Dhungana — Frontend Developer portfolio preview",
   robots = "index, follow, max-image-preview:large",
+  articlePublishedTime,
+  articleModifiedTime,
   jsonLd,
 }: SEOProps): JSX.Element {
   const canonicalUrl = normalizeCanonical(path);
   const finalTitle = buildTitle(title);
+  const isInitialLoad = useIsInitialLoad();
+  const location = useLocation();
+  // Track whether we've already stripped the prerendered tags for THIS
+  // component instance. Prevents redundant DOM walks on re-renders.
+  const strippedRef = useRef(false);
 
   // Normalize jsonLd into an array for uniform rendering.
   const jsonLdBlocks: JsonLdBlock[] = jsonLd
@@ -197,9 +271,32 @@ export function SEO({
       ogType,
       ogImage,
       ogImageAlt,
+      articlePublishedTime,
+      articleModifiedTime,
       jsonLd: jsonLdBlocks,
     });
   }
+
+  // Client-side: when this <SEO /> is mounted as a result of a client-side
+  // navigation (i.e. NOT the initial hydration), strip the prerendered
+  // <head> tags so they don't duplicate with the <Helmet> tags below.
+  useEffect(() => {
+    if (!isInitialLoad && !strippedRef.current) {
+      stripPrerenderedHeadTags();
+      strippedRef.current = true;
+    }
+  }, [isInitialLoad, location.pathname]);
+
+  // On the initial hydration, the prerender script has already injected the
+  // exact same tags into the static <head>. Rendering <Helmet> here would
+  // cause react-helmet-async v3 + React 19's native hoisting to append a
+  // second full set of tags → duplicates in the live DOM. So we skip Helmet
+  // entirely on the initial load.
+  if (isInitialLoad) {
+    return <></>;
+  }
+
+  const isArticle = ogType === "article";
 
   return (
     <Helmet prioritizeSeoTags>
@@ -223,6 +320,22 @@ export function SEO({
       <meta property="og:image:height" key="og:image:height" content="630" />
       <meta property="og:image:alt" key="og:image:alt" content={ogImageAlt} />
       <meta property="fb:app_id" key="fb:app_id" content={FB_APP_ID} />
+
+      {/* --- Article-specific OG (only when ogType === "article") --- */}
+      {isArticle && articlePublishedTime && (
+        <meta
+          property="article:published_time"
+          key="article:published_time"
+          content={articlePublishedTime}
+        />
+      )}
+      {isArticle && articleModifiedTime && (
+        <meta
+          property="article:modified_time"
+          key="article:modified_time"
+          content={articleModifiedTime}
+        />
+      )}
 
       {/* --- Twitter Cards --- */}
       <meta name="twitter:card" key="twitter:card" content="summary_large_image" />
@@ -255,7 +368,13 @@ export default SEO;
 //  JSON-LD factory helpers — reusable structured-data blocks
 // ----------------------------------------------------------------------------
 
-/** The Person entity for the site owner. Used on every route. */
+/**
+ * The Person entity for the site owner. Used on every route.
+ *
+ * NOTE: `url` deliberately has NO trailing slash so it exactly matches the
+ * homepage canonical URL (`https://nirvikdhungana.com.np`). Google's JSON-LD
+ * binder matches `url` against the canonical URL, so consistency matters.
+ */
 export const PERSON_JSONLD: JsonLdBlock = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -263,7 +382,7 @@ export const PERSON_JSONLD: JsonLdBlock = {
   name: "Nirvik Dhungana",
   image:
     "https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto/v1762424795/pfp_yggogi.png",
-  url: "https://nirvikdhungana.com.np/",
+  url: "https://nirvikdhungana.com.np",
   jobTitle: "Frontend Developer",
   email: "mailto:info.nirvik.dh@gmail.com",
   sameAs: [
@@ -293,7 +412,7 @@ export const WEBSITE_JSONLD: JsonLdBlock = {
   "@type": "WebSite",
   "@id": "https://nirvikdhungana.com.np/#website",
   name: "Nirvik Dhungana",
-  url: "https://nirvikdhungana.com.np/",
+  url: "https://nirvikdhungana.com.np",
   description: DEFAULT_DESCRIPTION,
   inLanguage: "en",
   publisher: { "@id": "https://nirvikdhungana.com.np/#person" },
@@ -304,7 +423,7 @@ export const PROFILE_PAGE_JSONLD: JsonLdBlock = {
   "@context": "https://schema.org",
   "@type": "ProfilePage",
   "@id": "https://nirvikdhungana.com.np/#profilepage",
-  url: "https://nirvikdhungana.com.np/",
+  url: "https://nirvikdhungana.com.np",
   dateCreated: "2026-06-22T00:00:00+05:45",
   dateModified: "2026-07-04T00:00:00+05:45",
   isPartOf: { "@id": "https://nirvikdhungana.com.np/#website" },

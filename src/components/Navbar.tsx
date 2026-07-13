@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { Menu, Keyboard as KeyboardIcon, ArrowRight } from "lucide-react";
+import { Menu, Keyboard as KeyboardIcon, ArrowRight, Keyboard } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PersonalInfo } from "../data/content";
 import { Modal } from "./primitives/Modal";
@@ -46,7 +46,9 @@ export function Navbar() {
   const [vimPending, setVimPending] = useState<string>("");
   const location = useLocation();
   const navigate = useNavigate();
-  const isPyropePage = location.pathname.startsWith("/projects/pyrope");
+  // Exact match — `startsWith` would also match any future /projects/pyrope/*
+  // sub-routes, incorrectly highlighting "Projects" on those pages too.
+  const isPyropePage = location.pathname === "/projects/pyrope";
   const isProgrammaticScrollRef = useRef(false);
   const vimPendingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -320,6 +322,7 @@ export function Navbar() {
                 }
               }}
               aria-label="Nirvik Dhungana — go to home"
+              aria-current={location.pathname === "/" ? "page" : undefined}
               className="relative flex items-center justify-center w-10 h-10 shrink-0 group rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1"
             >
               <div className="absolute inset-0 bg-accent/10 rounded-md transform transition-transform group-hover:scale-110 group-hover:rotate-3" aria-hidden="true" />
@@ -338,7 +341,7 @@ export function Navbar() {
                   <li key={link.name}>
                     <a
                       href={link.href}
-                      aria-current={isActive ? "true" : undefined}
+                      aria-current={isActive ? "location" : undefined}
                       className="relative px-3 lg:px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 group hover:bg-bg-2/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-1 block"
                       onClick={(e) => {
                         e.preventDefault();
@@ -477,7 +480,7 @@ export function Navbar() {
                 >
                   <a
                     href={link.href}
-                    aria-current={isActive ? "true" : undefined}
+                    aria-current={isActive ? "location" : undefined}
                     onClick={(e) => handleMobileNavClick(e, link.href, link.sectionId)}
                     className={`group flex items-center justify-between py-3.5 border-b border-bg-3/30 font-display text-2xl font-semibold transition-colors ${
                       isActive ? "text-accent" : "text-fg hover:text-accent"
@@ -645,7 +648,7 @@ export function Navbar() {
             className="hidden md:flex fixed bottom-6 left-1/2 -translate-x-1/2 bg-bg-1 border border-accent/40 rounded-xl px-5 py-3.5 shadow-2xl items-center gap-3 cursor-pointer hover:border-accent/70 transition-colors max-w-[calc(100vw-2rem)]"
             style={{ zIndex: zIndex.hint }}
           >
-            <kbd className="font-mono text-xs text-accent shrink-0">⌨</kbd>
+            <Keyboard size={16} className="text-accent shrink-0" aria-hidden="true" />
             <div className="text-left">
               <div className="text-fg-bright text-sm font-medium">
                 Vim keys enabled

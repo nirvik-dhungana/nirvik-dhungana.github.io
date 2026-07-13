@@ -39,7 +39,10 @@ export function PyropeHero() {
     : itemVariants;
 
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center px-6 overflow-hidden pt-32 pb-24">
+    <section
+      className="relative min-h-[70vh] flex items-center justify-center px-6 overflow-hidden pt-32 pb-24"
+      aria-label="Pyrope colorscheme introduction"
+    >
       {/* Ambient Blobs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div

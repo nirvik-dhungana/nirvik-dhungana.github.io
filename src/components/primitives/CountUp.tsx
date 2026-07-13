@@ -31,13 +31,19 @@ export function CountUp({ value, duration = 1500, className }: CountUpProps) {
     const suffix = match?.[3] ?? "";
     const decimals = match?.[2]?.includes(".") ? match[2].split(".")[1]?.length ?? 0 : 0;
 
-    const [display, setDisplay] = useState(reduceMotion ? value : `${prefix}0${suffix}`);
+    // SSR-safe initial state: always start with the "0" form so the
+    // prerendered HTML and the client's first hydration render match
+    // (reduceMotion is null during SSR / first client render). The
+    // reduceMotion-corrected value is applied in useEffect below.
+    const [display, setDisplay] = useState(`${prefix}0${suffix}`);
 
     useEffect(() => {
-        if (!inView || reduceMotion) {
-            if (reduceMotion) setDisplay(value);
+        // If reduced motion is on (client-side), snap to the final value.
+        if (reduceMotion) {
+            setDisplay(value);
             return;
         }
+        if (!inView) return;
 
         let raf: number;
         const start = performance.now();

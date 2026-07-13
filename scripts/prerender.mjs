@@ -82,33 +82,50 @@ async function main() {
     // 5. Build the final HTML
     let finalHtml = template;
 
-    // Remove the static fallback <title> and <meta name="description"> from
-    // the template — the prerendered versions replace them. This prevents
-    // duplicate tags which would confuse crawlers.
+    // --- Strip ALL fallback SEO tags from the template's <head> ---
+    // The template (index.html) ships a minimal fallback set of SEO tags
+    // (title, description, robots, author) so that the SPA 404 route still
+    // has something. For prerendered routes, the SSR metadata registry
+    // produces the canonical set, and we must remove the fallbacks to
+    // avoid duplicates in the static HTML Googlebot receives.
+    //
+    // We strip in this order: title, description, robots, author. Each
+    // regex tolerates multi-line attribute layout, single/double quotes,
+    // and self-closing or non-self-closing forms.
+    finalHtml = finalHtml.replace(/<title>[^<]*<\/title>\s*/g, "");
     finalHtml = finalHtml.replace(
-      /<title>[^<]*<\/title>\s*/g,
+      /<meta\s+name=["']description["']\s+content=["'][^"']*["']\s*\/?>\s*/g,
       "",
     );
     finalHtml = finalHtml.replace(
-      /<meta\s+name="description"\s+content="[^"]*"\s*\/?>\s*/g,
+      /<meta\s+name=["']robots["']\s+content=["'][^"']*["']\s*\/?>\s*/g,
+      "",
+    );
+    finalHtml = finalHtml.replace(
+      /<meta\s+name=["']author["']\s+content=["'][^"']*["']\s*\/?>\s*/g,
       "",
     );
 
     // The rendered body HTML from renderToString may contain helmet-rendered
     // tags inline (if helmet v3 with React 19 renders any). Strip them from
     // the body — we inject the clean headHtml into <head> instead.
+    //
+    // NOTE: with the fix in SEO.tsx that skips <Helmet> on initial hydration,
+    // Helmet is NOT rendered during SSR. But we keep these body-cleaning
+    // passes as a defensive belt-and-braces measure in case Helmet v3's
+    // internals change in the future.
     let cleanBodyHtml = html;
-    cleanBodyHtml = cleanBodyHtml.replace(/<title>[^<]*<\/title>/g, "");
+    cleanBodyHtml = cleanBodyHtml.replace(/<title[^>]*>[^<]*<\/title>/g, "");
     cleanBodyHtml = cleanBodyHtml.replace(
-      /<meta\s+(?:name|property)="[^"]*"[^>]*\/?>/g,
+      /<meta\s+(?:name|property)=["'][^"']*["'][^>]*\/?>/g,
       "",
     );
     cleanBodyHtml = cleanBodyHtml.replace(
-      /<link\s+rel="canonical"[^>]*\/?>/g,
+      /<link\s+rel=["']canonical["'][^>]*\/?>/g,
       "",
     );
     cleanBodyHtml = cleanBodyHtml.replace(
-      /<script\s+type="application\/ld\+json">[\s\S]*?<\/script>/g,
+      /<script\s+type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/g,
       "",
     );
 
@@ -138,12 +155,30 @@ async function main() {
 
     fs.writeFileSync(outPath, finalHtml, "utf-8");
 
-    // Verify
-    const ogCount = (finalHtml.match(/property="og:/g) || []).length;
-    const twitterCount = (finalHtml.match(/name="twitter:/g) || []).length;
-    const jsonLdCount = (finalHtml.match(/application\/ld\+json/g) || []).length;
+    // Verify (strip HTML comments first so comment-mentioned tags don't
+    // inflate the counts; the prerendered tags carry data-prerendered
+    // before name=/property= so the regex must allow attribute-permutation).
+    const noComments = finalHtml.replace(/<!--[\s\S]*?-->/g, "");
+    const ogCount = (noComments.match(/property="og:/g) || []).length;
+    const twitterCount = (noComments.match(/name="twitter:/g) || []).length;
+    const jsonLdCount = (noComments.match(/application\/ld\+json/g) || []).length;
+    const titleCount = (noComments.match(/<title[^>]*>[^<]*<\/title>/g) || []).length;
+    const descCount = (
+      noComments.match(/<meta[^>]*name=["']description["'][^>]*>/g) || []
+    ).length;
+    const robotsCount = (
+      noComments.match(/<meta[^>]*name=["']robots["'][^>]*>/g) || []
+    ).length;
+    const authorCount = (
+      noComments.match(/<meta[^>]*name=["']author["'][^>]*>/g) || []
+    ).length;
+    const canonicalCount = (
+      noComments.match(/<link[^>]*rel=["']canonical["'][^>]*>/g) || []
+    ).length;
     console.log(
-      `   ✓ ${route} → ${path.relative(root, outPath)}  (OG: ${ogCount}, Twitter: ${twitterCount}, JSON-LD: ${jsonLdCount})`,
+      `   ✓ ${route} → ${path.relative(root, outPath)}  ` +
+        `(title:${titleCount} desc:${descCount} robots:${robotsCount} author:${authorCount} ` +
+        `canonical:${canonicalCount} OG:${ogCount} Twitter:${twitterCount} JSON-LD:${jsonLdCount})`,
     );
   }
 

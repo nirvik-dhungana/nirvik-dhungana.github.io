@@ -1,8 +1,10 @@
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { Link } from "react-router-dom";
 import { SEO } from "./SEO";
 
 export function NotFound() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <>
       <SEO
@@ -12,9 +14,9 @@ export function NotFound() {
         robots="noindex, nofollow"
       />
       <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden bg-bg-base">
-        {/* Ambient Blob */}
+        {/* Ambient Blob — animated only when reduced motion is off. */}
         <motion.div
-          animate={{
+          animate={reduceMotion ? undefined : {
             scale: [1, 1.2, 1],
             opacity: [0.1, 0.2, 0.1],
           }}
@@ -24,6 +26,7 @@ export function NotFound() {
             ease: "easeInOut",
           }}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[600px] max-h-[600px] bg-accent/20 rounded-full blur-[100px] pointer-events-none"
+          aria-hidden="true"
         />
 
         <div className="relative z-10 flex flex-col items-center text-center">

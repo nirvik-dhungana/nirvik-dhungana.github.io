@@ -34,7 +34,7 @@ function SkillBadge({ skill, index }: { skill: SkillCategory["skills"][number]; 
             transition={{ duration: 0.4, delay: index * 0.04, ease: [0.2, 0.8, 0.2, 1] }}
             whileHover={reduceMotion ? undefined : { y: -3 }}
             className="tooltip-host group relative inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-bg-2/60 border border-bg-3/50 hover:bg-bg-2 hover:border-current/40 transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base"
-            style={{ ["--skill-color" as string]: skill.color }}
+            style={{ "--skill-color": skill.color } as React.CSSProperties}
         >
             {/* Icon — brand-tinted on hover. */}
             <span

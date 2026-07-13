@@ -100,12 +100,16 @@ export function Modal({
         const originalOverflow = document.body.style.overflow;
         document.body.style.overflow = "hidden";
 
-        // Move focus into the modal.
-        const focusTimer = window.setTimeout(() => {
+        // Move focus into the modal. Use rAF instead of setTimeout(50) so
+        // focus lands on the next paint — snappier and avoids the brief
+        // window where focus can escape to the document body.
+        let focusRaf = 0;
+        focusRaf = requestAnimationFrame(() => {
             closeBtnRef.current?.focus();
-        }, 50);
+        });
 
-        // Escape to close.
+        // Escape to close. (We stopPropagation so the Navbar's vim keydown
+        // listener doesn't also fire — Modal owns the keyboard while open.)
         const handleKey = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
                 e.stopPropagation();
@@ -135,7 +139,7 @@ export function Modal({
         return () => {
             document.body.style.overflow = originalOverflow;
             window.removeEventListener("keydown", handleKey);
-            window.clearTimeout(focusTimer);
+            cancelAnimationFrame(focusRaf);
             // Restore focus to the element that opened the modal.
             previouslyFocused.current?.focus?.();
         };

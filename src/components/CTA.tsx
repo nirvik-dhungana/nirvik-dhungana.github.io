@@ -14,6 +14,13 @@ const itemVariants = {
     visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 280, damping: 22 } },
 };
 
+// Compute the year ONCE at module load. This is deterministic per build —
+// the prerendered HTML and the client hydration see the same value, avoiding
+// a hydration mismatch warning. (Using `new Date()` inline in JSX would
+// evaluate at render time, which can differ between the prerender build
+// clock and the visitor's clock.)
+const CURRENT_YEAR = new Date().getFullYear();
+
 /* Group social links by category for organized presentation. */
 const groupLabels: Record<SocialLink["group"], string> = {
     code: "Code",
@@ -212,7 +219,7 @@ export function CTA() {
                     className="flex flex-col items-center gap-2 mt-12 pt-8 border-t border-bg-3/40 text-center"
                 >
                     <p className="text-sm text-fg-faint font-medium">
-                        &copy; {new Date().getFullYear()} {PersonalInfo.name}. All rights reserved.
+                        &copy; {CURRENT_YEAR} {PersonalInfo.name}. All rights reserved.
                     </p>
                     <p className="text-xs font-mono text-fg-faint/60 tracking-wider">
                         {PersonalInfo.location.toUpperCase()} · BUILT WITH REACT, TYPESCRIPT &amp; TAILWIND

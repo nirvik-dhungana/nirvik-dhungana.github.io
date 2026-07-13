@@ -83,26 +83,26 @@ const Photo = ({ className = "" }: { className?: string }) => (
     >
         <div className="photo-ring__inner absolute inset-0 rounded-full bg-bg-1 overflow-hidden z-10 flex items-center justify-center p-1.5">
             <div className="w-full h-full rounded-full overflow-hidden relative bg-bg-2">
-                <picture>
-                    <source
-                        srcSet="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_400/v1762424795/pfp_yggogi.png"
-                        type="image/webp"
-                    />
-                    <img
-                        src="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_400/v1762424795/pfp_yggogi.png"
-                        srcSet="
-                          https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_200/v1762424795/pfp_yggogi.png 200w,
-                          https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_400/v1762424795/pfp_yggogi.png 400w
-                        "
-                        sizes="(max-width: 640px) 160px, (max-width: 1024px) 192px, 400px"
-                        alt={PersonalInfo.name}
-                        className="w-full h-full object-cover"
-                        width="400"
-                        height="400"
-                        loading="eager"
-                        fetchPriority="high"
-                    />
-                </picture>
+                {/*
+                  Single <img> with srcSet — Cloudinary's `f_auto` flag
+                  negotiates the optimal format (WebP/AVIF/PNG) per browser
+                  via the Accept header, so a separate <picture><source>
+                  is redundant and would just duplicate the URL.
+                */}
+                <img
+                    src="https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_400/v1762424795/pfp_yggogi.png"
+                    srcSet="
+                      https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_200/v1762424795/pfp_yggogi.png 200w,
+                      https://res.cloudinary.com/dxt7szquk/image/upload/f_auto,q_auto,w_400/v1762424795/pfp_yggogi.png 400w
+                    "
+                    sizes="(max-width: 640px) 160px, (max-width: 1024px) 192px, 400px"
+                    alt={PersonalInfo.name}
+                    className="w-full h-full object-cover"
+                    width="400"
+                    height="400"
+                    loading="eager"
+                    fetchPriority="high"
+                />
                 {/* Subtle inner tint for cohesion with the accent. */}
                 <div className="absolute inset-0 bg-accent/[0.03] pointer-events-none" aria-hidden="true" />
             </div>
@@ -154,6 +154,7 @@ export function Hero() {
             className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-28 isolate"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
+            aria-label="Introduction"
         >
             {/* ===== Ambient background =====
                 A cohesive layered ambient system that reinforces the design
@@ -354,7 +355,12 @@ export function Hero() {
                   - Hidden on very short viewports (vertical) to avoid
                     overlapping content.
                   - Reduced-motion: the wheel dot is static, no animation.
+                  - Accessibility: the visual indicator is aria-hidden
+                    (decorative), and a visually-hidden paragraph announces
+                    "Scroll to explore the portfolio" so screen-reader users
+                    get the same call to action.
             */}
+            <p className="sr-only">Scroll to explore the portfolio.</p>
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

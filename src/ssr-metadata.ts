@@ -17,6 +17,13 @@
  *   The <SEO /> component still uses <Helmet> for client-side navigation
  *   (so route changes update the head tags dynamically). This registry is
  *   a parallel SSR-only extraction path.
+ *
+ *  Tag-marking convention:
+ *    Every tag emitted by `renderMetadataToHeadHtml` carries a
+ *    `data-prerendered` attribute. The client-side <SEO /> component uses
+ *    this attribute to locate and strip the prerendered set when a
+ *    client-side navigation occurs (so the new Helmet-rendered tags don't
+ *    accumulate alongside the prerendered ones).
  */
 
 import type { JSX } from "react";
@@ -29,6 +36,9 @@ export interface SSRMetadata {
   ogType: string;
   ogImage: string;
   ogImageAlt: string;
+  /** Optional; only emitted for ogType === "article". */
+  articlePublishedTime?: string;
+  articleModifiedTime?: string;
   jsonLd: Array<Record<string, unknown>>;
 }
 
@@ -54,65 +64,112 @@ export function getSSRMetadata(): SSRMetadata | null {
  * Build the complete <head> HTML string from the registered metadata.
  * This produces the exact same tags that <Helmet> would produce on the
  * client, ensuring consistency between prerendered and client-rendered pages.
+ *
+ * Every tag carries `data-prerendered` so the client can identify and remove
+ * them when a client-side navigation occurs (see SEO.tsx).
  */
 export function renderMetadataToHeadHtml(meta: SSRMetadata): string {
   const tags: string[] = [];
 
-  tags.push(`<title>${escapeHtml(meta.title)}</title>`);
   tags.push(
-    `<meta name="description" content="${escapeHtml(meta.description)}"/>`,
+    `<title data-prerendered>${escapeHtml(meta.title)}</title>`,
   );
-  tags.push(`<meta name="robots" content="${escapeHtml(meta.robots)}"/>`);
-  tags.push(`<meta name="author" content="Nirvik Dhungana"/>`);
-  tags.push(`<link rel="canonical" href="${escapeHtml(meta.canonical)}"/>`);
+  tags.push(
+    `<meta data-prerendered name="description" content="${escapeHtml(meta.description)}"/>`,
+  );
+  tags.push(
+    `<meta data-prerendered name="robots" content="${escapeHtml(meta.robots)}"/>`,
+  );
+  tags.push(
+    `<meta data-prerendered name="author" content="Nirvik Dhungana"/>`,
+  );
+  tags.push(
+    `<link data-prerendered rel="canonical" href="${escapeHtml(meta.canonical)}"/>`,
+  );
 
   // Open Graph
-  tags.push(`<meta property="og:site_name" content="Nirvik Dhungana"/>`);
-  tags.push(`<meta property="og:url" content="${escapeHtml(meta.canonical)}"/>`);
-  tags.push(`<meta property="og:type" content="${escapeHtml(meta.ogType)}"/>`);
-  tags.push(`<meta property="og:locale" content="en_US"/>`);
-  tags.push(`<meta property="og:title" content="${escapeHtml(meta.title)}"/>`);
   tags.push(
-    `<meta property="og:description" content="${escapeHtml(meta.description)}"/>`,
+    `<meta data-prerendered property="og:site_name" content="Nirvik Dhungana"/>`,
   );
-  tags.push(`<meta property="og:image" content="${escapeHtml(meta.ogImage)}"/>`);
-  tags.push(`<meta property="og:image:type" content="image/png"/>`);
-  tags.push(`<meta property="og:image:width" content="1200"/>`);
-  tags.push(`<meta property="og:image:height" content="630"/>`);
   tags.push(
-    `<meta property="og:image:alt" content="${escapeHtml(meta.ogImageAlt)}"/>`,
+    `<meta data-prerendered property="og:url" content="${escapeHtml(meta.canonical)}"/>`,
   );
-  tags.push(`<meta property="fb:app_id" content="1574476827372709"/>`);
+  tags.push(
+    `<meta data-prerendered property="og:type" content="${escapeHtml(meta.ogType)}"/>`,
+  );
+  tags.push(`<meta data-prerendered property="og:locale" content="en_US"/>`);
+  tags.push(
+    `<meta data-prerendered property="og:title" content="${escapeHtml(meta.title)}"/>`,
+  );
+  tags.push(
+    `<meta data-prerendered property="og:description" content="${escapeHtml(meta.description)}"/>`,
+  );
+  tags.push(
+    `<meta data-prerendered property="og:image" content="${escapeHtml(meta.ogImage)}"/>`,
+  );
+  tags.push(
+    `<meta data-prerendered property="og:image:type" content="image/png"/>`,
+  );
+  tags.push(
+    `<meta data-prerendered property="og:image:width" content="1200"/>`,
+  );
+  tags.push(
+    `<meta data-prerendered property="og:image:height" content="630"/>`,
+  );
+  tags.push(
+    `<meta data-prerendered property="og:image:alt" content="${escapeHtml(meta.ogImageAlt)}"/>`,
+  );
+  tags.push(
+    `<meta data-prerendered property="fb:app_id" content="1574476827372709"/>`,
+  );
+
+  // Article-specific OG
+  if (meta.ogType === "article") {
+    if (meta.articlePublishedTime) {
+      tags.push(
+        `<meta data-prerendered property="article:published_time" content="${escapeHtml(meta.articlePublishedTime)}"/>`,
+      );
+    }
+    if (meta.articleModifiedTime) {
+      tags.push(
+        `<meta data-prerendered property="article:modified_time" content="${escapeHtml(meta.articleModifiedTime)}"/>`,
+      );
+    }
+  }
 
   // Twitter
   tags.push(
-    `<meta name="twitter:card" content="summary_large_image"/>`,
-  );
-  tags.push(`<meta name="twitter:site" content="@Dhungana_Nirvik"/>`);
-  tags.push(`<meta name="twitter:creator" content="@Dhungana_Nirvik"/>`);
-  tags.push(
-    `<meta name="twitter:domain" content="nirvikdhungana.com.np"/>`,
+    `<meta data-prerendered name="twitter:card" content="summary_large_image"/>`,
   );
   tags.push(
-    `<meta name="twitter:url" content="${escapeHtml(meta.canonical)}"/>`,
+    `<meta data-prerendered name="twitter:site" content="@Dhungana_Nirvik"/>`,
   );
   tags.push(
-    `<meta name="twitter:title" content="${escapeHtml(meta.title)}"/>`,
+    `<meta data-prerendered name="twitter:creator" content="@Dhungana_Nirvik"/>`,
   );
   tags.push(
-    `<meta name="twitter:description" content="${escapeHtml(meta.description)}"/>`,
+    `<meta data-prerendered name="twitter:domain" content="nirvikdhungana.com.np"/>`,
   );
   tags.push(
-    `<meta name="twitter:image" content="${escapeHtml(meta.ogImage)}"/>`,
+    `<meta data-prerendered name="twitter:url" content="${escapeHtml(meta.canonical)}"/>`,
   );
   tags.push(
-    `<meta name="twitter:image:alt" content="${escapeHtml(meta.ogImageAlt)}"/>`,
+    `<meta data-prerendered name="twitter:title" content="${escapeHtml(meta.title)}"/>`,
+  );
+  tags.push(
+    `<meta data-prerendered name="twitter:description" content="${escapeHtml(meta.description)}"/>`,
+  );
+  tags.push(
+    `<meta data-prerendered name="twitter:image" content="${escapeHtml(meta.ogImage)}"/>`,
+  );
+  tags.push(
+    `<meta data-prerendered name="twitter:image:alt" content="${escapeHtml(meta.ogImageAlt)}"/>`,
   );
 
   // JSON-LD
   for (const block of meta.jsonLd) {
     tags.push(
-      `<script type="application/ld+json">${JSON.stringify(block)}</script>`,
+      `<script data-prerendered type="application/ld+json">${JSON.stringify(block)}</script>`,
     );
   }
 
